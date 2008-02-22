@@ -1,0 +1,90 @@
+ccopy_reg
+_reconstructor
+p1
+(creports.controllers
+CapRoot
+p2
+c__builtin__
+object
+p3
+NtRp4
+(dp5
+S'type'
+p6
+S'CapRoot'
+p7
+sS'data'
+p8
+VWelcome guest user, make yourself at home.\u000A\u000A[Test Page 1]\u000A\u000A[Test Page 2]\u000A\u000A(Test Page 3, which is elsewhere)  The link in page 1 and page 2 should be the same actual page;  editing one will edit the other.\u000A\u000A[Test Page 4]\u000A\u000A[cwillu] (which does exist, but you'd have to have the link already to put a link here)\u000A\u000A**name** creates a link to a new page\u000A\u000A**some/other/page** creates a direct link to 'page'.  The path can be absolute or relative (include '..'), but note that the guest's root is this page.\u000A\u000A**foo=name** renames a link, or creates a copy of the link\u000A\u000A**foo=some/other/page** creates a direct link to 'page' on this page, naming it 'foo' instead of 'page'.\u000A\u000A**?op=<name>;param=<so-on-and-so-forth>;param=...** (in the address bar) specifies the function to call on this page (or rather, this object).  There's not yet an easy way to determine what functions can be called, and with what parameters.\u000A\u000A[(Songs)]\u000A\u000A\u000A[moo]\u000A\u000A
+p9
+sS'links'
+p10
+(dp11
+VTest Page 2
+p12
+(S'c15c8410-83fe-4c43-9ace-c34209095bd2'
+g1
+(cuuid
+UUID
+p13
+g3
+NtRp14
+(dp15
+S'int'
+p16
+L177245777446759662250975645583653445562L
+sbS'c8b412906a1f9ca00cea306bc9a2c660351ba8471251f241de99028311b54f70'
+tp17
+sVTest Page 4
+p18
+(S'1a745c84-b2fc-43a7-ae67-842b98e4cd19'
+g1
+(g13
+g3
+NtRp19
+(dp20
+S'int'
+p21
+L28767299531939646083774246844108575222L
+sbS'd6baa00c782c053ccc65263a67729b33a3cbc1ea4dce048488198935475822bd'
+tp22
+sVTest Page 1
+p23
+(S'3e91d3ca-e956-4a75-b121-13a42cf8c1b3'
+g1
+(g13
+g3
+NtRp24
+(dp25
+S'int'
+p26
+L90978879019464288408401269216844997498L
+sbS'1289faaff207330e0e972d13746742b1ca0decc24f8ac4bed828aee2124ac08a'
+tp27
+sVmoo
+p28
+(S'a5e149fa-476b-46de-bae0-faf81f7b9491'
+g1
+(g13
+g3
+NtRp29
+(dp30
+S'int'
+p31
+L299503614537226995220136184665548174582L
+sbS'399bb4140cf5ad669504418bf1ecc112726a5571c2fcc386c5269f916d4c0dd9'
+tp32
+sVSongs
+p33
+(S'7fe851f4-85ba-4eeb-b3a4-7f6b08b56b74'
+g1
+(g13
+g3
+NtRp34
+(dp35
+S'int'
+p36
+L36115584920518385104880756476071781063L
+sbS'a104870b7e0a20617527c8a579e49da2a6f154a568927e3ed42cb5cad91b3d3a'
+tp37
+ssb.

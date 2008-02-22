@@ -1,0 +1,42 @@
+Traceback (most recent call last):
+  File "./start-reports.py", line 5, in <module>
+    from turbogears import config, update_config, start_server
+  File "/usr/lib/python2.5/site-packages/TurboGears-1.0.3.2-py2.5.egg/turbogears/__init__.py", line 8, in <module>
+    from turbogears import controllers, view, database, validators, command, \
+  File "/usr/lib/python2.5/site-packages/TurboGears-1.0.3.2-py2.5.egg/turbogears/widgets/__init__.py", line 4, in <module>
+    from turbogears.widgets.big_widgets import *
+  File "/usr/lib/python2.5/site-packages/TurboGears-1.0.3.2-py2.5.egg/turbogears/widgets/big_widgets.py", line 9, in <module>
+    from turbogears.widgets.i18n import CalendarLangFileLink
+  File "/usr/lib/python2.5/site-packages/TurboGears-1.0.3.2-py2.5.egg/turbogears/widgets/i18n.py", line 77, in <module>
+    class LocalizableJSLinkDesc(CoreWD, RenderOnlyWD):
+  File "/usr/lib/python2.5/site-packages/TurboGears-1.0.3.2-py2.5.egg/turbogears/widgets/base.py", line 599, in __init__
+    super(MetaDescription, cls).__init__(name, bases, dct)
+  File "/usr/lib/python2.5/site-packages/TurboGears-1.0.3.2-py2.5.egg/turbogears/widgets/meta.py", line 77, in __init__
+    cls.template) = load_kid_template(cls.template, modname)
+  File "/usr/lib/python2.5/site-packages/TurboGears-1.0.3.2-py2.5.egg/turbogears/widgets/meta.py", line 195, in load_kid_template
+    return (kid.load_template(t, name=modname).Template, t)
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/__init__.py", line 153, in load_template
+    code = compiler.compile(fo, filename, encoding, entity_map)
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/compiler.py", line 57, in compile
+    py = kid.codewriter.parse(source, encoding, filename, entity_map)
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/codewriter.py", line 54, in parse
+    return KidWriter(doc, encoding, filename).parse()
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/codewriter.py", line 245, in parse
+    self.proc_stream(self.module_code)
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/codewriter.py", line 333, in proc_stream
+    for ev, item in self.stream:
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/parser.py", line 179, in _track
+    for p in stream:
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/parser.py", line 221, in _coalesce
+    for ev, item in stream:
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/parser.py", line 393, in __iter__
+    for ev, stuff in self._expat_stream():
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/parser.py", line 372, in _expat_stream
+    feed(data)
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/parser.py", line 423, in feed
+    self._parser.Parse(data, isfinal)
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/parser.py", line 348, in _buildForeign
+    self._parser.ParseFile(parseableFile)
+  File "/usr/lib/python2.5/site-packages/kid-0.9.6-py2.5.egg/kid/parser.py", line 452, in _default
+    def _default(self, text):
+KeyboardInterrupt

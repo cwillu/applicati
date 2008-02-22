@@ -1,0 +1,29 @@
+Adding file 1
+
+----------------------------------------
+
+Traceback (most recent call last):
+  File "./start-reports.py", line 24, in <module>
+    from reports.controllers import Root
+  File "/home/cwillu/work/dominos/reports/reports/controllers.py", line 301, in <module>
+    wikiwords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
+  File "/usr/lib/python2.5/re.py", line 180, in compile
+    return _compile(pattern, flags)
+  File "/usr/lib/python2.5/re.py", line 231, in _compile
+    p = sre_compile.compile(pattern, flags)
+  File "/usr/lib/python2.5/sre_compile.py", line 507, in compile
+    p = sre_parse.parse(p, flags)
+  File "/usr/lib/python2.5/sre_parse.py", line 679, in parse
+    p = _parse_sub(source, pattern, 0)
+  File "/usr/lib/python2.5/sre_parse.py", line 314, in _parse_sub
+    itemsappend(_parse(source, state))
+  File "/usr/lib/python2.5/sre_parse.py", line 639, in _parse
+    p = _parse_sub(source, state)
+  File "/usr/lib/python2.5/sre_parse.py", line 314, in _parse_sub
+    itemsappend(_parse(source, state))
+  File "/usr/lib/python2.5/sre_parse.py", line 436, in _parse
+    code1 = _class_escape(source, this)
+KeyboardInterrupt
+
+----------------------------------------
+
