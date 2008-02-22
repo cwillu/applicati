@@ -2,9 +2,9 @@ import os, sys
 
 print '\n' + "-" * 40 + '\n'
 if not os.fork():
-  os.system('git-add ./')
+  os.system('git add ./')
 #  os.system('cg-rm -a')
-  os.system('git-commit -a -m "$(date)"')
+  os.system('git commit -a -m "$(date)"')
   sys.exit(0)
 
 from turbogears import controllers, url, expose, flash, redirect
