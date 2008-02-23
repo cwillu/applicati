@@ -1,23 +1,0 @@
-ccopy_reg
-_reconstructor
-p1
-(creports.controllers
-Wiki
-p2
-c__builtin__
-object
-p3
-NtRp4
-(dp5
-S'type'
-p6
-S'Wiki'
-p7
-sS'data'
-p8
-V<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\u000A<html><head><title>Employee Sales Report</title><style>\u000Abody {white-space:pre; font-face:Courier; font-family:monospace; } \u000A.size10 { font-size:10pt; } \u000A.size12 { font-size:8pt; } \u000A.size167 { font-size:6pt; line-height:150% } \u000A.double { font-family:auto; font-weight:bold; font-size:200%; line-height:50% }\u000A</style></head><body class=size12 ><div style="white-space:auto"> </div><div class=size10>\u000A</div><div class=size10>\u000ARon Carson                                                   Beg Date: <span style="text-decoration:underline">12 Jan 08</span>\u000ADomsask - Team 8th                                           End Date: <span style="text-decoration:underline">13 Jan 08</span>\u000A                                                             Store # : <span style="text-decoration:underline">10150</span>\u000A<span class=double>EMPLOYEE SALES REPORT</span>\u000A</div><div class=size167>------------------------------------------------------------------------------------------------------------------------------------\u000AEmployee Name        Orders   Cola%  Price/Ord   BRDST  MARIN  CINSX  ICING  RANCH  GARLC  CHESE\u000A------------------------------------------------------------------------------------------------------------------------------------\u000ASpicer, Megan D.       85      0.00    28.30       98      7      7      0     15      0     33\u000AVolk, Rocky C.         11      0.00    13.37        0      0      0      0      0      0      2\u000AWerbicki, Ashley M.    36      0.00    21.10        3      3      4      0      4      1      3\u000ASmith, Peter J.        21      0.00    27.64        2    101      3      0    198     99      6\u000APayne, Mike T.          1      0.00    12.98        0      0      0      0      0      0      0\u000APickering, Joshua A.   16      0.00    20.29        0      0      2      0      2      0      2\u000AFriesen, Becky A.      28      0.00    21.59        2      0      3      0      1      0     11\u000ACarson, Ron D.        103      0.00    20.78        7      0      3      0      9      4     31\u000ALucyshyn, Danica R.    13      0.00    20.86        3      2      2      0      0      0      5\u000AGrant, Cameron D.      17      0.00    21.37        4      1      3      0      1      0      1\u000ANovicki, Jessica A.    77      0.00    21.52       10      0      7      0      7     11     23\u000AKADYSCHUK, BJORN A.    27      0.00    20.02        2      0      0      0      1      2      9\u000ASMITH, ERIC C.         10      0.00    22.61        1      0      1      0      2      0      2\u000ALynn, Mitchell A.      11      0.00    17.38        1      0      0      0      0      0      2\u000A------------------------------------------------------------------------------------------------------------------------------------\u000A<span style="text-decoration:bold">Totals</span>                456      0.00    22.42      133    114     35      0    240    117    130   \u000A------------------------------------------------------------------------------------------------------------------------------------\u000A\u000A\u000A\u000A\u000A\u000A\u000A\u000A\u000A\u000A\u000A\u000A\u000A\u000A------------------------------------------------------------------------------------------------------------------------------------\u000A</div><div class=size10>Relief Manager Plus 3.64                       Date: <span style="text-decoration:underline">20 Jan 08</span>    Page: <span style="text-decoration:underline">  1</span>\u000A(c) 1991-2003 Breakaway International, Inc.    Time: <span style="text-decoration:underline">01:20 pm</span>     Code: <span style="text-decoration:underline">P011</span>\u000A</div></body></html> \u000A
-p9
-sS'links'
-p10
-(dp11
-sb.

@@ -1,19 +1,0 @@
-ccopy_reg
-_reconstructor
-p1
-(creports.controllers
-Raw
-p2
-c__builtin__
-object
-p3
-NtRp4
-(dp5
-S'data'
-p6
-V<!DOCTYPE html>\u000A<html><head><title>Key Indicators Report</title><style>\u000A\u000A</style></head><body><div class="size12" >\u000ASET locale "enUS"\u000ASET gxApi "opengl"\u000ASET gxResolution "800x600"\u000ASET gxFixLag "0"\u000ASET ffxGlow "0"\u000ASET ffxDeath "0"\u000ASET UIFaster "2"\u000ASET movie "0"\u000ASET expansionMovie "0"\u000ASET showToolsUI "1"\u000ASET Sound_OutputDriverName "dmix:0"\u000ASET realmList "us.logon.worldofwarcraft.com"\u000ASET patchlist "us.version.worldofwarcraft.com"\u000ASET SmallCull "0.040000"\u000ASET DistCull "500.000000"\u000ASET farclip "477"\u000ASET particleDensity "1.000000"\u000ASET groundEffectDensity "24"\u000ASET readTOS "1"\u000ASET readEULA "1"\u000ASET realmName "Cenarius"\u000ASET gameTip "31"\u000ASET coresDetected "1"\u000ASET hwDetect "0"\u000ASET gxMultisampleQuality "0.000000"\u000ASET videoOptionsVersion "1"\u000ASET accountName "cwillu"\u000ASET gxWindow "1"\u000ASET gxColorBits "24"\u000ASET gxDepthBits "24"\u000ASET pixelShaders "1"\u000ASET mouseSpeed "0.85000002384186"\u000ASET Gamma "1.000000"\u000ASET Sound_VoiceChatInputDriverName "dsnoop:0"\u000ASET Sound_VoiceChatOutputDriverName "dmix:0"\u000ASET ChatMusicVolume "0.30000001192093"\u000ASET ChatSoundVolume "0.40000000596046"\u000ASET ChatAmbienceVolume "0.30000001192093"\u000ASET Sound_MasterVolume "0.5"\u000ASET Sound_SFXVolume "1"\u000ASET Sound_MusicVolume "0.40000000596046"\u000ASET Sound_AmbienceVolume "0.60000002384186"\u000ASET mouseInvertPitch "1"\u000ASET cameraYawMoveSpeed "180"\u000ASET cameraYawSmoothSpeed "180"\u000ASET cameraSmoothStyle "0"\u000ASET cameraDistanceMaxFactor "2"\u000ASET OutboundChatVolume "1"\u000ASET InboundChatVolume "1"\u000ASET VoiceActivationSensitivity "0.40000003576279"\u000ASET deselectOnClick "0"\u000ASET ShowTargetCastbar "1"\u000ASET ShowVKeyCastbar "1"\u000ASET minimapZoom "0"\u000ASET minimapInsideZoom "0"\u000ASET autoSelfCast "1"\u000ASET cameraDistanceA "30.000000"\u000ASET cameraPitchA "10.600003"\u000ASET cameraYawA "0.000000"\u000ASET DesktopGamma "1"\u000ASET groundEffectDist "70"\u000ASET uiScale ".875"\u000ASET useUiScale "1"\u000ASET gxRefresh "50"\u000ASET xpBarText "1"\u000ASET Sound_EnableMusic "0"\u000ASET cameraView "3"\u000A\u000A</div></body></html> 
-p7
-sS'links'
-p8
-(dp9
-sb.
