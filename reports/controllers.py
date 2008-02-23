@@ -110,7 +110,7 @@ def findPageName(target, path, find=tuple()):
       return False, None
     
     if find:
-      _reachable, _descriptor = findPageName(target, path[:index+1] + find)
+      _reachable, _descriptor = findPageName(target, find)
       if _reachable:
         print "found", path[:index] + find
         bestFoundForFind = _reachable, _descriptor
@@ -138,7 +138,7 @@ def findPageName(target, path, find=tuple()):
       return None, None
 
     if find:
-      _reachable, _descriptor = findPageName(target, path + find)
+      _reachable, _descriptor = findPageName(target, find)
       if _reachable:
         print "found", path + find
         bestFoundForFind = _reachable, _descriptor
