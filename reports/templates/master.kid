@@ -45,8 +45,12 @@
       <div class="left">
           <a href="?op=edit">Edit</a>
         | <a href="?op=links">Links</a>
-        | <a href="?op=copy">Select</a>
-        | <a href="?op=write">Paste</a>
+        | <form name="select" action="?op=copy" method="POST">
+            <a href="#select" onClick="document.select.submit()">Select</a>
+          </form>
+        | <form name="paste" action="?op=write" method="POST">
+            <a href="#paste" onClick="document.paste.submit()">Paste</a>
+          </form>
       </div>
       <div class="right">
         <span py:for="perm in ['read', 'modify', 'replace', 'cross', 'override']">
