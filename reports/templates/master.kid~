@@ -46,10 +46,10 @@
           <a href="?op=edit">Edit</a>
         | <a href="?op=links">Links</a>
         | <form name="select" action="?op=copy" method="POST">
-            <a href="#" onClick="document.select.submit()">Select</a>
+            <a href="#select" onClick="document.select.submit()">Select</a>
           </form>
         | <form name="paste" action="?op=write" method="POST">
-            <a href="#" onClick="document.paste.submit()">Paste</a>
+            <a href="#paste" onClick="document.paste.submit()">Paste</a>
           </form>
       </div>
       <div class="right">
