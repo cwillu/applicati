@@ -14,10 +14,13 @@
             text-align: right;
         }
     </style>
+    <style type="text/css">
+      @import "${tg.url('/static/css/style.css')}";
+    </style>
     <style type="text/css" media="screen">
       @import "${tg.url('/static/css/screen.css')}";
     </style>
-    <style type="text/css" media="screen">
+    <style type="text/css" media="print">
       @import "${tg.url('/static/css/print.css')}";
     </style>
 </head>

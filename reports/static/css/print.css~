@@ -5,7 +5,7 @@
 html, body {
   color: black;
   background-color: #eee;
-  font-family: "Century Schoolbook L", Georgia, serif;
+  font: small "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
   margin: 0;
   padding: 0;
   
@@ -63,7 +63,7 @@ tr.even td {background-color:#fff;}
 
 
 h1,h2,h3,h4,h5,h6,#getting_started_steps {
-  font: small "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
+  font-family: "Century Schoolbook L", Georgia, serif;
   font-weight: bold;
 }
 
