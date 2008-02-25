@@ -716,7 +716,7 @@ class Raw(object):
     
     Presentation.__init__(self)
 
-  def show(self, page, prefix=None, format=True):
+  def show(self, page, prefix=None, formatted=True):
     if not format or not self.data:
       return self.data
 
