@@ -567,7 +567,7 @@ class Wiki(object):
     for link in self.links:
       knownIds[page.get(self.links[link]).id] = self.links[link]
 
-    content = wikiwords.split(content)
+    content = Wiki.wikiWords.split(content)
     text = content[::2]
     links = content[1::2]
     new = []
