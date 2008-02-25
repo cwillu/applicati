@@ -559,7 +559,9 @@ class Wiki(object):
     
   def show(self, page, formatted=False, prefix=None):
     if formatted:
-      return self._wikiFormat(page, self.data, prefix)
+      formatted = self._wikiFormat(page, self.data, prefix)
+      print formatted
+      return formatted
     return self.data
           
   def save(self, page, data=''):    
