@@ -545,8 +545,9 @@ class Wiki(object):
       meta = findPage(page, tuple(name.split('/')))
       inlineObject = meta.data
       presentation = findPresentation(inlineObject)
-      print presentation
-      return presentation.show(Wrapper(inlineObject, meta), tuple(page.path) + extension, prefix=prefix + extension) #XXX tuples, not list
+      content = show(Wrapper(inlineObject, meta), tuple(page.path) + extension, prefix=prefix + extension) #XXX tuples, not list            
+      
+      return dom.parseString(content).getElementsByTagName('body')[0].toxml()
         
 #      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
 #      return '<a href="http:%s/">%s</a>' % name
@@ -720,7 +721,7 @@ class Raw(object):
     if not formatted or not self.data:
       return self.data
 
-    return '<?xml version="1.0" ?>' + dom.parseString(self.data).getElementsByTagName('body')[0].toxml()
+    return dom.parseString(self.data).getElementsByTagName('body')[0].toxml()
     
   def save(self, page, data=''):
     self.data = data

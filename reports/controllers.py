@@ -545,7 +545,7 @@ class Wiki(object):
       meta = findPage(page, tuple(name.split('/')))
       inlineObject = meta.data
       presentation = findPresentation(inlineObject)
-      content = show(Wrapper(inlineObject, meta), tuple(page.path) + extension, prefix=prefix + extension) #XXX tuples, not list            
+      content = presentation.show(Wrapper(inlineObject, meta), tuple(page.path) + extension, prefix=prefix + extension) #XXX tuples, not list            
       
       return dom.parseString(content).getElementsByTagName('body')[0].toxml()
         
