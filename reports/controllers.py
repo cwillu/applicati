@@ -527,7 +527,7 @@ class Wiki(object):
   def _wikiFormat(self, page, content, prefix=None):
     #  name = html.escape(name)
     if not prefix:
-      prefix = []
+      prefix = tuple()
 
     def wikiLink(match):
       name = match.group(1)
