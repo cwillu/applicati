@@ -481,7 +481,8 @@ class RawPresentation(WikiPresentation):
   @expose(template="reports.templates.show")
   def show(self, obj,  path):
     content = obj.show()
-    content = dom.parseString(content).getElementsByTagName('body')[0].toxml()
+    if content:
+      content = dom.parseString(content).getElementsByTagName('body')[0].toxml()
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
  
 class Login(object):
