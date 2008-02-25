@@ -526,7 +526,7 @@ class Wiki(object):
     if not prefix:
       prefix = []
 
-    def wikiLink(self, match):
+    def wikiLink(match):
       name = match.group(1)
       if name.startswith('(') and name.endswith(')'):
         return ''
@@ -534,7 +534,7 @@ class Wiki(object):
       link = '/'.join(prefix+[link])
       return '<a href="http:%s/">%s</a>' % (link, name)
       
-    def inlineLink(self, match):
+    def inlineLink(match):
       name = match.group(1)
       if name.startswith('(') and name.endswith(')'):
         return ''      
