@@ -562,7 +562,7 @@ class Wiki(object):
   def show(self, page, formatted=False, prefix=None):
     if formatted:
       formatted = self._wikiFormat(page, self.data, prefix)
-      print formatted
+#      print formatted
       return formatted
     return self.data
           
