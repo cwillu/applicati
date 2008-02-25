@@ -543,7 +543,7 @@ class Wiki(object):
 #      return '<a href="http:%s/">%s</a>' % name
   
 #    content = commentblock.split(content)
-    content[::2] = [publish_parts(part, writer_name="html")['html_body'] for part in content[::2]]
+    content = publish_parts(content, writer_name="html")['html_body']
     content = wikiWords.sub(wikiLink, ''.join(content))
     content = inlineWords.sub(inlineLink, ''.join(content))
     return content
