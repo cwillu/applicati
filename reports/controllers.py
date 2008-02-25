@@ -720,7 +720,7 @@ class Raw(object):
     if not formatted or not self.data:
       return self.data
 
-    return dom.parseString(self.data).getElementsByTagName('body')[0].toxml()
+    return '<?xml version="1.0" ?>' + dom.parseString(self.data).getElementsByTagName('body')[0].toxml()
     
   def save(self, page, data=''):
     self.data = data
