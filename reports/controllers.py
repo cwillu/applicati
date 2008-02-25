@@ -368,7 +368,7 @@ class WikiPresentation(Presentation):
     return self._path(path)[-1]
 
   @expose(template="reports.templates.show")
-  def show(self, obj,  path, formatted, prefix=None):
+  def show(self, obj,  path, formatted=True, prefix=None):
     content = obj.show(formatted=formatted, prefix=prefix)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
