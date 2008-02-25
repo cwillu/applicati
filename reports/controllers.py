@@ -534,7 +534,7 @@ class Wiki(object):
       if name.startswith('(') and name.endswith(')'):
         return ''
       link = name[:-1] if name.endswith('*') else name
-      link = '/'.join(prefix+[link])
+      link = '/'.join(prefix+(link,))
       return '<a href="http:%s/">%s</a>' % (link, name)
       
     def inlineLink(match):
@@ -542,9 +542,9 @@ class Wiki(object):
       if name.startswith('(') and name.endswith(')'):
         return ''      
 
-      extension = name.split('/')
+      extension = tuple(name.split('/'))
 
-      meta = findPage(page, name.split('/'))
+      meta = findPage(page, tuple(name.split('/')))
       inlineObject = meta.data
       return findPresentation(inlineObject).show(Wrapper(inlineObject, meta), page.path + extension, prefix=prefix + extension)
         
