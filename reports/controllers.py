@@ -518,15 +518,15 @@ class Wiki(object):
     self.data = data
     self.links = {}
 
-  wikiwords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
-  inlinewords = re.compile(r'\{(\(?[^\ \[\}][^\[\}]*?\)?)\}')   
+  wikiWords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
+  inlineWords = re.compile(r'\{(\(?[^\ \[\}][^\[\}]*?\)?)\}')   
 
   def _wikiFormat(self, page, content, prefix=None):
     #  name = html.escape(name)
     if not prefix:
       prefix = []
 
-    def _wikiLink(self, match):
+    def wikiLink(self, match):
       name = match.group(1)
       if name.startswith('(') and name.endswith(')'):
         return ''
@@ -534,7 +534,7 @@ class Wiki(object):
       link = '/'.join(prefix+[link])
       return '<a href="http:%s/">%s</a>' % (link, name)
       
-    def _inlineLink(self, match):
+    def inlineLink(self, match):
       name = match.group(1)
       if name.startswith('(') and name.endswith(')'):
         return ''      
@@ -544,12 +544,13 @@ class Wiki(object):
   
     content = commentblock.split(content)
     content[::2] = [publish_parts(part, writer_name="html")['html_body'] for part in content[::2]]
-    content = wikiwords.sub(wikiLink, ''.join(content))
+    content = wikiWords.sub(wikiLink, ''.join(content))
+    content = inlineWords.sub(inlineLink, ''.join(content))
     return content
     
   def show(self, page, formatted=False, prefix=None):
     if formatted:
-      return wikiFormat(self.data, page, prefix)
+      return _wikiFormat(self.data, page, prefix)
     return self.data
           
   def save(self, page, data=''):    

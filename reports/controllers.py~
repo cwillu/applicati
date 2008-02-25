@@ -304,28 +304,6 @@ class Root(controllers.RootController):
     
     return WikiPresentation()
 
-
-wikiwords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
-def wikiLink(match):
-  name = match.group(1)
-  if name.startswith('(') and name.endswith(')'):
-    return ''
-  #  name = html.escape(name)
-  link = name[:-1] if name.endswith('*') else name
-  
-  return '<a href="http:%s/">%s</a>' % (link, name)
-
-commentblock = re.compile(r'\{\{\{(.*?)\}\}\}', flags=re.DOTALL)
-def fixedFormat(match):
-  block = match.group(1).splitlines()
-  return '\n'.join('| %s' % line for line in block)  
-
-def wikiFormat(content):
-  content = commentblock.split(content)
-  content[::2] = [publish_parts(part, writer_name="html")['html_body'] for part in content[::2]]
-  content = wikiwords.sub(wikiLink, ''.join(content))
-  return content
-
 def redirectToShow(path):
   raise redirect("/%s/?op=show" % '/'.join(path))
 
@@ -388,7 +366,7 @@ class WikiPresentation(Presentation):
 
   @expose(template="reports.templates.show")
   def show(self, obj,  path):
-    content = wikiFormat(obj.show())
+    content = obj.show(formatted=True)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
   @expose(template="reports.templates.edit")
@@ -539,8 +517,39 @@ class Wiki(object):
   def __init__(self, data=''):
     self.data = data
     self.links = {}
+
+  wikiwords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
+  inlinewords = re.compile(r'\{(\(?[^\ \[\}][^\[\}]*?\)?)\}')   
+
+  def _wikiFormat(self, page, content, prefix=None):
+    #  name = html.escape(name)
+    if not prefix:
+      prefix = []
+
+    def _wikiLink(self, match):
+      name = match.group(1)
+      if name.startswith('(') and name.endswith(')'):
+        return ''
+      link = name[:-1] if name.endswith('*') else name
+      link = '/'.join(prefix+[link])
+      return '<a href="http:%s/">%s</a>' % (link, name)
+      
+    def _inlineLink(self, match):
+      name = match.group(1)
+      if name.startswith('(') and name.endswith(')'):
+        return ''      
+        
+      return findPageName(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
+#      return '<a href="http:%s/">%s</a>' % name
+  
+    content = commentblock.split(content)
+    content[::2] = [publish_parts(part, writer_name="html")['html_body'] for part in content[::2]]
+    content = wikiwords.sub(wikiLink, ''.join(content))
+    return content
     
-  def show(self, page):
+  def show(self, page, formatted=False, prefix=None):
+    if formatted:
+      return wikiFormat(self.data, page, prefix)
     return self.data
           
   def save(self, page, data=''):    
