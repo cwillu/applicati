@@ -297,7 +297,7 @@ class Root(controllers.RootController):
   def findPresentation(self, obj):
     return findPresentation(obj)
 
-def findPresentation(self, obj):
+def findPresentation(obj):
   if isinstance(obj, Presentation):    
     Log.warn("default presentation used for object %s" % obj)
     return obj
