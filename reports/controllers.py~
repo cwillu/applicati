@@ -546,7 +546,7 @@ class Wiki(object):
 
       meta = findPage(page, name.split('/'))
       inlineObject = meta.data
-      return findPresentation(inlineObject).show(Wrapper(inlineObject, meta), path + extension, prefix=prefix + extension)
+      return findPresentation(inlineObject).show(Wrapper(inlineObject, meta), page.path + extension, prefix=prefix + extension)
         
 #      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
 #      return '<a href="http:%s/">%s</a>' % name

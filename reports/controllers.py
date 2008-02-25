@@ -348,7 +348,7 @@ class Presentation(object):
 
 def blank():
   class Blank(object):
-    def show(self, meta):
+    def show(self, meta, prefix=None):
       return ''
       '''    @expose(template="reports.templates.show")
     def blank(self, *args, **kargs):
@@ -368,8 +368,8 @@ class WikiPresentation(Presentation):
     return self._path(path)[-1]
 
   @expose(template="reports.templates.show")
-  def show(self, obj,  path):
-    content = obj.show(formatted=True)
+  def show(self, obj,  path, formatted, prefix=None):
+    content = obj.show(formatted=formatted, prefix=prefix)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
   @expose(template="reports.templates.edit")
@@ -460,8 +460,8 @@ class WikiPresentation(Presentation):
 
 class RawPresentation(WikiPresentation):
   @expose(template="reports.templates.show")
-  def show(self, obj,  path):
-    content = obj.show()
+  def show(self, obj,  path, prefix=None):
+    content = obj.show(prefix=None)
     if content:
       content = dom.parseString(content).getElementsByTagName('body')[0].toxml()
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
@@ -506,7 +506,7 @@ class Constructor(object):
     self.class_ = class_
     self.links = {}
   
-  def show(self, page):
+  def show(self, page, prefix=None):
     return self.class_
     
   def save(self, page, class_):
@@ -714,7 +714,7 @@ class Raw(object):
     
     Presentation.__init__(self)
 
-  def show(self, page):
+  def show(self, page, prefix=None):
     return self.data
     
   def save(self, page, data=''):
