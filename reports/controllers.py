@@ -542,6 +542,7 @@ class Wiki(object):
       if name.startswith('(') and name.endswith(')'):
         return ''      
       
+      assert isinstance(page.path, tuple), type(page.path)
       assert isinstance(prefix, tuple), type(prefix)
       extension = tuple(name.split('/'))
 

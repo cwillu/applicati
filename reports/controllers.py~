@@ -541,7 +541,8 @@ class Wiki(object):
       name = match.group(1)
       if name.startswith('(') and name.endswith(')'):
         return ''      
-
+      
+      assert isinstance(prefix, tuple), type(prefix)
       extension = tuple(name.split('/'))
 
       meta = findPage(page, tuple(name.split('/')))
