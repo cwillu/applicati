@@ -544,8 +544,8 @@ class Wiki(object):
   
 #    content = commentblock.split(content)
     content = publish_parts(content, writer_name="html")['html_body']
-    content = wikiWords.sub(wikiLink, ''.join(content))
-    content = inlineWords.sub(inlineLink, ''.join(content))
+    content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
+    content = Wiki.inlineWords.sub(inlineLink, ''.join(content))
     return content
     
   def show(self, page, formatted=False, prefix=None):
