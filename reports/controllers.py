@@ -542,7 +542,7 @@ class Wiki(object):
       return findPageName(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
 #      return '<a href="http:%s/">%s</a>' % name
   
-    content = commentblock.split(content)
+#    content = commentblock.split(content)
     content[::2] = [publish_parts(part, writer_name="html")['html_body'] for part in content[::2]]
     content = wikiWords.sub(wikiLink, ''.join(content))
     content = inlineWords.sub(inlineLink, ''.join(content))
