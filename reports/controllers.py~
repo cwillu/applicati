@@ -539,7 +539,7 @@ class Wiki(object):
       if name.startswith('(') and name.endswith(')'):
         return ''      
         
-      return findPageName(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
+      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
 #      return '<a href="http:%s/">%s</a>' % name
   
 #    content = commentblock.split(content)

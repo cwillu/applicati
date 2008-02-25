@@ -295,14 +295,17 @@ class Root(controllers.RootController):
     print
  
   def findPresentation(self, obj):
-    if isinstance(obj, Presentation):    
-      Log.warn("default presentation used for object %s" % obj)
-      return obj
-    
-    if isinstance(obj, Raw):
-      return RawPresentation()
-    
-    return WikiPresentation()
+    return findPresentation(obj)
+
+def findPresentation(self, obj):
+  if isinstance(obj, Presentation):    
+    Log.warn("default presentation used for object %s" % obj)
+    return obj
+  
+  if isinstance(obj, Raw):
+    return RawPresentation()
+  
+  return WikiPresentation()
 
 def redirectToShow(path):
   raise redirect("/%s/?op=show" % '/'.join(path))
@@ -538,8 +541,14 @@ class Wiki(object):
       name = match.group(1)
       if name.startswith('(') and name.endswith(')'):
         return ''      
+
+      extension = name.split('/')
+
+      meta = findPage(page, name.split('/'))
+      inlineObject = meta.data
+      return findPresentation(data).show(Wrapper(inlineObject, meta), path + extension, prefix=prefix + extension)
         
-      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
+#      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
 #      return '<a href="http:%s/">%s</a>' % name
   
 #    content = commentblock.split(content)
