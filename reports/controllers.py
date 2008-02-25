@@ -546,7 +546,7 @@ class Wiki(object):
       inlineObject = meta.data
       presentation = findPresentation(inlineObject)
       content = presentation.show(Wrapper(inlineObject, meta), tuple(page.path) + extension, prefix=prefix + extension) #XXX tuples, not list            
-      print content
+      content = '\n'.join(line for line in content if '<meta content' not in line and 'content-type' not in line)
       print dom.parseString(content).getElementsByTagName('body')[0].toxml()
       return "<i>test</i>"
 

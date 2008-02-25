@@ -3,8 +3,6 @@
       xmlns:py="http://purl.org/kid/ns#"
       py:extends="'master.kid'">
 <head>
-<meta content="text/html; charset=utf-8"
-      http-equiv="Content-Type" py:replace="''"/>
 <title> ${name} - NeoWiki </title>
 </head>
 <body>
