@@ -295,36 +295,17 @@ class Root(controllers.RootController):
     print
  
   def findPresentation(self, obj):
-    if isinstance(obj, Presentation):    
-      Log.warn("default presentation used for object %s" % obj)
-      return obj
-    
-    if isinstance(obj, Raw):
-      return RawPresentation()
-    
-    return WikiPresentation()
+    return findPresentation(obj)
 
-
-wikiwords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
-def wikiLink(match):
-  name = match.group(1)
-  if name.startswith('(') and name.endswith(')'):
-    return ''
-  #  name = html.escape(name)
-  link = name[:-1] if name.endswith('*') else name
+def findPresentation(obj):
+  if isinstance(obj, Presentation):    
+    Log.warn("default presentation used for object %s" % obj)
+    return obj
   
-  return '<a href="http:%s/">%s</a>' % (link, name)
-
-commentblock = re.compile(r'\{\{\{(.*?)\}\}\}', flags=re.DOTALL)
-def fixedFormat(match):
-  block = match.group(1).splitlines()
-  return '\n'.join('| %s' % line for line in block)  
-
-def wikiFormat(content):
-  content = commentblock.split(content)
-  content[::2] = [publish_parts(part, writer_name="html")['html_body'] for part in content[::2]]
-  content = wikiwords.sub(wikiLink, ''.join(content))
-  return content
+  if isinstance(obj, Raw):
+    return RawPresentation()
+  
+  return WikiPresentation()
 
 def redirectToShow(path):
   raise redirect("/%s/?op=show" % '/'.join(path))
@@ -367,7 +348,7 @@ class Presentation(object):
 
 def blank():
   class Blank(object):
-    def show(self, meta):
+    def show(self, meta, prefix=None):
       return ''
       '''    @expose(template="reports.templates.show")
     def blank(self, *args, **kargs):
@@ -387,8 +368,8 @@ class WikiPresentation(Presentation):
     return self._path(path)[-1]
 
   @expose(template="reports.templates.show")
-  def show(self, obj,  path):
-    content = wikiFormat(obj.show())
+  def show(self, obj,  path, formatted=True, prefix=None):
+    content = obj.show(formatted=formatted, prefix=prefix)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
   @expose(template="reports.templates.edit")
@@ -479,10 +460,8 @@ class WikiPresentation(Presentation):
 
 class RawPresentation(WikiPresentation):
   @expose(template="reports.templates.show")
-  def show(self, obj,  path):
-    content = obj.show()
-    if content:
-      content = dom.parseString(content).getElementsByTagName('body')[0].toxml()
+  def show(self, obj,  path, prefix=None):
+    content = obj.show(formatted=True, prefix=None)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
  
 class Login(object):
@@ -525,7 +504,7 @@ class Constructor(object):
     self.class_ = class_
     self.links = {}
   
-  def show(self, page):
+  def show(self, page, prefix=None):
     return self.class_
     
   def save(self, page, class_):
@@ -539,8 +518,50 @@ class Wiki(object):
   def __init__(self, data=''):
     self.data = data
     self.links = {}
+
+  wikiWords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
+  inlineWords = re.compile(r'\{(\(?[^\ \[\}][^\[\}]*?\)?)\}')   
+
+  def _wikiFormat(self, page, content, prefix=None):
+    #  name = html.escape(name)
+    if not prefix:
+      prefix = tuple()
+
+    def wikiLink(match):
+      name = match.group(1)
+      if name.startswith('(') and name.endswith(')'):
+        return ''
+      link = name[:-1] if name.endswith('*') else name
+      link = '/'.join(prefix+(link,))
+      return '<a href="http:%s/">%s</a>' % (link, name)
+      
+    def inlineLink(match):
+      name = match.group(1)
+      if name.startswith('(') and name.endswith(')'):
+        return ''      
+      
+      extension = tuple(name.split('/'))
+
+      meta = findPage(page, tuple(name.split('/')))
+      inlineObject = meta.data
+      presentation = Presentation()
+      content = inlineObject.show(meta, prefix=prefix + extension) #XXX tuples, not list            
+      return dom.parseString(content).getElementsByTagName('body')[0].toxml()
+        
+#      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
+#      return '<a href="http:%s/">%s</a>' % name
+  
+#    content = commentblock.split(content)
+    content = publish_parts(content, writer_name="html")['html_body']
+    content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
+    content = Wiki.inlineWords.sub(inlineLink, ''.join(content))
+    return content
     
-  def show(self, page):
+  def show(self, page, formatted=False, prefix=None):
+    if formatted:
+      formatted = self._wikiFormat(page, self.data, prefix)
+#      print formatted
+      return formatted
     return self.data
           
   def save(self, page, data=''):    
@@ -557,7 +578,7 @@ class Wiki(object):
     for link in self.links:
       knownIds[page.get(self.links[link]).id] = self.links[link]
 
-    content = wikiwords.split(content)
+    content = Wiki.wikiWords.split(content)
     text = content[::2]
     links = content[1::2]
     new = []
@@ -695,8 +716,11 @@ class Raw(object):
     
     Presentation.__init__(self)
 
-  def show(self, page):
-    return self.data
+  def show(self, page, prefix=None, formatted=True):
+    if not formatted or not self.data:
+      return self.data
+
+    return dom.parseString(self.data).getElementsByTagName('body')[0].toxml()
     
   def save(self, page, data=''):
     self.data = data
