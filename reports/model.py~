@@ -101,7 +101,8 @@ def BaseComponent():
         raise PermissionError(op, self.permissions)
 
     def watch(self, func):
-      actionList = actions.setdefault(self._descriptor, [])
+      possible = []
+      actionList = actions.setdefault(self._descriptor, possible)
       actionList.append(func)
       actionCollections[func] = actionList
 

@@ -101,7 +101,7 @@ def BaseComponent():
         raise PermissionError(op, self.permissions)
 
     def watch(self, func):
-      possible = []
+      possible = set()
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.append(func)
       actionCollections[func] = actionList
@@ -109,7 +109,8 @@ def BaseComponent():
     def _fireEvent(self):
       action = actions.get(self._descriptor, None)
       if action:
-        action()
+        for listener in action:
+          listener()
 
     @property
     def name(self):
