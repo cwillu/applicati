@@ -7,6 +7,11 @@ import uuid
 from Crypto.Hash import SHA256
 import os
 
+import weakref
+
+actions = weakref.WeakValueDictionary()
+actionCollections = weakref.WeakKeyDictionary()
+
 def _assertId(id):  #XXX change to assert
   print "ASSERTING", id
   if not isinstance(id, tuple) or id == (1, ): 
@@ -95,6 +100,16 @@ def BaseComponent():
       if not self._query(op):
         raise PermissionError(op, self.permissions)
 
+    def watch(self, func):
+      actionList = actions.setdefault(self._descriptor, [])
+      actionList.append(func)
+      actionCollections[func] = actionList
+
+    def _fireEvent(self):
+      action = actions.get(self._descriptor, None)
+      if action:
+        action()
+
     @property
     def name(self):
       if self.path:
@@ -144,8 +159,13 @@ def BaseComponent():
       print folder, name
       if not os.access(folder, os.F_OK):
         os.makedirs(folder)
-        
-      return pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
+      result = pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
+      try:
+        self._fireEvent()
+      except:
+        pass #XXX logging      
+      return result
+      
     data = property(getData, _selfSetData)   
     
     def _filename(self, selector="data", id=None):
