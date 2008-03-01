@@ -353,12 +353,12 @@ class Presentation(object):
       try:
         queue.get(timeout=1)
         print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % [index, request.rfile.rfile.closed]
-        response.status=204 #no content
-        return
+#        response.status=204 #no content
+        yield 'done'
       except Empty:
         print dir(request)
         print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.rfile.rfile.closed]
-        pass
+        yield ''
 #      response.status=200 #reset content
 
 def blank():
