@@ -352,11 +352,11 @@ class Presentation(object):
     for interval in range(60*60):
       try:
         queue.get(timeout=1)
-        print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % index
+        print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % [index, request.closed]
         response.status=204 #no content
         return
       except Empty:
-        print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % index
+        print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.closed]
         pass
 #      response.status=200 #reset content
 
