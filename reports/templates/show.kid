@@ -6,6 +6,7 @@
 <title> ${name} - NeoWiki </title>
 <script language="javascript">
 
+  //window.addEventListener('load', init(), false);
   window.addEventListener('load', function() {setTimeout('init()', 10)}, false);
 
   function init() {
