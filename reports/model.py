@@ -114,6 +114,7 @@ def BaseComponent():
       for action in actions.get(self._descriptor, []):
         print "Firing event %s" % action
         action()
+        
     @property
     def name(self):
       if self.path:
