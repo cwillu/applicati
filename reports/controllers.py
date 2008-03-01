@@ -354,7 +354,7 @@ class Presentation(object):
         return
       except Empty:
         print hash
-        yield 'a'
+        yield ' '
 
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
