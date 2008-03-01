@@ -1,4 +1,18 @@
 import os, sys
+from Crypto.Cipher import Blowfish as blowfish
+from sha import sha
+from os import urandom as random
+import xml.dom.minidom as dom
+import re
+from Queue import Queue, Empty
+
+from turbogears import controllers, url, expose, flash, redirect
+from cherrypy import session, request, response
+from turbogears.toolbox.catwalk import CatWalk
+from docutils.core import publish_parts
+from pydoc import html
+
+import model as db
 
 print '\n' + "-" * 40 + '\n'
 if not os.fork():
@@ -7,24 +21,6 @@ if not os.fork():
   os.system('git commit -a -m "$(date)"')
   sys.exit(0)
 
-from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response
-from turbogears.toolbox.catwalk import CatWalk
-
-from Crypto.Cipher import Blowfish as blowfish
-
-from sha import sha
-
-import model as db
-
-from docutils.core import publish_parts
-from pydoc import html
-
-from os import urandom as random
-
-import xml.dom.minidom as dom
-
-import re
 
 # import logging
 # log = logging.getLogger("reports.controllers")
@@ -176,6 +172,7 @@ class Wrapper(object):
     self.page = page
     self.write = page.write
     self.links = page.links
+    self.watch = page.watch
     self.changePermission = page.changePermission
     self.permissions = page.permissions
         
@@ -345,6 +342,16 @@ class Presentation(object):
 
     obj.changePermission(link, permission, value)
     redirectToShow(path)    
+
+  def waitForChange(self, obj, path):
+    queue = Queue()
+    action = lambda: queue.put(True)
+    obj.watch(action)
+    try:
+      queue.get(timeout=60*60)
+      response.status=200 #no content
+    except Empty:
+#      response.status=200 #reset content
 
 def blank():
   class Blank(object):

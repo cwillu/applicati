@@ -16,9 +16,9 @@
 	    request.open("get", "?op=show", false); 
 	    request.send(null);	    
 	    if(request.status == 200){
-        original = document.getElementById("view");
-  	    replacement = request.responseXML.getElementById("view");
-	      document.getElementById("main_content").replaceChild(replacement, original);
+        original = document.getElementByClass("document")[0];
+  	    replacement = request.responseXML.getElementByClass("document")[0];
+	      document.getElementById("viewer").replaceChild(replacement, original);
 	    }
 	  }
   }

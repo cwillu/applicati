@@ -27,6 +27,8 @@
   }
 </script>
 </head>
+<body>
   <div py:replace="XML(data)">Page text goes here.</div>
 
+</body>
 </html>
