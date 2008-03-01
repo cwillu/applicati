@@ -343,7 +343,7 @@ class Presentation(object):
     obj.changePermission(link, permission, value)
     redirectToShow(path)    
 
-  def waitForChange(self, obj, path, rand=None):
+  def waitForChange(self, obj, path, hash=None):
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
