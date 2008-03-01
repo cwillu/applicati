@@ -17,7 +17,7 @@
 //        {
 //            callbackFunction(request.responseText);
 //        }
-        setTimeout('window.history.go(0);', 500)
+#        setTimeout('window.location.reload();', 500)
         
       }
     };

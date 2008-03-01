@@ -358,7 +358,7 @@ class Presentation(object):
       except Empty:
         print dir(request)
         print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.rfile.rfile.closed]
-        yield ''
+        yield 'foo'
 #      response.status=200 #reset content
 
 def blank():
