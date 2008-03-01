@@ -7,11 +7,27 @@ import cPickle as pickle
 import uuid
 from Crypto.Hash import SHA256
 import os
+import subprocess
 
 import weakref
 
 actions = weakref.WeakValueDictionary()
 actionCollections = weakref.WeakKeyDictionary()
+
+def monitor():
+  pipe = subprocess.Popen('inotifywait -r pickles/ -e close_write,create -m', stdout=subprocess.PIPE)
+  re_id = re.compile(r'pickles/([^/ ]+)')
+  for line in pipe.stdout:
+    if 'close_write' not in line or not line.endswith('data'):
+      continue
+    id = re_id.findall(line)
+    if not id:
+      continue
+      
+    for action in actions.get(id, []):
+      print "Firing event %s" % action
+      action()        
+thread.start_new_thread(monitor, tuple())
 
 def _assertId(id):  #XXX change to assert
   print "ASSERTING", id
@@ -106,14 +122,6 @@ def BaseComponent():
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.add(func)
       actionCollections[func] = actionList
-
-    def _fireEvent(self):
-      import time
-      time.sleep(3)
-
-      for action in actions.get(self._descriptor, []):
-        print "Firing event %s" % action
-        action()
         
     @property
     def name(self):
@@ -165,10 +173,7 @@ def BaseComponent():
       if not os.access(folder, os.F_OK):
         os.makedirs(folder)
       result = pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
-      try:
-        self._fireEvent()
-      except:
-        pass #XXX logging      
+    
       return result
       
     data = property(getData, _selfSetData)   
