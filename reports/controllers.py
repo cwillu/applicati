@@ -353,7 +353,7 @@ class Presentation(object):
 #        response.status=204 #no content
         return
       except Empty:
-        print "bar"
+        print hash
         yield ''
 
 #      response.status=200 #reset content
