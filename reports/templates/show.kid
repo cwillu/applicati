@@ -10,14 +10,26 @@
 
   function init() {
     var request = new XMLHttpRequest(); 
-	  request.open("get", "?op=waitForChange", false); 
+	  request.open("get", "?op=waitForChange", true); 
+    request.onreadystatechange = function() {
+      if (request.readyState == 4) {
+//        if (request.responseText)
+//        {
+//            callbackFunction(request.responseText);
+//        }
+        setTimeout('window.location.reload();', 500)
+        
+      }
+    };
+	  
 	  request.send(null);
 //	  if(request.status == 205){
-      window.history.go(0);
+
 //	  }
   }
   
   function refresh() {
+    
   }
 </script>
 </head>

@@ -103,14 +103,12 @@ def BaseComponent():
     def watch(self, func):
       possible = set()
       actionList = actions.setdefault(self._descriptor, possible)
-      actionList.append(func)
+      actionList.add(func)
       actionCollections[func] = actionList
 
     def _fireEvent(self):
-      action = actions.get(self._descriptor, None)
-      if action:
-        for listener in action:
-          listener()
+      for action in actions.get(self._descriptor, []):
+        action()
 
     @property
     def name(self):
