@@ -9,7 +9,7 @@
   window.addEventListener('load', function() {setTimeout('init()', 10)}, false);
 
   function init() {
-    hash = Math.ceil(Math.random(10000))
+    hash = Math.ceil(Math.random()*10000)
     var request = new XMLHttpRequest(); 
 	  request.open("get", "?op=waitForChange;hash="+hash, true); 
     request.onreadystatechange = function() {
