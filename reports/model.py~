@@ -27,7 +27,7 @@ def monitor():
     for action in actions.get(id, []):
       print "Firing event %s" % action
       action()        
-thread.start_new_thread(monitor, None)
+thread.start_new_thread(monitor, tuple())
 
 def _assertId(id):  #XXX change to assert
   print "ASSERTING", id
