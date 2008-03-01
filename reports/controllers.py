@@ -349,11 +349,10 @@ class Presentation(object):
     obj.watch(action)
     for interval in range(60 * 60):
       try:
-        queue.get(timeout=1)
+        queue.get(timeout=10)
 #        response.status=204 #no content
         return
       except Empty:
-        print hash
         yield ' '
 
 #      response.status=200 #reset content
