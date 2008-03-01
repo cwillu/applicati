@@ -366,7 +366,6 @@ class Presentation(object):
   #      response.status=200 #reset content
     return content()
   waitForChange._cp_config = {'streamResponse': True, 'stream_response': True, 'response.stream': True}
-  cherrypy.config.update({'/thing': {'streamResponse': True}}) 
   
 def blank():
   class Blank(object):
