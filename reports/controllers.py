@@ -361,7 +361,6 @@ class Presentation(object):
       except Empty:
         print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.rfile.rfile.closed]
         yield 'foo'
-    import traceback; traceback.print_stack()
 
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
