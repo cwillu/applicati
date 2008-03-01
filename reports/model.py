@@ -108,12 +108,13 @@ def BaseComponent():
       actionCollections[func] = actionList
 
     def _fireEvent(self):
+      import time
+      time.sleep(3)
+
       for action in actions.get(self._descriptor, []):
         print "Firing event %s" % action
         try:
           thread.start_new_thread(action, tuple())
-          import time
-          time.sleep(1)
         except:
           pass
 

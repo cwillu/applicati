@@ -112,6 +112,8 @@ def BaseComponent():
         print "Firing event %s" % action
         try:
           thread.start_new_thread(action, tuple())
+          import time
+          time.sleep(1)
         except:
           pass
 
