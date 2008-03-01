@@ -110,7 +110,7 @@ def BaseComponent():
       actionCollections[func] = actionList
       
     def _fireWatchEvent(self):
-      actionList = actions.get(self._descriptor, set())
+      actionList = actions.get(self._descriptor, set())      
       for action in actionList:
         print 
         print action
@@ -168,7 +168,7 @@ def BaseComponent():
         os.makedirs(folder)
       result = pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
     
-      self._fireWatchEvent()
+      thread.start_new_thread(self._fireWatchEvent, tuple())
       return result
      
     data = property(getData, _selfSetData)   
