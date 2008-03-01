@@ -40,10 +40,10 @@
     </div>       
   </div>
   <div class="middle">
-    <div id="main_content">
+    <div id="viewer">
       <div class="spacer"> </div>
       <div onClick="document.getElementById('status_block').style.display='none'" id="status_block" class="flash" py:if="value_of('tg_flash', None)" py:content="tg_flash" />
-      <div id="view"><div py:replace="[item.text]+item[:]"/></div>
+      <div py:replace="[item.text]+item[:]"/>  
       <div class="spacer"> </div>
     </div>    <div class="bot"><div class="toolbar"> 
       <div class="left">

@@ -18,15 +18,17 @@
 	    if(request.status == 200){
         original = document.getElementById("view");
   	    replacement = request.responseXML.getElementById("view");
-	      document.getElementById("main_content").replaceChild(original, replacement);
+	      document.getElementById("main_content").replaceChild(replacement, original);
 	    }
 	  }
+  }
+  
+  function refresh() {
   }
 </script>
 </head>
 <body>
-  <div class="main_content">
-    <div id="view" py:replace="XML(data)">Page text goes here.</div>
-  </div>    
+  <div py:replace="XML(data)">Page text goes here.</div>
+
 </body>
 </html>
