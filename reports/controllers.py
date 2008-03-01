@@ -349,7 +349,7 @@ class Presentation(object):
     obj.watch(action)
     try:
       queue.get(timeout=60*60)
-      response.status=200 #no content
+      response.status=204 #no content
     except Empty:
       pass
 #      response.status=200 #reset content

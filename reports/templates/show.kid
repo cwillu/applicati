@@ -12,7 +12,7 @@
     var request = new XMLHttpRequest(); 
 	  request.open("get", "?op=waitForChange", false); 
 	  request.send(null);
-	  if(request.status == 205){
+	  if(request.status == 204){
 	    request.open("get", "?op=show", false); 
 	    request.send(null);	    
 	    if(request.status == 200){
