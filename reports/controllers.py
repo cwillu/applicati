@@ -347,14 +347,16 @@ class Presentation(object):
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
+    import random 
+    index = random.randint(100)
     for interval in range(60*60):
       try:
         queue.get(timeout=1)
-        print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      "
+        print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      " + index
         response.status=204 #no content
         return
       except Empty:
-        print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$      "
+        print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$      "+ index
         pass
 #      response.status=200 #reset content
 
