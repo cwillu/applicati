@@ -19,6 +19,7 @@ def monitor():
   pipe = subprocess.Popen(['inotifywait', '-r', '-e', 'close_write,create', '-m', 'pickles/'], stdout=subprocess.PIPE)
   re_id = re.compile(r'pickles/([^/ ]+)')
   for line in pipe.stdout:
+    print line
     if 'close_write' not in line or not line.endswith('data'):
       continue
     id = re_id.findall(line)
