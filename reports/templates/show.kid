@@ -10,7 +10,7 @@
 
   function init() {
     var request = new XMLHttpRequest(); 
-	  request.open("get", "?op=waitForChange", true); 
+	  request.open("get", "?op=waitForChange", false); 
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
 //        if (request.responseText)
@@ -23,6 +23,7 @@
     };
 	  
 	  request.send(null);
+	  
 //	  if(request.status == 205){
 
 //	  }
