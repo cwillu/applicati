@@ -110,7 +110,7 @@ def BaseComponent():
       actionCollections[func] = actionList
       
     def _fireWatchEvent(self):
-      actionList = actions[self._descriptor]
+      actionList = actions.get(self._descriptor, set())
       for action in actionList:
         print 
         print action
