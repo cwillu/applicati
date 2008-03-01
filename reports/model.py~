@@ -10,6 +10,7 @@ import os
 import subprocess
 
 import weakref
+import re
 
 actions = weakref.WeakValueDictionary()
 actionCollections = weakref.WeakKeyDictionary()
