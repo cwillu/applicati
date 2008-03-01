@@ -111,7 +111,7 @@ def BaseComponent():
       for action in actions.get(self._descriptor, []):
         print "Firing event %s" % action
         try:
-          thread.start_new_thread(action)
+          thread.start_new_thread(action, tuple())
         except:
           pass
 

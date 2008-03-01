@@ -2,6 +2,7 @@ from turbogears.database import PackageHub
 hub = PackageHub('reports')
 __connection__ = hub
 
+import thread
 import cPickle as pickle
 import uuid
 from Crypto.Hash import SHA256
@@ -108,7 +109,11 @@ def BaseComponent():
 
     def _fireEvent(self):
       for action in actions.get(self._descriptor, []):
-        action()
+        print "Firing event %s" % action
+        try:
+          thread.start_new_thread(action)
+        except:
+          pass
 
     @property
     def name(self):
