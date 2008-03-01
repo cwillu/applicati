@@ -364,7 +364,7 @@ class Presentation(object):
           yield 'foo'
   #      response.status=200 #reset content
     return content()
-  waitForChange._cp_config = {'streamResponse': True}
+  waitForChange._cp_config = {'streamResponse': True, 'stream_response': True, 'response.stream': True}
 
 def blank():
   class Blank(object):
