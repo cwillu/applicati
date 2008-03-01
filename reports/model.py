@@ -112,6 +112,9 @@ def BaseComponent():
     def _fireWatchEvent(self):
       actionList = actions[self._descriptor]
       for action in actionList:
+        print 
+        print action
+        print 
         action()
         
     @property
