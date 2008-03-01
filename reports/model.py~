@@ -18,7 +18,7 @@ actionCollections = weakref.WeakKeyDictionary()
 def monitor():
   pipe = subprocess.Popen(['inotifywait', '-r', '-e', 'close_write,create', '-m', 'pickles/'], stdout=subprocess.PIPE)
   re_id = re.compile(r'pickles/([^/ ]+)')
-  for line in pipe.stdout:
+  for line in pipe.communicate()[0]:
     print line
     if 'close_write' not in line or not line.endswith('data'):
       continue
