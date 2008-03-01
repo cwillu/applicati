@@ -350,12 +350,10 @@ class Presentation(object):
     for interval in range(60 * 60):
       try:
         queue.get(timeout=1)
-        print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % [hash, request.rfile.rfile.closed]
 #        response.status=204 #no content
-        yield 'done'
+        yield ''
       except Empty:
-        print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [hash, request.rfile.rfile.closed]
-        yield 'foo'
+        yield ''
 
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}

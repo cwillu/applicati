@@ -9,15 +9,17 @@
   window.addEventListener('load', function() {setTimeout('init()', 10)}, false);
 
   function init() {
+    hash = Math.ceil(Math.random(10000))
     var request = new XMLHttpRequest(); 
-	  request.open("get", "?op=waitForChange", false); 
+	  request.open("get", "?op=waitForChange;hash="+hash, true); 
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
 //        if (request.responseText)
 //        {
 //            callbackFunction(request.responseText);
 //        }
-//        setTimeout('window.location.reload();', 500)
+        window.location.reload();
+        //setTimeout('window.location.reload();', 50)
         
       }
     };
