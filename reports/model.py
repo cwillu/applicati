@@ -15,23 +15,6 @@ import re
 actions = weakref.WeakValueDictionary()
 actionCollections = weakref.WeakKeyDictionary()
 
-def monitor():
-  pipe = subprocess.Popen(['inotifywait', '-r', '-e', 'close_write,create', '-m', 'pickles/'], stdout=subprocess.PIPE)
-  re_id = re.compile(r'pickles/([^/ ]+)')
-  for line in pipe.communicate()[0]:
-    print line
-    if 'close_write' not in line or not line.endswith('data'):
-      continue
-    id = re_id.findall(line)
-    if not id:
-      continue
-    
-    print "Potential action (%s)" % id
-    for action in actions.get(id, []):
-      print "Firing event %s" % action
-      action()        
-thread.start_new_thread(monitor, tuple())
-
 def _assertId(id):  #XXX change to assert
   print "ASSERTING", id
   if not isinstance(id, tuple) or id == (1, ): 
@@ -125,6 +108,11 @@ def BaseComponent():
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.add(func)
       actionCollections[func] = actionList
+      
+    def _fireWatchEvent(self):
+      actionList = actions[self._descriptor]
+      for action in actionList:
+        action()
         
     @property
     def name(self):
@@ -177,8 +165,9 @@ def BaseComponent():
         os.makedirs(folder)
       result = pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
     
+      self._fireWatchEvent()
       return result
-      
+     
     data = property(getData, _selfSetData)   
     
     def _filename(self, selector="data", id=None):
