@@ -349,7 +349,7 @@ class Presentation(object):
     obj.watch(action)
     import random 
     index = random.randrange(10000)
-    for interval in range(5):
+    for interval in range(60 * 60):
       try:
         queue.get(timeout=1)
         print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % [index, request.rfile.rfile.closed]
