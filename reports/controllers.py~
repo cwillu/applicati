@@ -347,26 +347,24 @@ class Presentation(object):
 
 
   def waitForChange(self, obj, path):
-    response.stream = True
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
     import random 
     index = random.randrange(10000)
-    def content():
-      for interval in range(5):
-        try:
-          queue.get(timeout=1)
-          print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % [index, request.rfile.rfile.closed]
-  #        response.status=204 #no content
-          yield 'done'
-        except Empty:
-          print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.rfile.rfile.closed]
-          yield 'foo'
-  #      response.status=200 #reset content
-    return content()
-  waitForChange._cp_config = {'streamResponse': True, 'stream_response': True, 'response.stream': True}
-  
+    for interval in range(60*60):
+      try:
+        queue.get(timeout=1)
+        print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % [index, request.rfile.rfile.closed]
+#        response.status=204 #no content
+        yield 'done'
+      except Empty:
+        print dir(request.wfile)
+        print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.rfile.rfile.closed]
+        yield 'foo'
+#      response.status=200 #reset content
+  waitForChange._cp_config = {'response.stream': True}
+
 def blank():
   class Blank(object):
     def show(self, meta, prefix=None):

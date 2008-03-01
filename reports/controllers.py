@@ -359,7 +359,6 @@ class Presentation(object):
 #        response.status=204 #no content
         yield 'done'
       except Empty:
-        print dir(request.wfile)
         print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.rfile.rfile.closed]
         yield 'foo'
 #      response.status=200 #reset content
