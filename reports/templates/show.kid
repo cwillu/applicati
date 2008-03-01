@@ -12,15 +12,9 @@
     var request = new XMLHttpRequest(); 
 	  request.open("get", "?op=waitForChange", false); 
 	  request.send(null);
-	  if(request.status == 204){
-	    request.open("get", "?op=show", false); 
-	    request.send(null);	    
-	    if(request.status == 200){
-        original = document.getElementByClass("document")[0];
-  	    replacement = request.responseXML.getElementByClass("document")[0];
-	      document.getElementById("viewer").replaceChild(replacement, original);
-	    }
-	  }
+//	  if(request.status == 205){
+      window.history.go(0);
+//	  }
   }
   
   function refresh() {
