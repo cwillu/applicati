@@ -23,7 +23,8 @@ def monitor():
     id = re_id.findall(line)
     if not id:
       continue
-      
+    
+    print "Potential action (%s)" % id
     for action in actions.get(id, []):
       print "Firing event %s" % action
       action()        
