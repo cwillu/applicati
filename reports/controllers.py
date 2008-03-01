@@ -343,23 +343,29 @@ class Presentation(object):
     obj.changePermission(link, permission, value)
     redirectToShow(path)    
 
+
+
+
   def waitForChange(self, obj, path):
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
     import random 
     index = random.randrange(10000)
-    for interval in range(60*60):
-      try:
-        queue.get(timeout=1)
-        print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % [index, request.rfile.rfile.closed]
-#        response.status=204 #no content
-        yield 'done'
-      except Empty:
-        print dir(response.wfile)
-        print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.rfile.rfile.closed]
-        yield 'foo'
-#      response.status=200 #reset content
+    def content():
+      for interval in range(60*60):
+        try:
+          queue.get(timeout=1)
+          print "     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     %s " % [index, request.rfile.rfile.closed]
+  #        response.status=204 #no content
+          yield 'done'
+        except Empty:
+          print dir(response.wfile)
+          print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.rfile.rfile.closed]
+          yield 'foo'
+  #      response.status=200 #reset content
+    return content()
+  waitForChange._cp_config = {'response.stream': True}
 
 def blank():
   class Blank(object):
