@@ -356,7 +356,7 @@ class Presentation(object):
         response.status=204 #no content
         return
       except Empty:
-        print dir(request.rfile)
+        print dir(request.rfile.rfile)
         print "     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$     %s " % [index, request.closed]
         pass
 #      response.status=200 #reset content
