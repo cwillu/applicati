@@ -353,7 +353,7 @@ class Presentation(object):
 #        response.status=204 #no content
         return
       except Empty:
-        yield ' '
+        yield ''
 
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
