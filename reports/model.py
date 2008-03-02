@@ -103,13 +103,15 @@ def BaseComponent():
       if not self._query(op):
         raise PermissionError(op, self.permissions)
 
-    def watch(self, func):
+    def watch(self, func):      
       possible = set()
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.add(func)
       actionCollections[func] = actionList
+      print len(actionCollections), len(actionList)
       
     def _fireWatchEvent(self):
+      print len(actionCollections), len(actionList)
       actionList = actions.get(self._descriptor, set())      
       for action in actionList:
         print 
