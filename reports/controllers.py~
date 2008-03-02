@@ -362,8 +362,6 @@ class Presentation(object):
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
 
-def stream(queue):  
-
 def blank():
   class Blank(object):
     def show(self, meta, prefix=None):
