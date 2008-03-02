@@ -349,11 +349,18 @@ class Presentation(object):
     action = lambda: queue.put(True)
     obj.watch(action)
     try:
+      yield '<!DOCTYPE html>\n'
       for interval in range(60 * 60):
         try:
           queue.get(timeout=2)
       #        response.status=204 #no content
-          yield '!'
+          yield  '''<html xmlns="http://www.w3.org/1999/xhtml"
+                  xmlns:py="http://purl.org/kid/ns#">
+            <head><script language="javascript">
+            window.parent.location.reload()
+            </script></head><body></body></html>          
+          '''
+#          yield '!'
           return
         except Empty:
           print hash
