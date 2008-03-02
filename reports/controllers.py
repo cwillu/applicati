@@ -173,7 +173,7 @@ class Wrapper(object):
     self.write = page.write
     self.links = page.links
     self.watch = page.watch
-    self.removeWatch = page.removeWatch
+#    self.removeWatch = page.removeWatch
     self.changePermission = page.changePermission
     self.permissions = page.permissions
         
