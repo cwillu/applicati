@@ -354,7 +354,6 @@ class Presentation(object):
         yield 'Yay'
         return
       except Empty:
-        print hash
         yield ' '  # requires patch to cherrypy
 
 #      response.status=200 #reset content
