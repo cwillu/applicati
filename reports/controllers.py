@@ -348,10 +348,10 @@ class Presentation(object):
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
-    try:  
-      return stream(queue)
-    finally:
-      obj.removeWatch(action)
+#    try:  
+    return stream(queue)
+#    finally:
+#      obj.removeWatch(action)
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
 
