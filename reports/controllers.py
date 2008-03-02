@@ -344,9 +344,10 @@ class Presentation(object):
     obj.changePermission(link, permission, value)
     redirectToShow(path)    
 
+  counter=0
   def waitForChange(self, obj, path, hash=None):
-    import random
-    hash=randrange(1, 100)
+    self.counter+=1
+    hash = self.counter
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
