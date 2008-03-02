@@ -308,7 +308,7 @@ def findPresentation(obj):
 def redirectToShow(path):
   raise redirect("/%s/?op=show" % '/'.join(path))
 
-counter=[0]
+
 class Presentation(object):
   def __getattr__(self, operation):
     if operation in ['retrieve_css', 'retrieve_javascript']:  #Turbogears junk
@@ -345,10 +345,7 @@ class Presentation(object):
     obj.changePermission(link, permission, value)
     redirectToShow(path)    
 
-
   def waitForChange(self, obj, path, hash=None):
-    counter[0]+=1
-    hash = counter[0]
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
@@ -356,15 +353,13 @@ class Presentation(object):
 #      yield '<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">\n'
       for interval in range(60 * 60):
         try:
-          queue.get(timeout=2)
+          queue.get(timeout=30)
       #        response.status=204 #no content
 #          yield  '''
 #            <body onLoad="window.parent.location.reload()"></body></html>          
 #          '''
-          yield '!'
           return
         except Empty:
-          print hash
           yield ' '  # requires patch to cherrypy
     finally:
       obj.removeWatch(action)
