@@ -35,7 +35,7 @@
   }
 
   window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
-  window.addEventListener('leave', function() {request.abort()}, false);  
+  window.addEventListener('unload', function() {request.abort()}, true);  
 </script>
 </head>
 <body>

@@ -10,7 +10,7 @@
 
   function monitor() {
     var hash = Math.ceil(Math.random()*10000)
-    var request = new XMLHttpRequest(); 
+    request = new XMLHttpRequest(); 
     var loc = window.location
 	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
     
@@ -35,6 +35,7 @@
   }
 
   window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
+  window.addEventListener('unload', function() {request.abort()}, false);  
 </script>
 </head>
 <body>
