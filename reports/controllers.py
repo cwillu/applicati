@@ -345,6 +345,8 @@ class Presentation(object):
     redirectToShow(path)    
 
   def waitForChange(self, obj, path, hash=None):
+    import random
+    hash=randrange(1, 100)
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
