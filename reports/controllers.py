@@ -351,11 +351,12 @@ class Presentation(object):
     try:  
       for interval in range(60 * 60):
         try:
-          queue.get(timeout=10)
+          queue.get(timeout=2)
       #        response.status=204 #no content
           yield 'Yay'
           return
         except Empty:
+          print hash
           yield ' '  # requires patch to cherrypy
     finally:
       pass

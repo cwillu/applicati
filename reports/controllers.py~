@@ -358,7 +358,8 @@ class Presentation(object):
         except Empty:
           yield ' '  # requires patch to cherrypy
     finally:
-      obj.removeWatch(action)
+      pass
+  #    obj.removeWatch(action)
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
 
