@@ -9,21 +9,32 @@
   //window.addEventListener('load', init(), false);
 
   function monitor() {
-    var f = document.createElement('iframe');
-    f.setAttribute('id', 'monitor');
-    f.style.border='0px';
-    f.style.width='0px';
-    f.style.height='0px';
-    f = document.body.appendChild(f);
+    var hash = Math.ceil(Math.random()*10000)
+    var request = new XMLHttpRequest(); 
+    var loc = window.location
+	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
     
-    f.contentDocument.location.replace("?op=waitForChange");
-    return true;
+    request.onreadystatechange = function() {
+      if (request.readyState == 4) {
+  //      if (request.responseText.lastindexof("!", request.responseText.length-100)>=0){
+          loc.reload();
+        //}
+
+        //
+        //{
+        //    callbackFunction(request.responseText);
+        //}
+        //setTimeout('window.location.reload();', 50)        
+      }
+    };	  
+	  request.send(null);
+    
 //	  if(request.status == 205){
 
 //	  }
   }
 
-  window.addEventListener('load', function() {setTimeout('monitor()', 10); return true;}, false);
+  window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
 </script>
 </head>
 <body>
