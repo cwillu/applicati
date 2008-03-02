@@ -23,7 +23,7 @@
 //	  }
   }
 
-  window.addEventListener('load', function() {setTimeout('monitor()', 10);}, false);
+  window.addEventListener('load', function() {setTimeout('monitor()', 10); return false;}, false);
 </script>
 </head>
 <body>
