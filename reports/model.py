@@ -112,7 +112,10 @@ def BaseComponent():
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.add(func)
       actionCollections[func] = actionList
+      for a in actionCollections: pass
+      for a in actionList: pass
       print len(actionCollections), len(actionList)
+      
 
     def removeWatch(self, func):
       actionCollections.pop(func, None)
