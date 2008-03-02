@@ -352,7 +352,7 @@ class Presentation(object):
       try:
         queue.get(timeout=2)
     #        response.status=204 #no content
-        yield 'Yay'
+        yield '!'
         return
       except Empty:
         print hash
