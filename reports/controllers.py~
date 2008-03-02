@@ -308,6 +308,7 @@ def findPresentation(obj):
 def redirectToShow(path):
   raise redirect("/%s/?op=show" % '/'.join(path))
 
+counter=[0]
 class Presentation(object):
   def __getattr__(self, operation):
     if operation in ['retrieve_css', 'retrieve_javascript']:  #Turbogears junk
@@ -344,10 +345,10 @@ class Presentation(object):
     obj.changePermission(link, permission, value)
     redirectToShow(path)    
 
-  counter=0
+
   def waitForChange(self, obj, path, hash=None):
-    self.counter+=1
-    hash = self.counter
+    self.counter[0]+=1
+    hash = self.counter[0]
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
