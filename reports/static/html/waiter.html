@@ -11,9 +11,13 @@
     var request = new XMLHttpRequest(); 
     var loc = window.parent.location
 	  request.open("get", loc.pathname + "?op=waitForChange;hash=" + hash, true); 
-    request.onreadystatechange = function() {
+    request.onload = function() {
+      loc.reload();	  
+    };
+    
+/*    request.onreadystatechange = function() {
       if (request.readyState == 4) {
-        if (request.responseText){
+        if (request.responseText.){
           loc.reload();	  
         }
         //
@@ -22,7 +26,7 @@
         //}
         //setTimeout('window.location.reload();', 50)        
       }
-    };	  
+    };	  */
 	  request.send(null);
     
 //	  if(request.status == 205){

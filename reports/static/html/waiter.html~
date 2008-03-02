@@ -13,8 +13,10 @@
 	  request.open("get", loc.pathname + "?op=waitForChange;hash=" + hash, true); 
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
-        loc.reload();	  
-        //if (request.responseText)
+        if (request.responseText){
+          loc.reload();	  
+        }
+        //
         //{
         //    callbackFunction(request.responseText);
         //}
