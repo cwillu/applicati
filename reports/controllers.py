@@ -357,7 +357,7 @@ class Presentation(object):
           return
         except Empty:
           print hash
-          yield ' '  # requires patch to cherrypy
+          yield '!'  # requires patch to cherrypy
     finally:
       assert False
       obj.removeWatch(action)
