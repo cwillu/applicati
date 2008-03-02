@@ -104,24 +104,15 @@ def BaseComponent():
         raise PermissionError(op, self.permissions)
 
     def watch(self, func):      
-      '''
-        actions = weakref.WeakValueDictionary()
-        actionCollections = weakref.WeakKeyDictionary()
-      '''
       possible = set()
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.add(func)
       actionCollections[func] = actionList
       print len(actionCollections), len(actionList)
-      
 
-#    def removeWatch(self, func):
-#      actionCollections.pop(func, None)
-#      for actionsList in actions.get(self._descriptor, set()):
-#        actionList.discard(func)      
       
     def _fireWatchEvent(self):
-      print len(actionCollections), len(actionList)
+      print len(actionCollections), len(actions)
       actionList = actions.get(self._descriptor, set())      
       for action in actionList:
         print 
