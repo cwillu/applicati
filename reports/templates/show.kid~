@@ -6,13 +6,12 @@
 <title> ${name} - NeoWiki </title>
 <script language="javascript">
 
-  window.addEventListener('load', init(), false);
-  //window.addEventListener('load', function() {setTimeout('init()', 10)}, false);
+  //window.addEventListener('load', init(), false);
 
-  function init() {
+  function monitor() {
     hash = Math.ceil(Math.random()*10000)
     var request = new XMLHttpRequest(); 
-	  request.open("get", "?op=waitForChange;hash="+hash, false); 
+	  request.open("get", "?op=waitForChange;hash="+hash, true); 
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
 //        if (request.responseText)
@@ -26,18 +25,22 @@
     };
 	  
 	  request.send(null);
-    window.location.reload();	  
+//    window.location.reload();	  
 //	  if(request.status == 205){
 
 //	  }
   }
   
-  function refresh() {
-    
-  }
+  window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
 </script>
 </head>
 <body>
+  <iframe>
+  <body>
+    test
+  </body>
+  </iframe>
+
   <div py:replace="XML(data)">Page text goes here.</div>
 
 </body>

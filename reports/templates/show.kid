@@ -7,9 +7,8 @@
 <script language="javascript">
 
   //window.addEventListener('load', init(), false);
-  window.addEventListener('load', function() {setTimeout('init()', 10)}, false);
 
-  function init() {
+  function monitor() {
     hash = Math.ceil(Math.random()*10000)
     var request = new XMLHttpRequest(); 
 	  request.open("get", "?op=waitForChange;hash="+hash, false); 
@@ -32,12 +31,16 @@
 //	  }
   }
   
-  function refresh() {
-    
-  }
+  window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
 </script>
 </head>
 <body>
+  <iframe>
+  <body>
+    test
+  </body>
+  </iframe>
+
   <div py:replace="XML(data)">Page text goes here.</div>
 
 </body>
