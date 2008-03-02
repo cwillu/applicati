@@ -116,6 +116,7 @@ def BaseComponent():
       
 
     def removeWatch(self, func):
+      return
       actionCollections.pop(func, None)
       for actionsList in actions.get(self._descriptor, set()):
         actionList.discard(func)      

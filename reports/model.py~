@@ -21,7 +21,7 @@ def _assertId(id):  #XXX change to assert
     assert len(str(id)) > 10 or id == '1' or id == (1, ), (id, type(id)) #XXX fix root id
 #    assert False, "WARNING: old-style descriptor in use: %s (%s)" % (id, type(id))
     print "WARNING: old-style descriptor in use: %s (%s)" % (id, type(id))
-    return 
+    return (id, )
   return id
 
 def resolveComponent(name):
