@@ -9,21 +9,25 @@
   //window.addEventListener('load', init(), false);
 
   function monitor() {
-    document.monitor.src="?op=waitForChange" 
+    var f = document.createElement('iframe');
+    f.setAttribute('id', 'monitor');
+    f.style.border='0px';
+    f.style.width='0px';
+    f.style.height='0px';
+    f = document.body.appendChild(f);
     
+    f.contentDocument.location.replace("?op=waitForChange");
+    return false;
 //	  if(request.status == 205){
 
 //	  }
   }
 
-  window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
+  window.addEventListener('load', function() {setTimeout('monitor()', 10); return false;}, false);
 </script>
 </head>
 <body>
   <!--<iframe src="/static/html/waiter.html" style="width:0px; height:0px; border: 0px" />-->
-  <iframe name="monitor" style="width:0px; height:0px; border: 0px" />
-
-
   <div py:replace="XML(data)">Page text goes here.</div>
 
 </body>

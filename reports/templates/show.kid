@@ -23,13 +23,11 @@
 //	  }
   }
 
-  window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
+  window.addEventListener('load', function() {setTimeout('monitor()', 10);}, false);
 </script>
 </head>
 <body>
   <!--<iframe src="/static/html/waiter.html" style="width:0px; height:0px; border: 0px" />-->
-  <iframe name="monitor" style="width:0px; height:0px; border: 0px" />
-
 
   <div py:replace="XML(data)">Page text goes here.</div>
 
