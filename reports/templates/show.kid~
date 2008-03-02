@@ -11,7 +11,7 @@
   function monitor() {
     hash = Math.ceil(Math.random()*10000)
     var request = new XMLHttpRequest(); 
-	  request.open("get", "?op=waitForChange;hash="+hash, true); 
+	  request.open("get", "?op=waitForChange;hash="+hash, false); 
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
 //        if (request.responseText)
@@ -25,7 +25,7 @@
     };
 	  
 	  request.send(null);
-//    window.location.reload();	  
+    window.location.reload();	  
 //	  if(request.status == 205){
 
 //	  }

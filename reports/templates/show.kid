@@ -12,17 +12,17 @@
     hash = Math.ceil(Math.random()*10000)
     var request = new XMLHttpRequest(); 
 	  request.open("get", "?op=waitForChange;hash="+hash, false); 
-    request.onreadystatechange = function() {
-      if (request.readyState == 4) {
+//    request.onreadystatechange = function() {
+//      if (request.readyState == 4) {
 //        if (request.responseText)
 //        {
 //            callbackFunction(request.responseText);
 //        }
-        window.location.reload();
-        //setTimeout('window.location.reload();', 50)
-        
-      }
-    };
+//        window.location.reload();
+//        //setTimeout('window.location.reload();', 50)
+//        
+//      }
+//    };
 	  
 	  request.send(null);
     window.location.reload();	  
