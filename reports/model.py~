@@ -115,11 +115,10 @@ def BaseComponent():
       print len(actionCollections), len(actionList)
       
 
-    def removeWatch(self, func):
-      return
-      actionCollections.pop(func, None)
-      for actionsList in actions.get(self._descriptor, set()):
-        actionList.discard(func)      
+#    def removeWatch(self, func):
+#      actionCollections.pop(func, None)
+#      for actionsList in actions.get(self._descriptor, set()):
+#        actionList.discard(func)      
       
     def _fireWatchEvent(self):
       print len(actionCollections), len(actionList)
