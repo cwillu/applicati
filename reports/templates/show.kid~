@@ -17,13 +17,13 @@
     f = document.body.appendChild(f);
     
     f.contentDocument.location.replace("?op=waitForChange");
-    return false;
+    return true;
 //	  if(request.status == 205){
 
 //	  }
   }
 
-  window.addEventListener('load', function() {setTimeout('monitor()', 10); return false;}, false);
+  window.addEventListener('load', function() {setTimeout('monitor()', 10); return true;}, false);
 </script>
 </head>
 <body>

@@ -348,7 +348,7 @@ class Presentation(object):
 
   def waitForChange(self, obj, path, hash=None):
     counter[0]+=1
-    hash = self.counter[0]
+    hash = counter[0]
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
