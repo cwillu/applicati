@@ -348,18 +348,16 @@ class Presentation(object):
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
-    try:  
-      for interval in range(60 * 60):
-        try:
-          queue.get(timeout=2)
-      #        response.status=204 #no content
-          yield 'Yay'
-          return
-        except Empty:
-          print hash
-          yield ' '  # requires patch to cherrypy
-    finally:
-      pass
+    for interval in range(60 * 60):
+      try:
+        queue.get(timeout=2)
+    #        response.status=204 #no content
+        yield 'Yay'
+        return
+      except Empty:
+        print hash
+        yield ' '  # requires patch to cherrypy
+
   #    obj.removeWatch(action)
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
