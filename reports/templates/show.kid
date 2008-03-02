@@ -13,29 +13,18 @@
     request = new XMLHttpRequest(); 
     var loc = window.location
 	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
-    
-    request.onreadystatechange = function() {
-      if (request.readyState == 4) {
-  //      if (request.responseText.lastindexof("!", request.responseText.length-100)>=0){
-          loc.reload();
-        //}
-
-        //
-        //{
-        //    callbackFunction(request.responseText);
-        //}
-        //setTimeout('window.location.reload();', 50)        
-      }
-    };	  
+    function onError(e) {
+    }   
+    function onLoad(e) {
+      loc.reload();
+    }       
+    request.onerror = onError
+    request.onload = onLoad
+ 
 	  request.send(null);
-    
-//	  if(request.status == 205){
-
-//	  }
   }
 
   window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
-  window.addEventListener('unload', function() {request.abort()}, true);  
 </script>
 </head>
 <body>

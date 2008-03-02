@@ -367,7 +367,6 @@ class Presentation(object):
           print hash
           yield ' '  # requires patch to cherrypy
     finally:
-      assert False
       obj.removeWatch(action)
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
