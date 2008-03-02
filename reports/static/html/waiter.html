@@ -15,8 +15,9 @@
     request.onreadystatechange = function() {
       if (request.readyState == 4) {
         if (request.responseText.charAt(request.responseText.length-1)=="!"){
-          loc.reload();	  
         }
+        loc.reload();
+
         //
         //{
         //    callbackFunction(request.responseText);
