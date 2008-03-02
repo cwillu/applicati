@@ -9,8 +9,15 @@
   //window.addEventListener('load', init(), false);
 
   function monitor() {
-    document.monitor.src="?op=waitForChange" 
+    var f = document.createElement('iframe');
+    f.setAttribute('id', 'monitor');
+    f.style.border='0px';
+    f.style.width='0px';
+    f.style.height='0px';
+    f = document.body.appendChild(f);
     
+    f.contentDocument.location.replace("?op=waitForChange");
+    return false;
 //	  if(request.status == 205){
 
 //	  }
