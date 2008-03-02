@@ -173,6 +173,7 @@ class Wrapper(object):
     self.write = page.write
     self.links = page.links
     self.watch = page.watch
+    self.removeWatch = page.removeWatch
     self.changePermission = page.changePermission
     self.permissions = page.permissions
         
@@ -347,15 +348,17 @@ class Presentation(object):
     queue = Queue()
     action = lambda: queue.put(True)
     obj.watch(action)
-    for interval in range(60 * 60):
-      try:
-        queue.get(timeout=10)
-#        response.status=204 #no content
-        yield 'Yay'
-        return
-      except Empty:
-        yield ' '  # requires patch to cherrypy
-
+    try:  
+      for interval in range(60 * 60):
+        try:
+          queue.get(timeout=10)
+  #        response.status=204 #no content
+          yield 'Yay'
+          return
+        except Empty:
+          yield ' '  # requires patch to cherrypy
+    finally:
+      obj.removeWatch(action)
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
 
