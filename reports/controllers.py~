@@ -351,9 +351,10 @@ class Presentation(object):
       try:
         queue.get(timeout=10)
 #        response.status=204 #no content
+        yield 'Yay'
         return
       except Empty:
-        yield ''
+        yield ''  # requires patch to cherrypy
 
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
