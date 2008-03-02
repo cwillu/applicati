@@ -355,7 +355,7 @@ class Presentation(object):
         return
       except Empty:
         print hash
-        yield ''  # requires patch to cherrypy
+        yield ' '  # requires patch to cherrypy
 
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
