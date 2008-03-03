@@ -251,6 +251,8 @@ class Root(controllers.RootController):
       flash('''%s permission denied''' % (err.args[0].title(), ))
 
       aBlank = blank()
+      if not meta:
+        meta = None
       return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)
  
   def find(self, path, args):
@@ -353,7 +355,7 @@ class Presentation(object):
 #      yield '<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">\n'
       for interval in range(60 * 60):
         try:
-          queue.get(timeout=30)
+          queue.get(timeout=5)
       #        response.status=204 #no content
 #          yield  '''
 #            <body onLoad="window.parent.location.reload()"></body></html>          

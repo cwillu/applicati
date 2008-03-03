@@ -14,20 +14,14 @@
     var loc = window.location
 	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
     function onError(e) {
-//      alert("Error " + e.target.status + " occurred while receiving the document.");
     }   
     function onLoad(e) {
       loc.reload();
-//      alert("Load " + e.target.status + " occurred while receiving the document.");
     }       
     request.onerror = onError
     request.onload = onLoad
  
 	  request.send(null);
-    
-//	  if(request.status == 205){
-
-//	  }
   }
 
   window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);

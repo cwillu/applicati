@@ -223,6 +223,7 @@ class Root(controllers.RootController):
     print "<%s>" % '/'.join(path), args
     op = args.pop('op', '')
     try:
+      meta = None
       meta, obj = self.find(path, args)           
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
