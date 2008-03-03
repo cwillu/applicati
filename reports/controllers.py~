@@ -223,6 +223,7 @@ class Root(controllers.RootController):
     print "<%s>" % '/'.join(path), args
     op = args.pop('op', '')
     try:
+      meta = None
       meta, obj = self.find(path, args)           
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
@@ -251,8 +252,6 @@ class Root(controllers.RootController):
       flash('''%s permission denied''' % (err.args[0].title(), ))
 
       aBlank = blank()
-      if not meta:
-        meta = None
       return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)
  
   def find(self, path, args):
