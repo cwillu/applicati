@@ -167,9 +167,11 @@ def findPage(root, path, find=tuple(), onNew=None):
 
 
 class Wrapper(object):
-  def __init__(self, data, page):
+  def __init__(self, data, page):    
     self._data = data
     self.page = page
+    if not page:
+      return
     self.write = page.write
     self.links = page.links
     self.watch = page.watch
@@ -222,8 +224,9 @@ class Root(controllers.RootController):
   def dispatch(self, path, args):
     print "<%s>" % '/'.join(path), args
     op = args.pop('op', '')
-    meta, obj = self.find(path, args)           
     try:
+      meta = None  
+      meta, obj = self.find(path, args)           
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
             

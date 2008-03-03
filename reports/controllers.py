@@ -371,7 +371,7 @@ class Presentation(object):
 
 def blank():
   class Blank(object):
-    def show(self, meta, prefix=None):
+    def show(self, meta, formatted=None, prefix=None):
       return ''
       '''    @expose(template="reports.templates.show")
     def blank(self, *args, **kargs):
