@@ -222,9 +222,8 @@ class Root(controllers.RootController):
   def dispatch(self, path, args):
     print "<%s>" % '/'.join(path), args
     op = args.pop('op', '')
+    meta, obj = self.find(path, args)           
     try:
-      meta = None
-      meta, obj = self.find(path, args)           
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
             
