@@ -12,7 +12,7 @@
     var hash = Math.ceil(Math.random()*10000)
     request = new XMLHttpRequest(); 
     var loc = window.location
-	  request.open("get", "?op=waitForChange;hash=" + hash, false); 
+	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
     function onError(e) {
     }   
     function onLoad(e) {
