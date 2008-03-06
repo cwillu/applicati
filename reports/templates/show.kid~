@@ -12,7 +12,7 @@
     var hash = Math.ceil(Math.random()*10000)
     request = new XMLHttpRequest(); 
     var loc = window.location
-	  request.open("get", "?op=waitForChange;hash=" + hash, false); 
+	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
     function onError(e) {
     }   
     function onLoad(e) {
@@ -31,6 +31,13 @@
   <!--<iframe src="/static/html/waiter.html" style="width:0px; height:0px; border: 0px" />-->
 
   <div py:replace="XML(data)">Page text goes here.</div>
+
+  <div  style="border: 1px solid #000;">
+  <span class="right" style="width: 25%;">foo2</span>
+  <span class="right" style="width: 25%;">foo3</span>
+  <span class="right" style="width: 25%;">foo4</span>
+  <span class="right" style="width: 25%;">foo5</span>
+  </div>
 
 </body>
 </html>
