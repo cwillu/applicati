@@ -4,10 +4,33 @@
       py:extends="'master.kid'">
 <head>
 <title> ${name} - NeoWiki </title>
+<script language="javascript">
+
+  //window.addEventListener('load', init(), false);
+
+  function monitor() {
+    var hash = Math.ceil(Math.random()*10000)
+    request = new XMLHttpRequest(); 
+    var loc = window.location
+	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
+    function onError(e) {
+    }   
+    function onLoad(e) {
+      loc.reload();
+    }       
+    request.onerror = onError
+    request.onload = onLoad
+ 
+	  request.send(null);
+  }
+
+  window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
+</script>
 </head>
 <body>
-  <div class="main_content">
-    <div py:replace="XML(data)">Page text goes here.</div>
-  </div>    
+  <!--<iframe src="/static/html/waiter.html" style="width:0px; height:0px; border: 0px" />-->
+
+  <div py:replace="XML(data)">Page text goes here.</div>
+
 </body>
 </html>

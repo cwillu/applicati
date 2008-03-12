@@ -1,4 +1,18 @@
 import os, sys
+from Crypto.Cipher import Blowfish as blowfish
+from sha import sha
+from os import urandom as random
+import xml.dom.minidom as dom
+import re
+from Queue import Queue, Empty
+
+from turbogears import controllers, url, expose, flash, redirect
+from cherrypy import session, request, response
+from turbogears.toolbox.catwalk import CatWalk
+from docutils.core import publish_parts
+from pydoc import html
+
+import model as db
 
 print '\n' + "-" * 40 + '\n'
 if not os.fork():
@@ -7,24 +21,6 @@ if not os.fork():
   os.system('git commit -a -m "$(date)"')
   sys.exit(0)
 
-from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response
-from turbogears.toolbox.catwalk import CatWalk
-
-from Crypto.Cipher import Blowfish as blowfish
-
-from sha import sha
-
-import model as db
-
-from docutils.core import publish_parts
-from pydoc import html
-
-from os import urandom as random
-
-import xml.dom.minidom as dom
-
-import re
 
 # import logging
 # log = logging.getLogger("reports.controllers")
@@ -171,11 +167,15 @@ def findPage(root, path, find=tuple(), onNew=None):
 
 
 class Wrapper(object):
-  def __init__(self, data, page):
+  def __init__(self, data, page):    
     self._data = data
     self.page = page
+    if not page:
+      return
     self.write = page.write
     self.links = page.links
+    self.watch = page.watch
+    self.removeWatch = page.removeWatch
     self.changePermission = page.changePermission
     self.permissions = page.permissions
         
@@ -225,6 +225,7 @@ class Root(controllers.RootController):
     print "<%s>" % '/'.join(path), args
     op = args.pop('op', '')
     try:
+      meta = None  
       meta, obj = self.find(path, args)           
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
@@ -310,6 +311,7 @@ def findPresentation(obj):
 def redirectToShow(path):
   raise redirect("/%s/?op=show" % '/'.join(path))
 
+
 class Presentation(object):
   def __getattr__(self, operation):
     if operation in ['retrieve_css', 'retrieve_javascript']:  #Turbogears junk
@@ -346,9 +348,30 @@ class Presentation(object):
     obj.changePermission(link, permission, value)
     redirectToShow(path)    
 
+  def waitForChange(self, obj, path, hash=None):
+    queue = Queue()
+    action = lambda: queue.put(True)
+    obj.watch(action)
+    try:
+#      yield '<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">\n'
+      for interval in range(60 * 60):
+        try:
+          queue.get(timeout=5)
+      #        response.status=204 #no content
+#          yield  '''
+#            <body onLoad="window.parent.location.reload()"></body></html>          
+#          '''
+          return
+        except Empty:
+          yield ' '  # requires patch to cherrypy
+    finally:
+      obj.removeWatch(action)
+#      response.status=200 #reset content
+  waitForChange._cp_config = {'response.stream': True}
+
 def blank():
   class Blank(object):
-    def show(self, meta, prefix=None):
+    def show(self, meta, formatted=None, prefix=None):
       return ''
       '''    @expose(template="reports.templates.show")
     def blank(self, *args, **kargs):
@@ -546,10 +569,6 @@ class Wiki(object):
       inlineObject = meta.data
       presentation = Presentation()
       content = inlineObject.show(meta, prefix=prefix + extension) #XXX tuples, not list            
-      print content
-      print dom.parseString(content).getElementsByTagName('body')[0].toxml()
-      return "<i>test</i>"
-
       return dom.parseString(content).getElementsByTagName('body')[0].toxml()
         
 #      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
@@ -717,8 +736,6 @@ class Raw(object):
   def __init__(self, data=''):
     self.data = data
     self.links = {}
-    
-    Presentation.__init__(self)
 
   def show(self, page, prefix=None, formatted=True):
     if not formatted or not self.data:

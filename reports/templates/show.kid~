@@ -3,14 +3,41 @@
       xmlns:py="http://purl.org/kid/ns#"
       py:extends="'master.kid'">
 <head>
-<meta content="text/html; charset=utf-8"
-      http-equiv="Content-Type" >
-      </meta>
 <title> ${name} - NeoWiki </title>
+<script language="javascript">
+
+  //window.addEventListener('load', init(), false);
+
+  function monitor() {
+    var hash = Math.ceil(Math.random()*10000)
+    request = new XMLHttpRequest(); 
+    var loc = window.location
+	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
+    function onError(e) {
+    }   
+    function onLoad(e) {
+      loc.reload();
+    }       
+    request.onerror = onError
+    request.onload = onLoad
+ 
+	  request.send(null);
+  }
+
+  window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
+</script>
 </head>
 <body>
-  <div class="main_content">
-    <div py:replace="XML(data)">Page text goes here.</div>
-  </div>    
+  <!--<iframe src="/static/html/waiter.html" style="width:0px; height:0px; border: 0px" />-->
+
+  <div py:replace="XML(data)">Page text goes here.</div>
+
+  <div  style="border: 1px solid #000;">
+  <span class="right" style="width: 25%;">foo2</span>
+  <span class="right" style="width: 25%;">foo3</span>
+  <span class="right" style="width: 25%;">foo4</span>
+  <span class="right" style="width: 25%;">foo5</span>
+  </div>
+
 </body>
 </html>

@@ -79,13 +79,13 @@ a.link, a, a.active {
   height: auto;
 }
 
-#viewer {
+#main_content {
   font-size: 105%;
   margin: 0 0 0 15px;
   padding: 15px 15px;
 }
 
-#viewer .spacer {
+#main_content .spacer {
   padding: 17px;
 }
 

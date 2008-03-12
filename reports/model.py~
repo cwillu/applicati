@@ -2,10 +2,18 @@ from turbogears.database import PackageHub
 hub = PackageHub('reports')
 __connection__ = hub
 
+import thread
 import cPickle as pickle
 import uuid
 from Crypto.Hash import SHA256
 import os
+import subprocess
+
+import weakref
+import re
+
+actions = weakref.WeakValueDictionary()
+actionCollections = weakref.WeakKeyDictionary()
 
 def _assertId(id):  #XXX change to assert
   print "ASSERTING", id
@@ -95,6 +103,26 @@ def BaseComponent():
       if not self._query(op):
         raise PermissionError(op, self.permissions)
 
+    def watch(self, func):      
+      possible = set()
+      actionList = actions.setdefault(self._descriptor, possible)
+      actionList.add(func)
+      actionCollections[func] = actionList
+      print len(actionCollections), len(actionList)
+
+    def removeWatch(self, func):
+      actionCollections.pop(func, None)
+      actions.get(self._descriptor, set()).discard(func)
+      
+    def _fireWatchEvent(self):
+      print "FIRING"
+      print len(actionCollections), len(actions)
+      actionList = actions.get(self._descriptor, set())      
+      for action in actionList:
+        print action
+        print 
+        action()
+        
     @property
     def name(self):
       if self.path:
@@ -144,8 +172,11 @@ def BaseComponent():
       print folder, name
       if not os.access(folder, os.F_OK):
         os.makedirs(folder)
-        
-      return pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
+      result = pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
+    
+      thread.start_new_thread(self._fireWatchEvent, tuple())
+      return result
+     
     data = property(getData, _selfSetData)   
     
     def _filename(self, selector="data", id=None):
