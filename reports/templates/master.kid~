@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?python import sitetemplate ?>
+<?python import random ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title py:replace="''">Your title goes here</title>
@@ -25,7 +26,14 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="toolbar" style="position: absolute; z-index:1; top: 0; width: 100%"> 
     <div class="left">
-      <a href="/"><img style="display: inline; position: relative; bottom: 13px;" src="${tg.url('/static/images/mantis50.png')}" /></a>
+      <a href="/"><img style="display: inline; position: relative; bottom: 13px;" src="${tg.url([
+        '/static/images/mantis50.png', 
+        '/static/images/mantis-straight.png', 
+        '/static/images/mantis-right.png', 
+        '/static/images/mantis-up.png', 
+        '/static/images/mantis-rolled.png', 
+        '/static/images/mantis-left.png', 
+        ][random.randrange(6)])}" /></a>
     </div>
     <div class="left path">
       <span py:for="index, link in enumerate(path[:-1])"> / <a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
@@ -35,7 +43,8 @@
     </div>
     <div class="right"> 
       <span>
-        <form class="search" action="/?op=search" method="get">               
+        <form name="search" action="/" method="get">               
+          <input type="hidden" name="op" value="search" />
           <input id="search" type="text" name="query" />
           <a href="#search" onClick="document.search.submit(); return false;">Search</a>      
         </form>
