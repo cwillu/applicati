@@ -368,10 +368,15 @@ class Presentation(object):
     redirectToShow(path)
     
   def search(self, obj, path, query):
-    result = []
+    results = []
+    seen = set()
     def doSearch(page):
-      if query in page.data.show(page):
-        result.append(str((page.name, page.path)))
+      if query not in page.data.show(page):
+        return
+      if page.id in seen:
+        return
+      results.append(str((page.name, page.path)))
+      seen.add(page.id)
       
     visit(loginRoot(), doSearch)
 

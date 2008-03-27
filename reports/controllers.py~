@@ -370,10 +370,8 @@ class Presentation(object):
   def search(self, obj, path, query):
     result = []
     def doSearch(page):
-      result.append("""
-%s (%s)
-  %s
-""" % (page.name, page.path, page.data.show(page)))
+      if query in page.data.show(page):
+        result.append(str((page.name, page.path)))
       
     visit(loginRoot(), doSearch)
 
