@@ -90,8 +90,7 @@ def findPageName(target, path, find=tuple()):
   for index, segment in enumerate(path[:-1]):
     assert type(segment) in [str, unicode], (path, segment, type(segment))
     source = target
-    
-    descriptor = getattr(source, 'resolve', lambda a: None)(segment)
+    descriptor = source.resolve(segment)
       
     if not descriptor:
       print "Access to non-existant path attempted: ", path, segment
@@ -117,7 +116,7 @@ def findPageName(target, path, find=tuple()):
 
     print "SEGMENT:", segment
   
-    descriptor = getattr(source, 'resolve', lambda a: None)(segment)
+    descriptor = source.resolve(segment)  
     print descriptor
     
     if not descriptor:
