@@ -337,8 +337,6 @@ def findPresentation(obj):
   if isinstance(obj, Raw):
     return RawPresentation()
   
-  if isinstance(obj, list):
-    assert False, "Wiki"
   return WikiPresentation()
 
 def redirectToShow(path):
