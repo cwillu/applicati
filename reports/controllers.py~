@@ -373,9 +373,7 @@ class Presentation(object):
       result.append("""
 %s (%s)
   %s
-""" % (page.name, page.path, page.data.show(page, page.path))
-      
-      result.append(str(dir(page)))
+""" % (page.name, page.path, page.data.show(page, page.path)))
       
     visit(loginRoot(), doSearch)
 
