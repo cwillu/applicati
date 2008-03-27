@@ -179,8 +179,8 @@ def visit(root, action, depth=5):
         continue
       try:
         child = childNode.data      
-      except exc:
-        assert False, "exception %s" % exc
+      except PermissionError:
+        continue
       action(child)      
       stack.append((childNode, child.list(childNode)))
     

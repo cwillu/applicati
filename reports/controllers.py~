@@ -174,14 +174,13 @@ def visit(root, action, depth=5):
   while stack:
     current, links = stack.pop(0)  #breadth first    
     for link in links:
+      childNode = findPage(current, (link,))
+      if not childNode:  
+        continue
       try:
-        childNode = findPage(current, (link,))
-        if not childNode:  
-          continue
+        child = childNode.data      
       except exc:
         assert False, "exception %s" % exc
-
-      child = childNode.data      
       action(child)      
       stack.append((childNode, child.list(childNode)))
     
