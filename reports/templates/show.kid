@@ -9,7 +9,9 @@
   //window.addEventListener('load', init(), false);
 
   function monitor() {
-    var hash = Math.ceil(Math.random()*10000)
+    return;
+    
+    var hash = Math.ceil(Math.random()*10000);
     request = new XMLHttpRequest(); 
     var loc = window.location
 	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
@@ -18,8 +20,8 @@
     function onLoad(e) {
       loc.reload();
     }       
-    request.onerror = onError
-    request.onload = onLoad
+    request.onerror = onError;
+    request.onload = onLoad;
  
 	  request.send(null);
   }
