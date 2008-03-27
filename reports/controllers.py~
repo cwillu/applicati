@@ -337,7 +337,7 @@ def findPresentation(obj):
   if isinstance(obj, Raw):
     return RawPresentation()
   
-  if isinstance(obj, metaTypes.values())
+  if isinstance(obj, metaTypes.values()):
     return WikiPresentation()
     
   return PrimitivePresentation()
