@@ -368,14 +368,13 @@ class Presentation(object):
     redirectToShow(path)
     
   def search(self, obj, path, query):
+    result = []
     def doSearch(page):
-      print page
-      print dir(page)
-      print
+      result.append(str(dir(page)))
       
     visit(loginRoot(), doSearch)
-    redirectToShow(path)
-    
+
+    return '\n'.join(result)    
 
 
   def changePermission(self, obj, path, link=None, permission=None, value=None):
