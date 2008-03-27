@@ -386,8 +386,8 @@ class Presentation(object):
       seen.add(page.id)
       
     visit(loginRoot(), doSearch)
-
-    return results
+    
+    raise ReturnedObject(results)
     return '\n'.join(results)    
 
 

@@ -387,7 +387,7 @@ class Presentation(object):
       
     visit(loginRoot(), doSearch)
 
-    return result
+    return results
     return '\n'.join(results)    
 
 
