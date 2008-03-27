@@ -66,7 +66,7 @@ a.link, a, a.active {
 
 #search {
   background: #fff;
-  padding: 3px;
+  padding: 2px;
   background-color: #fff;
 }
 

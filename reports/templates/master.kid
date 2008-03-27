@@ -80,11 +80,11 @@
       <div class="right">
         <span py:for="perm in ['read', 'modify', 'replace', 'cross', 'override']">
           <img py:if="obj.permissions and obj.permissions[0] and perm in obj.permissions[1]"
-            src="/static/images/${'set' if perm in obj.permissions[0] else 'unset'}.png" alt="${perm}, changed" />
+            src="/static/images/${'set' if perm in obj.permissions[0] else 'unset'}.png" title="${perm}, changed" />
           <img py:if="obj.permissions and obj.permissions[0] and perm not in obj.permissions[1]"
-            src="/static/images/${'set-off' if perm in obj.permissions[0] or 'override' in obj.permissions[0] else 'unset-off'}.png" alt="${perm}"/>
+            src="/static/images/${'set-off' if perm in obj.permissions[0] or 'override' in obj.permissions[0] else 'unset-off'}.png" title="${perm}"/>
           <img py:if="not obj.permissions or not obj.permissions[0] "
-            src="/static/images/${'set-off'}.png" alt="${perm}" />
+            src="/static/images/${'set-off'}.png" title="${perm}" />
         </span>
       </div>
     </div>
