@@ -274,7 +274,7 @@ class Root(controllers.RootController):
           redirectToShow(path)
         return result        
       except ReturnedObject, obj:
-        assert False, "foo %s" % obj
+        assert False, "foo %s" % obj.data
 
         presentation = self.findPresentation(obj.data)      
         meta = meta.create()

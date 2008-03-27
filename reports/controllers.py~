@@ -274,6 +274,8 @@ class Root(controllers.RootController):
           redirectToShow(path)
         return result        
       except ReturnedObject, obj:
+        assert False, "foo %s" % obj
+
         presentation = self.findPresentation(obj.data)      
         meta = meta.create()
         meta.data = obj.data
@@ -330,8 +332,6 @@ class Root(controllers.RootController):
     return findPresentation(obj)
 
 def findPresentation(obj):
-  assert False, "foo %s" % obj
-
   if isinstance(obj, Presentation):    
     Log.warn("default presentation used for object %s" % obj)
     return obj
