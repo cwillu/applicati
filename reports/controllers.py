@@ -193,7 +193,7 @@ def visit(root, action, maxDepth=5):
 
       childList = getattr(child, 'list', lambda node: [])
       stack.append((childNode, childList(childNode), depth+1))
-      seen.add(followed.id)        
+      seen.add(childNode.id)        
     
 
 class Wrapper(object):
