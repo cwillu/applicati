@@ -180,7 +180,7 @@ def visit(root, action, depth=5):
 
       child = childNode.data      
       action(child)      
-      stack.append((child, child.list(childNode)))
+      stack.append((childNode, child.list(childNode)))
     
     
 
