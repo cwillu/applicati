@@ -387,6 +387,7 @@ class Presentation(object):
       
     visit(loginRoot(), doSearch)
     
+    assert False, "foo"
     raise ReturnedObject(results)
     return '\n'.join(results)    
 
