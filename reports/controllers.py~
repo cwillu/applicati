@@ -776,7 +776,7 @@ class Raw(object):
     self.data = data
     self.links = {}
 
-  def show(self, page, prefix=None, formatted=True):
+  def show(self, page, prefix=None, formatted=False):
     if not formatted or not self.data:
       return self.data
 
