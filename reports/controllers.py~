@@ -171,6 +171,7 @@ class Wrapper(object):
     self._data = data
     self.page = page
     if not page:
+      self.permissions = ([], [])
       return
     self.write = page.write
     self.links = page.links

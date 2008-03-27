@@ -49,6 +49,7 @@ a.link, a, a.active {
 /*  margin: 3px 0;*/
   vertical-align:middle;
   display: inline;
+  border: 0;
 }
 
 .toolbar form {
@@ -61,6 +62,18 @@ a.link, a, a.active {
   background: 0;
   padding: 0;
   display: inline;
+}
+
+#search {
+  background: #fff;
+  padding: 3px;
+  background-color: #fff;
+}
+
+.search input {
+  background: #fff;
+  border: 5;
+  background-color: #fff;
 }
 
 .bot {

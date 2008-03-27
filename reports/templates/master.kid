@@ -24,9 +24,8 @@
 </head>
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="toolbar" style="position: absolute; z-index:1; top: 0; width: 100%"> 
-
     <div class="left">
-      <img src="${tg.url('/static/images/mantis50.png')}" />
+      <a href="/"><img style="display: inline; position: relative; bottom: 13px;" src="${tg.url('/static/images/mantis50.png')}" /></a>
     </div>
     <div class="left path">
       <span py:for="index, link in enumerate(path[:-1])"> / <a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
@@ -35,12 +34,18 @@
       --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])"> / <a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span> 
     </div>
     <div class="right"> 
+      <span>
+        <form name="search" action="/?op=search" method="get">               
+          <input id="search" type="text" name="query" />
+          <a href="#search" onClick="document.search.submit(); return false;">Search</a>      
+        </form>
+      </span>
       <span py:if="root[-1] == 'guest'">
-        <a href="/?op=login">Log in</a>
+        | <a href="/?op=login">Log in</a>
       </span>
       <span py:if="root[-1] != 'guest'">
-        ${root[-1]} | <a href="/?op=logout">Log out</a>
-      </span>            
+        | ${root[-1]} | <a href="/?op=logout">Log out</a>
+      </span>               
     </div>       
   </div>
   <div class="middle">
@@ -54,10 +59,10 @@
           <a href="?op=edit">Edit</a>
         | <a href="?op=links">Links</a>
         | <form name="select" action="?op=copy" method="POST">
-            <a href="#select" onClick="document.select.submit()">Select</a>
+            <a href="#select" onClick="document.select.submit(); return false;">Select</a>
           </form>
         | <form name="paste" action="?op=write" method="POST">
-            <a href="#paste" onClick="document.paste.submit()">Paste</a>
+            <a href="#paste" onClick="document.paste.submit(); return false;">Paste</a>
           </form>
       </div>
       <div class="right">
