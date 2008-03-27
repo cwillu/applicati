@@ -182,7 +182,9 @@ def visit(root, action, depth=5):
       except db.PermissionError:
         continue
       action(child)      
-      stack.append((childNode, child.list(childNode)))
+
+      childList = getattr(child, list, lambda node: [])
+      stack.append((childNode, childList(childNode)))
     
     
 
