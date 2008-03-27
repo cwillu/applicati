@@ -24,6 +24,10 @@
 </head>
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="toolbar" style="position: absolute; z-index:1; top: 0; width: 100%"> 
+
+    <div class="left">
+      <img src="${tg.url('/static/images/mantis50.png')}" />
+    </div>
     <div class="left path">
       <span py:for="index, link in enumerate(path[:-1])"> / <a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
       --><span id="selected"> / <a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a>

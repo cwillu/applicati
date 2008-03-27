@@ -48,6 +48,19 @@ a.link, a, a.active {
 .toolbar img {
 /*  margin: 3px 0;*/
   vertical-align:middle;
+  display: inline;
+}
+
+.toolbar form {
+  border: 0;
+  background: 0;
+  display: inline;
+}
+.toolbar input {
+  border: 0;
+  background: 0;
+  padding: 0;
+  display: inline;
 }
 
 .bot {

@@ -48,6 +48,7 @@ a.link, a, a.active {
 .toolbar img {
 /*  margin: 3px 0;*/
   vertical-align:middle;
+  display: inline;
 }
 
 .toolbar form {
