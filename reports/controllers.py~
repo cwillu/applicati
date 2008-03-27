@@ -226,6 +226,9 @@ class Wrapper(object):
 
     return lambda *args, **kargs: getattr(self._data, name)(self.page, *args, **kargs)
 
+  def __str__(self):
+    return str(self._data)
+
 class ReturnedObject(Exception):
   def __init__(self, data):
     self.data = data
