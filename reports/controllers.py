@@ -169,7 +169,7 @@ def visit(root, action, depth=5):
   
   child = root.data
   action(child)      
-  stack.append((child, child.list())) 
+  stack.append((child, child.list(root))) 
 
   while stack:
     current, links = stack.pop(0)  #breadth first    
@@ -180,7 +180,7 @@ def visit(root, action, depth=5):
 
       child = childNode.data      
       action(child)      
-      stack.append((child, child.list()))
+      stack.append((child, child.list(childNode)))
     
     
 
