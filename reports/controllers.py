@@ -330,6 +330,8 @@ class Root(controllers.RootController):
     return findPresentation(obj)
 
 def findPresentation(obj):
+  assert False, "foo %s" % obj
+
   if isinstance(obj, Presentation):    
     Log.warn("default presentation used for object %s" % obj)
     return obj
@@ -387,7 +389,6 @@ class Presentation(object):
       
     visit(loginRoot(), doSearch)
     
-    assert False, "foo"
     raise ReturnedObject(results)
     return '\n'.join(results)    
 
