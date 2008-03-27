@@ -259,7 +259,7 @@ def BaseComponent():
     links = property(getPerms, setPerms)   
       
     def resolve(self, name):
-      getattr(self._selfGetData(), 'resolve', lambda *a: None)(self, name)
+      return self._selfGetData().resolve(self, name)
 
 #    @classmethod
     def get(self, descriptor, segment=None, path=None):
