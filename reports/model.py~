@@ -12,8 +12,9 @@ import subprocess
 import weakref
 import re
 
-actions = weakref.WeakValueDictionary()
-actionCollections = weakref.WeakKeyDictionary()
+actions = {}
+#actions = weakref.WeakValueDictionary()
+#actionCollections = weakref.WeakKeyDictionary()
 
 def _assertId(id):  #XXX change to assert
   print "ASSERTING", id
@@ -107,16 +108,18 @@ def BaseComponent():
       possible = set()
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.add(func)
-      actionCollections[func] = actionList
-      print len(actionCollections), len(actionList)
+#      actionCollections[func] = actionList
+      print len(actionList)
 
     def removeWatch(self, func):
-      actionCollections.pop(func, None)
-      actions.get(self._descriptor, set()).discard(func)
+      actionList = actions.get(self._descriptor, set())
+      actionList.discard(func)
+      if not actionList:
+        del actions[self._descriptor]
       
     def _fireWatchEvent(self):
       print "FIRING"
-      print len(actionCollections), len(actions)
+      print len(actions)
       actionList = actions.get(self._descriptor, set())      
       for action in actionList:
         print action
