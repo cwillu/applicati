@@ -341,6 +341,10 @@ class Presentation(object):
   def copy(self, obj, path):
     session['hand'] = obj.descriptor
     redirectToShow(path)
+    
+  def search(self, obj, path, query):
+    print query
+    
 
   def changePermission(self, obj, path, link=None, permission=None, value=None):
     values = {'none': None, 'true': True, 'false': False}

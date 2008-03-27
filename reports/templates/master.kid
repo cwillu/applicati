@@ -28,7 +28,10 @@
     <div class="left">
       <a href="/"><img style="display: inline; position: relative; bottom: 13px;" src="${tg.url([
         '/static/images/mantis50.png', 
+        '/static/images/mantis50.png', 
+        '/static/images/mantis50.png', 
         '/static/images/mantis-straight.png', 
+        '/static/images/mantis-right.png', 
         '/static/images/mantis-right.png', 
         '/static/images/mantis-up.png', 
         '/static/images/mantis-rolled.png', 

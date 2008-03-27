@@ -164,7 +164,24 @@ def findPage(root, path, find=tuple(), onNew=None):
   
   return reachable
 
+def visit(root, action, depth=5):
+  action(root)
+  stack = [(root, root.get().links().keys())]
 
+  while stack:
+    current, links = stack.pop(0)  #breadth first    
+    for link in links:
+      childNode = findPage(current, [link])
+      if not childNode:  
+        continue
+      child = childNode.data
+      
+      action(child)
+      
+      links = child.list()
+      stack.append((child, links))
+    
+    
 
 class Wrapper(object):
   def __init__(self, data, page):    
@@ -343,8 +360,13 @@ class Presentation(object):
     redirectToShow(path)
     
   def search(self, obj, path, query):
-    print query
-    
+    def doSearch(page):
+      print page
+      print dir(page)
+      print
+      
+    visit(loginRoot(), doSearch)
+
 
   def changePermission(self, obj, path, link=None, permission=None, value=None):
     values = {'none': None, 'true': True, 'false': False}
