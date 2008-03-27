@@ -183,7 +183,7 @@ def visit(root, action, maxDepth=5):
         continue
       action(child)      
 
-      if depth => maxDepth:
+      if depth >= maxDepth:
         continue
 
       childList = getattr(child, 'list', lambda node: [])

@@ -168,7 +168,7 @@ def visit(root, action, maxDepth=5):
   stack = []
   
   child = root.data
-  action(child)      
+  action(root)      
   stack.append((root, child.list(root), 0)) 
 
   while stack:
@@ -178,10 +178,10 @@ def visit(root, action, maxDepth=5):
       if not childNode:  
         continue
       try:
+        action(childNode)
         child = childNode.data      
       except db.PermissionError:
         continue
-      action(child)      
 
       if depth >= maxDepth:
         continue
