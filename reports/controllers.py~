@@ -394,7 +394,7 @@ class Presentation(object):
         return
       if page.id in seen:
         return
-      results.append(str((page.name, '/'.join(page.path[pathCut:]))))
+      results.append((page.name, '/'.join(page.path[pathCut:])))
       seen.add(page.id)
       
     visit(root, doSearch)
