@@ -183,7 +183,7 @@ def visit(root, action, depth=5):
         continue
       action(child)      
 
-      childList = getattr(child, list, lambda node: [])
+      childList = getattr(child, 'list', lambda node: [])
       stack.append((childNode, childList(childNode)))
     
     
