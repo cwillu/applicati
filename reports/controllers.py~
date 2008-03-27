@@ -350,6 +350,9 @@ def redirectToShow(path):
 
 
 class Presentation(object):
+  def _path(self, path):
+    return ('home', ) + path
+    
   def __getattr__(self, operation):
     if operation in ['retrieve_css', 'retrieve_javascript']:  #Turbogears junk
       return None
@@ -377,7 +380,8 @@ class Presentation(object):
   def copy(self, obj, path):
     session['hand'] = obj.descriptor
     redirectToShow(path)
-    
+
+  @expose(template="reports.templates.search")    
   def search(self, obj, path, query):
     results = []
     seen = set()
@@ -394,6 +398,8 @@ class Presentation(object):
       seen.add(page.id)
       
     visit(root, doSearch)
+    
+    return dict(session=session, root=session['root'], results=results, path=self._path(path), name="Search", obj=obj)  
     
     raise ReturnedObject(results)
     return '\n'.join(results)    

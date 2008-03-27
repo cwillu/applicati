@@ -10,12 +10,12 @@
 <body>
     <div class="main_content">
         <table border="0" >
-        <tr><td></td><td py:for="permission in permissions">${permission}</td></tr>
+        <tr></tr>
         <tr py:for="name, link in results" class="operations" >
           <div class="permissions">
             <td><div class="id">${name}</div></td>
             <td>
-              <a href="${link}">
+              <a href="${link}">${link}</a>
             </td>
           </div>
         </tr>
