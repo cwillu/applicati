@@ -337,9 +337,10 @@ def findPresentation(obj):
   if isinstance(obj, Raw):
     return RawPresentation()
   
-  if isinstance(obj, list):
-    assert False, "Wiki"
-  return WikiPresentation()
+  if isinstance(obj, metaTypes.values())
+    return WikiPresentation()
+    
+  return PrimitivePresentation()
 
 def redirectToShow(path):
   raise redirect("/%s/?op=show" % '/'.join(path))
@@ -533,9 +534,15 @@ class WikiPresentation(Presentation):
     flash('Logged out')
     redirectToShow(['/'])
 
+class PrimitivePresentation(WikiPresentation):
+  @expose(template="reports.templates.show")
+  def show(self, obj, path, prefix=None):
+    content = "%s" % obj
+    return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
+
 class RawPresentation(WikiPresentation):
   @expose(template="reports.templates.show")
-  def show(self, obj,  path, prefix=None):
+  def show(self, obj, path, prefix=None):
     content = obj.show(formatted=True, prefix=None)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
  
