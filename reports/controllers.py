@@ -179,7 +179,7 @@ def visit(root, action, depth=5):
         continue
       try:
         child = childNode.data      
-      except PermissionError:
+      except db.PermissionError:
         continue
       action(child)      
       stack.append((childNode, child.list(childNode)))
