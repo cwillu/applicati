@@ -275,7 +275,6 @@ class Root(controllers.RootController):
         return result        
       except ReturnedObject, obj:
         presentation = self.findPresentation(obj.data)      
-        assert False, "foo %s" % presentation
         meta = meta.create()
         meta.data = obj.data
         session['hand'] = meta.descriptor
