@@ -381,6 +381,8 @@ class Presentation(object):
   def search(self, obj, path, query):
     results = []
     seen = set()
+    root = loginRoot()
+    pathCut = len(root.path)
     def doSearch(page):
       if not page.data:
         return
@@ -388,10 +390,10 @@ class Presentation(object):
         return
       if page.id in seen:
         return
-      results.append(str((page.name, page.path)))
+      results.append(str((page.name, '/'.join(page.path[:pathCut]))))
       seen.add(page.id)
       
-    visit(loginRoot(), doSearch)
+    visit(root, doSearch)
     
     raise ReturnedObject(results)
     return '\n'.join(results)    
