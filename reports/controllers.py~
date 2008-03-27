@@ -380,7 +380,7 @@ class Presentation(object):
       
     visit(loginRoot(), doSearch)
 
-    return '\n'.join(result)    
+    return '\n'.join(results)    
 
 
   def changePermission(self, obj, path, link=None, permission=None, value=None):

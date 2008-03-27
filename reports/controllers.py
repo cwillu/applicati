@@ -166,16 +166,21 @@ def findPage(root, path, find=tuple(), onNew=None):
 
 def visit(root, action, maxDepth=5):
   stack = []
+  seen = set()
   
-  child = root.data
-  action(root)      
+  child = root.data  
+  action(root)
   stack.append((root, child.list(root), 0)) 
+  seen.add(root.id)
+
 
   while stack:
     current, links, depth = stack.pop(0)  #breadth first    
     for link in links:
-      childNode = findPage(current, (link,))
+      childNode = findPage(current, (link,))      
       if not childNode:  
+        continue
+      if childNode.id in seen:
         continue
       try:
         action(childNode)
@@ -188,7 +193,7 @@ def visit(root, action, maxDepth=5):
 
       childList = getattr(child, 'list', lambda node: [])
       stack.append((childNode, childList(childNode), depth+1))
-    
+      seen.add(followed.id)        
     
 
 class Wrapper(object):
