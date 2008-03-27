@@ -376,7 +376,7 @@ class Presentation(object):
     results = []
     seen = set()
     def doSearch(page):
-      if query not in page.data.show(page):
+      if query not in page.data.show(page).lower():
         return
       if page.id in seen:
         return
