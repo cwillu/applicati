@@ -15,7 +15,7 @@
           <div class="permissions">
             <td><div class="id">${name}</div></td>
             <td>
-              <a href="${link}">/home/${link}</a>
+              <a href="/${'/'.join(link)}">/ ${' / '.join(link)}</a>
             </td>
           </div>
         </tr>
