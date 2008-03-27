@@ -370,6 +370,8 @@ class Presentation(object):
       print
       
     visit(loginRoot(), doSearch)
+    redirectToShow(path)
+    
 
 
   def changePermission(self, obj, path, link=None, permission=None, value=None):
