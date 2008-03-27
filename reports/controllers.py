@@ -164,15 +164,15 @@ def findPage(root, path, find=tuple(), onNew=None):
   
   return reachable
 
-def visit(root, action, depth=5):
+def visit(root, action, maxDepth=5):
   stack = []
   
   child = root.data
   action(child)      
-  stack.append((root, child.list(root))) 
+  stack.append((root, child.list(root), 0)) 
 
   while stack:
-    current, links = stack.pop(0)  #breadth first    
+    current, links, depth = stack.pop(0)  #breadth first    
     for link in links:
       childNode = findPage(current, (link,))
       if not childNode:  
@@ -183,8 +183,11 @@ def visit(root, action, depth=5):
         continue
       action(child)      
 
+      if depth >= maxDepth:
+        continue
+
       childList = getattr(child, 'list', lambda node: [])
-      stack.append((childNode, childList(childNode)))
+      stack.append((childNode, childList(childNode), depth+1))
     
     
 
