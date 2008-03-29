@@ -11,13 +11,13 @@
     <div class="main_content">
         <table border="0" >
         <tr></tr>
-        <tr py:for="name, link in results" class="operations" >
-          <div class="permissions">
-            <td><div class="id">${name}</div></td>
+        <tr py:for="name, id, link in results">
             <td>
-              <a href="/${'/'.join(link)}">/ ${' / '.join(link)}</a>
+            ${name}
+            <div class="details" style="float: left; clear: left;"><a href="/${'/'.join(link)}">/${'/'.join(link)}</a></div>
+            <div class="id">${id}</div>
             </td>
-          </div>
+          
         </tr>
         </table>      
     </div>

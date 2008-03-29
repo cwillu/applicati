@@ -136,7 +136,13 @@ span.code {
   background: #eee;
 }
 
-.id{
+.details {
+  font-size: 80%;
+  text-decoration: italic;
+  text-align: left;
+}
+
+.id {
   font-size: 50%;
   text-decoration: italic;
   text-align: right;
