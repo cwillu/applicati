@@ -260,8 +260,8 @@ def BaseComponent():
       
     def resolve(self, name):
       data = self._selfGetData()
-      if not data:  
-        return None
+#      if not data:  
+#        return None
       return data.resolve(self, name)
 
 #    @classmethod
