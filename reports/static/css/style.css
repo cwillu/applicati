@@ -33,11 +33,12 @@ tr.even td {background-color:#fff;}
 }
 
 .top {
+  font-size: 125%;
   position: absolute; 
   z-index:1; 
   top: 0; 
   width: 100%;
-  height: 35px;
+  height: 40px;
 }
 
 a.link, a, a.active {
@@ -49,9 +50,18 @@ a.link, a, a.active {
 }
 
 .toolbar #selected a {
-  font-weight: bold;
+#  font-weight: bold;
+  font-size: 103%;
   color: #2cf;
   text-decoration: none;
+}
+.path {
+  font-size: 75%;  
+  position: relative;
+  bottom: -2px;
+}
+.path #selected a {
+  font-weight: normal;
 }
 
 .toolbar img {
@@ -73,9 +83,7 @@ a.link, a, a.active {
   display: inline;
 }
 
-.path {
-  font-size: 75%;
-}
+
 
 #search {
   background: #fff;
