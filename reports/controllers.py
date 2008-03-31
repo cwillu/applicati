@@ -630,6 +630,7 @@ class Wiki(object):
       return '<a href="http:%s/">%s</a>' % (link, name)
       
     def inlineLink(match):
+      assert False, match
       name = match.group(1)
       if name.startswith('(') and name.endswith(')'):
         return ''      
