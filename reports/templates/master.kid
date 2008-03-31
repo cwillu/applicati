@@ -24,9 +24,9 @@
     </style>
 </head>
 
-<body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="toolbar" style="position: absolute; z-index:1; top: 0; width: 100%"> 
+<body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
     <div class="left">
-      <a href="/"><img style="display: inline; position: relative; bottom: 13px;" src="${tg.url([
+      <a href="/"><img style="display: inline; position: relative; bottom: 4px;" src="${tg.url([
         '/static/images/mantis50.png', 
         '/static/images/mantis50.png', 
         '/static/images/mantis50.png', 
@@ -39,9 +39,10 @@
         ][random.randrange(6)])}" /></a>
     </div>
     <div class="left path">
+      <div class="left"><span id="selected"><a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span></div>
+      <br />
       <span py:for="index, link in enumerate(path[:-1])"> / <a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
-      --><span id="selected"> / <a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a>
-        </span><!--
+      --><!--
       --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])"> / <a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span> 
     </div>
     <div class="right"> 

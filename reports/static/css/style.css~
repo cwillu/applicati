@@ -24,12 +24,20 @@ tr.odd td {background-color:#edf3fe;}
 tr.even td {background-color:#fff;}
 
 .toolbar {
-  height: 25px;  background-color: #224;
-  background: url(/static/images/toolbar-gradient.png) repeat-y 0 0;
+  height: 25px;  background: url(/static/images/toolbar-gradient.png) repeat-y 0 0;
+  background-color: #224;
   padding: 0px;
   color: #ccf;
   font-size: 125%;
   padding: 5px 0;
+}
+
+.top {
+  position: absolute; 
+  z-index:1; 
+  top: 0; 
+  width: 100%;
+  height: 35px;
 }
 
 a.link, a, a.active {
@@ -136,13 +144,13 @@ span.code {
   background: #eee;
 }
 
-.details{
+.details {
   font-size: 80%;
   text-decoration: italic;
-  text-align: right;
+  text-align: left;
 }
 
-.id{
+.id {
   font-size: 50%;
   text-decoration: italic;
   text-align: right;
