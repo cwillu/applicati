@@ -75,9 +75,9 @@
 </head> 
 <body>
     <form name="debug">
-    <textarea name="text" STYLE="width:95%"  />
+    <textarea name="text" STYLE="display: none; width:95%"  />
     </form>
-    <div class="main_content">
+    <div id="main_content">
         <table border="0" >
         <tr><td></td><td py:for="permission in permissions">${permission}</td></tr>
         <tr py:for="name in sorted(links)" class="operations" >

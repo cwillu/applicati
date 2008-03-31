@@ -32,7 +32,7 @@
 <body>
   <!--<iframe src="/static/html/waiter.html" style="width:0px; height:0px; border: 0px" />-->
 
-  <div py:replace="XML(data)">Page text goes here.</div>
+  <div id="main_content"><div py:replace="XML(data)">Page text goes here.</div></div>
 
 </body>
 </html>

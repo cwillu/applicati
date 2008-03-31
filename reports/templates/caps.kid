@@ -74,11 +74,9 @@
 </script>
 </head> 
 <body>
-    <form name="debug">
-    <textarea name="text" STYLE="width:95%"  />
-    </form>
-    <div class="main_content">
-        <table border="0" >
+    <form style="display: none" name="debug"><textarea name="text" style="width:95%"  /></form>
+    <div id="main_content">
+      <table border="0" >
         <tr><td></td><td py:for="permission in permissions">${permission}</td></tr>
         <tr py:for="name in sorted(links)" class="operations" >
           <div class="permissions">
@@ -89,7 +87,7 @@
             </td>
           </div>
         </tr>
-        </table>      
+      </table>      
     </div>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <title> Editing ${name} - NeoWiki </title>
 </head>
 <body>
-    <div class="main_content">
+    <div id="main_content">
       <form action="?op=save&amp;prototype=${prototype}" method="post">               
         <textarea name="data" py:content="data" rows="20" cols="60"/>
         <input type="submit" name="submit" value="Save"/>

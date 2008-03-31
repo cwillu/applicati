@@ -8,13 +8,13 @@
 <title> ${name} - NeoWiki </title>
 </head> 
 <body>
-    <div class="main_content">
+    <div id="main_content">
         <table border="0" >
         <tr></tr>
         <tr py:for="name, id, link in results">
             <td>
             ${name}
-            <div class="details" style="float: left; clear: left;"><a href="/${'/'.join(link)}">/${'/'.join(link)}</a></div>
+            <div class="path" style="float: left; clear: left;"><a href="/${'/'.join(link)}">/${'/'.join(link)}</a></div>
             <div class="id">${id}</div>
             </td>
           

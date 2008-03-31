@@ -10,7 +10,7 @@
 <body>
     <div class="main_content">
       <form action="?op=save&amp;prototype=${prototype}" method="post">               
-        <textarea name="data" py:content="data" height="100" cols="60"/>
+        <textarea name="data" py:content="data" rows="20" cols="60"/>
         <input type="submit" name="submit" value="Save"/>
       </form>
     </div>

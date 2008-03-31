@@ -26,10 +26,10 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
     <div class="left">
-      <a href="/"><img height="60" style="display: inline; position: relative; bottom: 8px;" src="${tg.url([
-        '/static/images/mantis50.png', 
-        '/static/images/mantis50.png', 
-        '/static/images/mantis50.png', 
+      <a href="/"><img style="display: inline; position: relative; bottom: 8px; left: -2px;" src="${tg.url([
+        '/static/images/mantis-angle.png', 
+        '/static/images/mantis-angle.png', 
+        '/static/images/mantis-angle.png', 
         '/static/images/mantis-straight.png', 
         '/static/images/mantis-right.png', 
         '/static/images/mantis-right.png', 
@@ -40,10 +40,14 @@
     </div>
     <div class="left ">
       <div ><span id="selected"><a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span></div>
+      <div class="path">
+        <span py:for="index, link in enumerate(path[:-1])"> / <a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
+        --><span id="selected"> / <a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span><!--
+        --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])"> / <a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span>
+      </div>      
     </div>  
     
-    <div class="right">
-      <br />
+    <div class="right" >
       <span>
         <form name="search" action="/" method="get">               
           <input type="hidden" name="op" value="search" />
@@ -58,22 +62,23 @@
         | ${root[-1]} | <a href="/?op=logout">Log out</a>
       </span>               
     </div> 
-    
-    <div class="left">      
-      <div class="path" style="clear: right;">
-        <span py:for="index, link in enumerate(path[:-1])"> / <a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
-        --><span id="selected"> / <a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span><!--
-        --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])"> / <a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span>
-      </div>
-    </div>
-          
   </div>
   <div class="middle">
     <div id="viewer">
-      <div class="spacer"> </div>
-      <div onClick="document.getElementById('status_block').style.display='none'" id="status_block" class="flash" py:if="value_of('tg_flash', None)" py:content="tg_flash" />
-        <div id="main_content" py:replace="[item.text]+item[:]"/>  
-      <div class="spacer"> </div>
+      <div class="spacer" />
+      <div class="shadow" id="shadow1">
+        <div class="shadow" id="shadow2">
+        <div class="shadow" id="shadow3">
+        <div class="shadow" id="shadow4">
+        <div class="shadow" id="shadow5">
+          <div onClick="document.getElementById('status_block').style.display='none'" id="status_block" class="flash" py:if="value_of('tg_flash', None)" py:content="tg_flash" />
+          <div id="main_content" py:replace="[item.text]+item[:]"/>  
+        </div>
+        </div>
+        </div>
+        </div>
+      </div>
+      <div class="spacer" />
     </div>    <div class="bot"><div class="toolbar"> 
       <div class="left">
           <a href="?op=edit">Edit</a>

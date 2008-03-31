@@ -23,18 +23,6 @@ tr th {text-align:left;background-color:#f0f0f0;color:#333;}
 tr.odd td {background-color:#edf3fe;}
 tr.even td {background-color:#fff;}
 
-.middle {
-  position: relative;
-  color: black;
-  background-color: white;
-  border-left: 1px solid #aaa;
-  border-right: 1px solid #aaa;
-  padding: 0px 0px;
-  margin: 0 0 -100px 0;
-  min-height: 100%;
-  height: auto;
-}
-
 #viewer {
   font-size: 105%;
   margin: 0 0 0 15px;
@@ -44,17 +32,6 @@ tr.even td {background-color:#fff;}
 #viewer .spacer {
   padding: 17px;
 }
-
-.left {
-  float: left;
-  margin-left: 0.5em;
-}
-
-.right {
-  text-align: right;
-  float: right;
-  margin-right: 0.5em;
-}
 
 
 
@@ -114,32 +91,6 @@ span.code {
 .perm.unset.off {
   background-repeat: no-repeat ;
   background: url(/static/images/unset-off.png); 
-}
-
-
-
-.flash {
-  margin: 0 auto 0.5em 0;
-  padding: 15px 10px 15px 35px;
-  background: #cec;
-  border: 1px solid #99c;
-  width: 450px;
-  font-size: 120%;
-  font-weight: bolder;
-  float: right;
-}
-
-.notice {
-  margin: 0.5em auto 0.5em auto;
-  padding: 15px 10px 15px 55px;
-  width: 450px;
-  background: #eef URL('../images/info.png') left center no-repeat;
-  border: 1px solid #cce;
-}
-
-.fielderror {
-    color: red;
-    font-weight: bold;
 }
 
 .fixed {white-space:pre; font-face:Courier; font-family:monospace; } 

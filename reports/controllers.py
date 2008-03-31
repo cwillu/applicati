@@ -661,8 +661,8 @@ class Wiki(object):
     content = '\n'.join(newContent)        
     
     content = publish_parts(content, writer_name="html")['html_body']
-    content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
     content = Wiki.inlineWords.sub(inlineLink, ''.join(content))
+    content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
     return content
     
   def show(self, page, formatted=False, prefix=None):
