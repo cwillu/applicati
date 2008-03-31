@@ -652,7 +652,6 @@ class Wiki(object):
     for line in content.splitlines():
       matches = Wiki.indentWords.findall(line)
       if matches and len(matches[0]) != lastIndent:
-        assert False, (lastIndent, line)
         if lastIndent: 
           newContent.append('\n')
         lastIndent = len(matches[0])
