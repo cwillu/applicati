@@ -639,7 +639,7 @@ class Wiki(object):
       meta = findPage(page, tuple(name.split('/')))
       inlineObject = meta.data
       presentation = Presentation()
-      content = inlineObject.show(meta, prefix=prefix + extension) #XXX tuples, not list            
+      content = inlineObject.show(meta, prefix=prefix + extension, formatted=True) #XXX tuples, not list            
       return dom.parseString(content).getElementsByTagName('body')[0].toxml()
         
 #      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
