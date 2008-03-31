@@ -614,7 +614,8 @@ class Wiki(object):
 
   wikiWords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
   inlineWords = re.compile(r'\{(\(?[^\ \[\}][^\[\}]*?\)?)\}')   
-
+  indentWords = re.compile(r'\s*\*')   
+  
   def _wikiFormat(self, page, content, prefix=None):
     #  name = html.escape(name)
     if not prefix:
@@ -645,6 +646,20 @@ class Wiki(object):
 #      return '<a href="http:%s/">%s</a>' % name
   
 #    content = commentblock.split(content)
+    
+    lastIndent = None
+    newContent = []
+    for line in content.splitlines():
+      matches = Wiki.indentWords.findall(line)
+      if matches and len(matches) != lastIndent:
+        if lastIndent: 
+          newContent.append('')
+        lastIndent = len(matches)
+      if not matches:
+        lastIndent = None
+      newContent.append(line)
+    content = '\n'.join(newContent)        
+    
     content = publish_parts(content, writer_name="html")['html_body']
     content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
     content = Wiki.inlineWords.sub(inlineLink, ''.join(content))
