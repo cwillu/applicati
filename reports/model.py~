@@ -95,7 +95,6 @@ def BaseComponent():
       if self._descriptor and not isinstance(self._descriptor, tuple):
         logging.getLogger('root.model').warn("Old style descriptor, updating in place")
         self._descriptor = (self._descriptor,)
- 
       
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
         assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
