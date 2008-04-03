@@ -12,6 +12,7 @@ import subprocess
 import weakref
 import re
 import logging
+logging.getLogger('root').setLevel('INFO')
 
 actions = {}
 #actions = weakref.WeakValueDictionary()
