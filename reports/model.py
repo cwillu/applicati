@@ -49,21 +49,21 @@ def _modPermissions(source, cap):
   return set(source[0]) - set(cap[0]) | set(cap[1]) , mask
 
 def _digest(descriptor, salt, secret): 
-  logging.getLogger('root.model.descriptors').info("Creating digest: %s", descriptor)
+  logging.getLogger('root.model.descriptors').debug("Creating digest: %s", descriptor)
   id = _assertId(descriptor)
   hash = SHA256.new(str(id[-1]) + str(salt) + str(secret)).hexdigest()
   logging.getLogger('root.model.descriptors').debug("Digest: %s", hash)
   return hash
 
 def _sign(descriptor, secret):
-  salt = uuid.uuid4() 
+  salt = uuid.uuid4()
   digest = _digest(descriptor, salt, secret)
   return (descriptor, salt, digest)
 
 def _checkSignature(signedDescriptor, secret):  
   descriptor, salt, digest = signedDescriptor
-  trialDigest = _digest(descriptor, salt, secret)
   logging.getLogger('root.model.descriptors').debug("Checking signature: %s", digest)
+  trialDigest = _digest(descriptor, salt, secret)
   return trialDigest == digest
 
 class PermissionError(Exception): pass
