@@ -91,8 +91,7 @@ def BaseComponent():
       self._descriptor = descriptor
       self._data = data
       self.permissions = permissions
-
-      assert isinstance(descriptor, tuple)
+      
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
         assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
 

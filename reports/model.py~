@@ -92,6 +92,7 @@ def BaseComponent():
       self._data = data
       self.permissions = permissions
 
+      assert isinstance(descriptor, tuple)
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
         assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
 
@@ -167,7 +168,7 @@ def BaseComponent():
       self._data = None
       if not self._descriptor:
         logging.getLogger('root.model').info("Saving new descriptor")
-        self._descriptor = str(uuid.uuid4())
+        self._descriptor = (str(uuid.uuid4()),)
         self.onReify and self.onReify(self)
       logging.getLogger('root.model').debug("Saving %s (%s)", self.name, self.id)
 
