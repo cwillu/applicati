@@ -267,7 +267,8 @@ def BaseComponent():
     def get(self, descriptor, segment=None, path=None):
 #      self._check('read')   #XXX ideally would be 'traverse', but current resolving requires reading the actual object anyway
       assert isinstance(descriptor, tuple), descriptor    
-      id = _assertId(descriptor[0])
+#      id = _assertId(descriptor[0])
+      id = _assertId(descriptor)
       
       if not path:
         path = self.path + [segment]
