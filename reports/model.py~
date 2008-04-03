@@ -92,7 +92,6 @@ def BaseComponent():
       self._data = data
       self.permissions = permissions
 
-      print self._descriptor
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
         assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
 
