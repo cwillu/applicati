@@ -270,8 +270,8 @@ def BaseComponent():
     def get(self, descriptor, segment=None, path=None):
 #      self._check('read')   #XXX ideally would be 'traverse', but current resolving requires reading the actual object anyway
       assert isinstance(descriptor, tuple), descriptor    
-#      id = _assertId(descriptor[0])
-      id = descriptor[0]
+      id = _assertId(descriptor[0])
+#      id = descriptor[0]
       
       if not path:
         path = self.path + [segment]
@@ -310,8 +310,7 @@ def BaseComponent():
         
       targetPermissions = _modPermissions(self.permissions, capPermissions)
 
-      return Object(descriptor=id, path=path, permissions=targetPermissions)
-#      return Object(descriptor=id[0], path=path, permissions=targetPermissions)
+      return Object(descriptor=id[0], path=path, permissions=targetPermissions)
 
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)

@@ -18,7 +18,7 @@ actions = {}
 #actionCollections = weakref.WeakKeyDictionary()
 
 def _assertId(id):  #XXX change to assert
-  logging.getLogger('root.model.descriptors').info("ASSERTING %s", id)
+  logging.getLogger('root.model.descriptors').debug("ASSERTING %s", id)
 #  if not isinstance(id, tuple) or id == (1, ): 
   if id == (1, ):
     id = (id, )
