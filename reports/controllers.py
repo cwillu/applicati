@@ -15,6 +15,7 @@ from pydoc import html
 import model as db
 
 import logging
+logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 if not os.fork():

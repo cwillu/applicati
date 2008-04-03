@@ -14,7 +14,9 @@ from pydoc import html
 
 import model as db
 
-print '\n' + "-" * 40 + '\n'
+import logging
+
+logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 if not os.fork():
   os.system('git add .')
 #  os.system('cg-rm -a')
@@ -26,19 +28,6 @@ if not os.fork():
 # log = logging.getLogger("reports.controllers")
 
 corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
-
-class Log(object):
-  @classmethod
-  def _print(self, message):
-    print message
-
-  @classmethod
-  def warn(self, message):
-    print
-    print "WARNING:", message
-    print
-  info = _print
-  debug = _print  
       
 def findPageName(target, path, find=tuple()):
   """
@@ -58,7 +47,7 @@ def findPageName(target, path, find=tuple()):
   isn't used because I'm a masochist; XXX)  
   """
 
-  print path
+  logging.getLogger('root.controller.find').debug(path)
   
   if '~hand' in path:
     path = path[list(path).index('~hand'):]
@@ -71,11 +60,10 @@ def findPageName(target, path, find=tuple()):
 
   bestFoundForFind = None
   if find:
-    print "\nSEARCHING", find
-    print
+    logging.getLogger('root.controller.find').debug("searching", find)
     _reachable, _descriptor = findPageName(target, find)
     if _reachable:
-      print "found", find
+      logging.getLogger('root.controller.find').debug("found", find)
       bestFoundForFind = _reachable, _descriptor
 
 
@@ -93,7 +81,7 @@ def findPageName(target, path, find=tuple()):
     descriptor = source.resolve(segment)
       
     if not descriptor:
-      print "Access to non-existant path attempted: ", path, segment
+      logging.getLogger('root.controller.find').warn("Access to non-existant path attempted: %s %s", path, segment)
       if bestFoundForFind:
         return bestFoundForFind
       return False, None
@@ -108,19 +96,19 @@ def findPageName(target, path, find=tuple()):
     if find:
       _reachable, _descriptor = findPageName(target, find)
       if _reachable:
-        print "found", path[:index] + find
+        logging.getLogger('root.controller.find').debug("found %s", path[:index] + find)
         bestFoundForFind = _reachable, _descriptor
 
   for segment in path[-1:]:
     source = target
 
-    print "SEGMENT:", segment
+    logging.getLogger('root.controller.find').debug("segment: %s", segment)
   
     descriptor = source.resolve(segment)  
-    print descriptor
+    logging.getLogger('root.controller.find').debug(descriptor)
     
     if not descriptor:
-      print "no descriptor"
+      logging.getLogger('root.controller.find').debug("no descriptor")
       if bestFoundForFind:
         return bestFoundForFind
       return None, None
@@ -128,7 +116,7 @@ def findPageName(target, path, find=tuple()):
     target = source.get(descriptor, segment)    
 
     if not target:
-      print "no page"
+      logging.getLogger('root.controller.find').debug("no page")
       if bestFoundForFind:
         return bestFoundForFind
       return None, None
@@ -136,11 +124,11 @@ def findPageName(target, path, find=tuple()):
     if find:
       _reachable, _descriptor = findPageName(target, find)
       if _reachable:
-        print "found", path + find
+        logging.getLogger('root.controller.find').debug("found %s", path + find)
         bestFoundForFind = _reachable, _descriptor
 
   if find:
-    print "************", bestFoundForFind
+    logging.getLogger('root.controller.find').debug("************ %s", bestFoundForFind)
   if bestFoundForFind:
     return bestFoundForFind
   return target, descriptor
@@ -150,7 +138,7 @@ def findPage(root, path, find=tuple(), onNew=None):
   reachable, descriptor = findPageName(root, path, find=find)
       
   if reachable:
-    print "reachable"
+    logging.getLogger('root.controller.find').debug("reachable")
     return reachable
 
   if reachable is None and not find:
@@ -217,7 +205,7 @@ class Wrapper(object):
   @property
   def __class__(self):
     ''' hack '''
-    print "CLASS: ", self._data.__class__
+    logging.getLogger('root.controller.wrapper').debug("Faking class: %s", self._data.__class__)
     return self._data.__class__
   
   def __getattr__(self, name):
@@ -247,16 +235,16 @@ class Root(controllers.RootController):
   @expose()
   def default(self, *path, **args):
     try:
-      print "Start", path, args
+      logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)
       if not request.path.endswith('/'):
         redirectToShow(path)
       return self.dispatch(path, args)
     finally:
-      print "Done"
+      logging.getLogger('root.controller.http').debug("Request complete")
 
 
   def dispatch(self, path, args):
-    print "<%s>" % '/'.join(path), args
+    logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
     op = args.pop('op', '')
     try:
       meta = None  
@@ -268,7 +256,7 @@ class Root(controllers.RootController):
         concreteOp = getattr(presentation, op)
       except AttributeError, err:
         response.status=404
-        flash('''%s not understood by type %s''' % (op, obj.__class__.__name__))
+        flash('''%s not understood by type %s''' % op, obj.__class__.__name__)
         redirectToShow(path)      
 
       try:
@@ -313,21 +301,17 @@ class Root(controllers.RootController):
         
       obj = constructor.data.construct(constructor)
 
-      print "Prototype %s: %s" % (prototype, obj)
+      logging.getLogger('root.controller.http').debug("Creating prototype %s: %s", prototype, obj)
     else:
       obj = meta.data
-      print "Existing page: %s" % obj  
+      logging.getLogger('root.controller.http').debug("Loading existing page: %s", obj)
       
     return meta, obj
   
   def updateCrumbTrail(self, path): 
-    print
-    print "CRUMB:", (session.get('path', []), path)
     if not '/'.join(session.get('path', [])).startswith('/'.join((path))):
-      print path
+      logging.getLogger('root.controller.http').debug("Updating crumb trail: %s %s", session.get('path', []), path)
       session['path'] = (path)
-
-    print
  
   def findPresentation(self, obj):
     return findPresentation(obj)
@@ -467,8 +451,8 @@ class WikiPresentation(Presentation):
   def save(self, obj, path, data='', submit=None):    
     if 'file' in dir(data):  #allow file uploads, handled by the framework
       data = data.file.read()
-     
-    print type(data), dir(data)
+    
+    logging.getLogger('root.controller.http').debug("Wiki saving: %s %s", type(data), dir(data))
     obj.save(data)      
 
     flash("Changes saved!")
@@ -678,8 +662,6 @@ class Wiki(object):
     return self.data
           
   def save(self, page, data=''):    
-    print type(data), dir(data)
-     
     self.data, self.links = self.resolveWikiLinks(page, data)
     page.data = self
             
@@ -771,7 +753,7 @@ class Wiki(object):
     return self.links.get(name, None)
     
   def link(self, page, name, id):
-    print "Linking", name, id
+    logging.getLogger('root.controller.http').debug("Linking %s %s", name, id)
     if 'links' not in dir(self):
       self.links = {}
   
@@ -786,32 +768,32 @@ class CapRoot(Wiki, Login):
   
 class User(Wiki, Login):
   def setPassword(self, page, password=None):
+    logging.getLogger('root.controller.user').info("Setting password (%s)", page)
     self.salt = sha(os.urandom(64)).hexdigest()
     self.token = self.getToken(page, password)
     page.data = self
     flash("Password set successfully")
 
   def checkPassword(self, page, password):
+    logging.getLogger('root.controller.user').info("Checking password (%s)", page)
     if 'salt' not in dir(self) or not self.salt:
       return True
     return self.getToken(page, password) == self.token
     
   def getToken(self, page, password):
-    print "User: %s" % page
-    print "Salt: %s" % self.salt
+    logging.getLogger('root.controller.user').debug("User: %s", page)
+    logging.getLogger('root.controller.user').debug("Salt: %s", self.salt)
     
     token = sha(password).hexdigest()
     token = self.salt + token
 
-    print
-    print "Hashing..."
+    logging.getLogger('root.controller.user').debug("Hashing...")
     factor = 100000  # ~1 second for a single lookup
     token = reduce(lambda token, i: sha(token).digest(), xrange(factor), token)
-    print "Done"
-    print
+    logging.getLogger('root.controller.user').debug("Done hashing")
 
     token = sha(token).hexdigest()
-    print "Token: %s" % token
+    logging.getLogger('root.controller.user').debug("Token: %s", token)
 
     return token 
 
@@ -819,8 +801,6 @@ class User(Wiki, Login):
     if name == '~hand':  # I don't like this
       return session['hand']
     return super(User, self).resolve(page, name)
-
-
 
 class Raw(object):
   def __init__(self, data=''):
