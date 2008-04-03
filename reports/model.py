@@ -11,17 +11,18 @@ import subprocess
 
 import weakref
 import re
+import logging
 
 actions = {}
 #actions = weakref.WeakValueDictionary()
 #actionCollections = weakref.WeakKeyDictionary()
 
 def _assertId(id):  #XXX change to assert
-  print "ASSERTING", id
+  logging.getLogger('root.model.descriptors').debug("ASSERTING", id)
   if not isinstance(id, tuple) or id == (1, ): 
     assert len(str(id)) > 10 or id == '1' or id == (1, ), (id, type(id)) #XXX fix root id
 #    assert False, "WARNING: old-style descriptor in use: %s (%s)" % (id, type(id))
-    print "WARNING: old-style descriptor in use: %s (%s)" % (id, type(id))
+    logging.getLogger('root.model.descriptors').warn("WARNING: old-style descriptor in use: %s (%s)", id, type(id))
     return (id, )
   return id
 
@@ -45,10 +46,10 @@ def _modPermissions(source, cap):
   return set(source[0]) - set(cap[0]) | set(cap[1]) , mask
 
 def _digest(descriptor, salt, secret): 
-  print "<->", descriptor 
+  logging.getLogger('root.model.descriptors').debug("Creating digest: %s", descriptor)
   id = _assertId(descriptor)
   hash = SHA256.new(str(id[-1]) + str(salt) + str(secret)).hexdigest()
-  print "==", hash
+  logging.getLogger('root.model.descriptors').debug("Digest: %s", hash)
   return hash
 
 def _sign(descriptor, secret):
@@ -59,7 +60,7 @@ def _sign(descriptor, secret):
 def _checkSignature(signedDescriptor, secret):  
   descriptor, salt, digest = signedDescriptor
   trialDigest = _digest(descriptor, salt, secret)
-  print "==?", digest
+  logging.getLogger('root.model.descriptors').debug("Checking signature: %s", digest)
   return trialDigest == digest
 
 class PermissionError(Exception): pass
@@ -92,7 +93,7 @@ def BaseComponent():
         assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
 
     def _query(self, op):
-      print "EFFECTIVE PERMISSIONS", self.permissions
+      logging.getLogger('root.model').debug("Effective Permissions: %s", self.permissions)
       if self.permissions == 0 or self.permissions[0] == 0:
         return True
       if op in self.permissions[0]:
@@ -109,7 +110,7 @@ def BaseComponent():
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.add(func)
 #      actionCollections[func] = actionList
-      print len(actionList)
+      logging.getLogger('root.model.watches').debug("Outstanding watches: %s", len(actionList))
 
     def removeWatch(self, func):
       actionList = actions.get(self._descriptor, set())
@@ -118,12 +119,10 @@ def BaseComponent():
         del actions[self._descriptor]
       
     def _fireWatchEvent(self):
-      print "FIRING"
-      print len(actions)
+      logging.getLogger('root.model.watches').debug("Firing watch event (%s outstanding)", len(actions))
       actionList = actions.get(self._descriptor, set())      
       for action in actionList:
-        print action
-        print 
+        logging.getLogger('root.model.watches').debug("Firing %s", action)
         action()
         
     @property
@@ -146,12 +145,11 @@ def BaseComponent():
         return pickle.load(file('pickles/%s' % self._filename()))
       except IOError, err:
         if self.id == 1 and err.errno == 2:
-          print "Recreating root page!!"
+          logging.getLogger('root.model').error("Recreating root page!!")
           return None
         if err.errno == 2 and 'data' not in self._filename(): #file not found
           return None
-        print err.errno
-        print dir(err)
+        logging.getLogger('root.model').error("Error retrieving page %s, %s", err.errno, dir(err))
         raise err  
     def write(self, obj):
       self._check('replace')
@@ -165,14 +163,15 @@ def BaseComponent():
     def _setData(self, obj):
       self._data = None
       if not self._descriptor:
-        print "create"
+        logging.getLogger('root.model').info("Saving new descriptor")
         self._descriptor = str(uuid.uuid4())
         self.onReify and self.onReify(self)
-      print "SAVING %s (%s)" % (self.name, self.id)
+      logging.getLogger('root.model').debug("Saving %s (%s)", self.name, self.id)
 
       folder, name = self._filename().rsplit('/', 1)
       folder = 'pickles/%s' % folder
-      print folder, name
+
+      logging.getLogger('root.model').debug("%s %s", folder, name)
       if not os.access(folder, os.F_OK):
         os.makedirs(folder)
       result = pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
@@ -237,7 +236,7 @@ def BaseComponent():
 
     def changePermission(self, link, permission, value):
       #XXX locking required, or a better reworking
-      print link, permission, value
+      logging.getLogger('root.model').debug("Setting permission %s on %s to %s", permission, link, value)
 
       links = self.links
       permissions = links[link][1:]
@@ -253,7 +252,7 @@ def BaseComponent():
       if value is not None:
         permissions[1 if value else 0].append(permission)
 
-      print "CHANGED PERMISSIONS:", links
+      logging.getLogger('root.model').debug("Resulting permissions:" % links)
 
       self.links = links
     links = property(getPerms, setPerms)   
@@ -280,7 +279,7 @@ def BaseComponent():
         return component.get(descriptor, path=path)
 
       if not _checkSignature(descriptor, componentSecret):
-        print descriptor
+        logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
         return False                
     
       capId = str(descriptor[1])  #XXX salt            
@@ -294,8 +293,8 @@ def BaseComponent():
 #        assert False
         perms[capId] = path, 0
         pickle.dump(perms, file('pickles/%s' % (self._filename('permissions', id[0])), 'w'))
-
-      print "CAPS", perms
+      
+      logging.getLogger('root.model').debug("Caps: %s", perms)
         
       capPermissions = perms[capId][1:]
       
