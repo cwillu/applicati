@@ -95,7 +95,7 @@ def BaseComponent():
       if not isinstance(self._descriptor, tuple):
         logging.getLogger('root.model').warn("Old style descriptor, updating in place")
         self._descriptor = (self._descriptor,)
-
+ 
       
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
         assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
@@ -197,9 +197,11 @@ def BaseComponent():
       if isinstance(id, (basestring, int, uuid.UUID)):
         return '%s/%s' % (id, selector)
 
+      if isinstance(id, tuple):
+        return '%s/%s' % (id[0], selector)
 
-      if id == (1,):
-        return "1/%s" % selector
+#      if id == (1,):
+#        return "1/%s" % selector
 
       if id[0] == (1,):
         id = ('1', ) + id[1:]        

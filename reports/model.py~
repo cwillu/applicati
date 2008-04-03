@@ -92,6 +92,11 @@ def BaseComponent():
       self._data = data
       self.permissions = permissions
       
+      if not isinstance(self._descriptor, tuple):
+        logging.getLogger('root.model').warn("Old style descriptor, updating in place")
+        self._descriptor = (self._descriptor,)
+
+      
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
         assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
 
@@ -169,6 +174,7 @@ def BaseComponent():
         logging.getLogger('root.model').info("Saving new descriptor")
         self._descriptor = (str(uuid.uuid4()),)
         self.onReify and self.onReify(self)
+        
       logging.getLogger('root.model').debug("Saving %s (%s)", self.name, self.id)
 
       folder, name = self._filename().rsplit('/', 1)
