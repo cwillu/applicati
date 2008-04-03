@@ -638,6 +638,9 @@ class Wiki(object):
 
       meta = findPage(page, tuple(name.split('/')))
       inlineObject = meta.data
+      if not inlineObject:
+        return None
+        
       presentation = Presentation()
       content = inlineObject.show(meta, prefix=prefix + extension, formatted=True) #XXX tuples, not list            
 #      print content

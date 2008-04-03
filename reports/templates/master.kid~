@@ -26,7 +26,7 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
     <div class="left">
-      <a href="/"><img style="display: inline; position: relative; bottom: 8px; left: -3px;" src="${tg.url([
+      <a href="/"><img style="display: inline; position: relative; bottom: 8px; left: -2px;" src="${tg.url([
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
@@ -71,6 +71,7 @@
         <div class="shadow" id="shadow3">
         <div class="shadow" id="shadow4">
         <div class="shadow" id="shadow5">
+ <div py:if="false" onClick="document.getElementById('status_block').style.display='none'" id="status_block" class="flash" >Foo</div>
           <div onClick="document.getElementById('status_block').style.display='none'" id="status_block" class="flash" py:if="value_of('tg_flash', None)" py:content="tg_flash" />
           <div id="main_content" py:replace="[item.text]+item[:]"/>  
         </div>

@@ -31,19 +31,7 @@ tr.even td {background-color:#fff;}
 
 #viewer .spacer {
   padding: 17px;
-}
-
-
-
-h1,h2,h3,h4,h5,h6,#getting_started_steps {
-  font-family: "Century Schoolbook L", Georgia, serif;
-  font-weight: bold;
 }
-
-h2 {
-  font-size: 150%;
-}
-
 
 .code {
   font-family: monospace;

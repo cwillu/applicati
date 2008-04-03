@@ -163,17 +163,47 @@ a.link, a, a.active {
   margin-right: 0.5em;
 }
 
+.footnote {
+  float: right;
+  max-width: 240px;
+  font-size: 80%;
+}
+
+.footnote tr .label{
+  background: none;
+}
+
+.footnote td{
+  border: none;
+  background: url(/static/images/info-gradient.png) repeat-y 0 0;
+  background-color: #b8d8b8;
+}
+
+.footnote td{
+  padding: 5px;
+}
 
 
-h1,h2,h3,h4,h5,h6,#getting_started_steps {
-  font-family: "Century Schoolbook L", Georgia, serif;
+
+.topic-title {
+  font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
+  font-weight: bold;
+  font-size: 125%;  
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
+#  font-family: "Century Schoolbook L", Georgia, serif;
   font-weight: bold;
 }
 
-h2 {
-  font-size: 150%;
+h1, h2 {
+  font-size: 125%;
 }
 
+h1 strong {
+  font-size: 150%;
+}
 
 .code {
   font-family: monospace;
@@ -228,7 +258,8 @@ span.code {
 .flash {
   margin: 0px -1px 0px -1px;
   padding: 17px 45px 15px 17px;
-  background: #cec;
+  background: url(/static/images/info-gradient.png) repeat-y 0 0;
+  background-color: #b8d8b8;
   border: 1px solid #444;
 #  width: 100%;
   
@@ -255,4 +286,4 @@ span.code {
 .size12 { white-space:pre; font-face:Courier; font-family:monospace; font-size:8pt; } 
 .size167 { white-space:pre; font-face:Courier; font-family:monospace; font-size:6pt; line-height:150% } 
 
-.double { white-space:pre; font-face:Courier; font-family:monospace; font-family:auto; font-weight:bold; font-size:200%; line-height:50%}
+.double { white-space:pre; font-face:Courier; font-family:monospace; font-family:auto; font-weight:bold; font-size:200%; line-height:50%}e

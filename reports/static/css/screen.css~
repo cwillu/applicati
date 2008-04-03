@@ -93,11 +93,6 @@ span.code {
   background: url(/static/images/unset-off.png); 
 }
 
-.fielderror {
-    color: red;
-    font-weight: bold;
-}
-
 .fixed {white-space:pre; font-face:Courier; font-family:monospace; } 
 .size10 { white-space:pre; font-face:Courier; font-family:monospace; font-size:10pt; } 
 .size12 { white-space:pre; font-face:Courier; font-family:monospace; font-size:8pt; } 

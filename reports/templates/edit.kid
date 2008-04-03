@@ -10,7 +10,8 @@
 <body>
     <div id="main_content">
       <form action="?op=save&amp;prototype=${prototype}" method="post">               
-        <textarea name="data" py:content="data" rows="20" cols="60"/>
+        <input type="submit" name="submit" value="Save"/>
+        <textarea name="data" py:content="data" rows="${max(19, sum([-((len(line)+1)/-55) for line in data.splitlines()]))+1}" cols="60"/>
         <input type="submit" name="submit" value="Save"/>
       </form>
     </div>

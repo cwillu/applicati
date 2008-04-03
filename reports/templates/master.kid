@@ -71,6 +71,7 @@
         <div class="shadow" id="shadow3">
         <div class="shadow" id="shadow4">
         <div class="shadow" id="shadow5">
+ <div py:if="False" onClick="document.getElementById('status_block').style.display='none'" id="status_block" class="flash" >Foo</div>
           <div onClick="document.getElementById('status_block').style.display='none'" id="status_block" class="flash" py:if="value_of('tg_flash', None)" py:content="tg_flash" />
           <div id="main_content" py:replace="[item.text]+item[:]"/>  
         </div>
