@@ -375,10 +375,9 @@ class Presentation(object):
     query = re.compile(r'\b%s\b' % re.escape(query.lower()))
     
     def doSearch(page):
-      print page.path
       if not page.data:
         return
-      if not query.search(page.data.show(page).lower()):
+      if not query.search(page.path[-1].lower() + ' ' + page.data.show(page).lower()):
         return
       if page.id in hits:
         hits[page.id][0] -= 1

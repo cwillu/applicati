@@ -375,6 +375,7 @@ class Presentation(object):
     query = re.compile(r'\b%s\b' % re.escape(query.lower()))
     
     def doSearch(page):
+      print page.path
       if not page.data:
         return
       if not query.search(page.data.show(page).lower()):
