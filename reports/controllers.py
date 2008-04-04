@@ -727,13 +727,13 @@ class Wiki(object):
       if not meta or not meta.id:
         if '/' in link:
           link = template % (link + '*')
-        assert False
         return link
       if meta.id in knownIds:
         nameMapping[name] = knownIds[meta.id]
       else:
         nameMapping[name] = meta.descriptor
 
+      assert '/' not in link
       return link
 
     return ''.join(content), nameMapping
