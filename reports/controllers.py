@@ -733,7 +733,6 @@ class Wiki(object):
       else:
         nameMapping[name] = meta.descriptor
 
-      assert '/' not in link
       return link
 
     return ''.join(content), nameMapping
