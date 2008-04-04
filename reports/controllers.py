@@ -786,7 +786,7 @@ class User(Wiki, Login):
     return token 
 
   def resolve(self, page, name):
-    if name == '~hand':  # I don't like this
+    if name == '~hand':  #FIXME I don't like this
       return session['hand']
     return super(User, self).resolve(page, name)
 

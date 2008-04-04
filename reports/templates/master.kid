@@ -26,7 +26,7 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
     <div class="left">
-      <a href="/"><img style="display: inline; position: relative; bottom: 8px; left: -2px;" src="${tg.url([
+      <a href="/"><img style="display: inline; position: relative; bottom: 7px; left: -2px;" src="${tg.url([
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 

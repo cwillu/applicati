@@ -26,7 +26,7 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
     <div class="left">
-      <a href="/"><img style="display: inline; position: relative; bottom: 8px; left: -2px;" src="${tg.url([
+      <a href="/"><img style="display: inline; position: relative; bottom: 9px; left: -2px;" src="${tg.url([
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
@@ -41,7 +41,7 @@
     <div class="left ">
       <div ><span id="selected"><a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span></div>
       <div class="path">
-        <span style="zindex: 10; margin: -15px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><!--
+        <span style="zindex: 10; margin: -16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><!--
         --><span py:for="index, link in enumerate(path[:-1])">/<a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
         --><span id="selected">/<a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span><!--
         --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])">/<a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span><!--
