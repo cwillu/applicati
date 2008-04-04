@@ -600,7 +600,7 @@ class Wiki(object):
 #  wikiWords = r'(?P<type>\[\(?)(?P<name>[^\ \[\]][^\[\]]*?\)?)\]'
 #  inlineWords = r'(?P<type>\{)(?P<name>\(?[^\ \[\}][^\[\}]*?\)?)\}'
 
-  linkWords = re.compile(r'(?P<type>[\[\(\{]+)(?P<name>[^\ \[\]][^\[\]]*?\)[\]\)\}]+')
+  linkWords = re.compile(r'(?P<type>[\[\(\{]+)(?P<name>[^\ \[\]\(\)\{\}][^\[\]]*?)[\]\)\}]+')
 #  wikiWords = re.compile(wikiWords)
 #  inlineWords = re.compile(inlineWords)   
   indentWords = re.compile(r'\s*\*')   
