@@ -10,9 +10,9 @@
 <body>
     <div id="main_content">
       <form action="?op=save&amp;prototype=${prototype}" method="post">               
-        <input type="submit" name="submit" value="Save"/>
-        <textarea name="data" py:content="data" rows="${max(19, sum([-((len(line)+1)/-55) for line in data.splitlines()]))+1}" cols="60"/>
-        <input type="submit" name="submit" value="Save"/>
+        <input style="float: right; margin: 5px;" type="submit" name="submit" value="Save"/>
+        <input style="float: right; clear: right; margin: 5px;" type="reset" name="reset" value="Reset"/>
+        <textarea name="data" py:content="data" rows="${max(19, sum([-((len(line)+1)/-55) for line in data.splitlines()]))+1}" cols="60"/><br/>
       </form>
     </div>
 </body>

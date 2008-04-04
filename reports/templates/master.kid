@@ -41,10 +41,12 @@
     <div class="left ">
       <div ><span id="selected"><a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span></div>
       <div class="path">
-        <span py:for="index, link in enumerate(path[:-1])"> / <a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
-        --><span id="selected"> / <a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span><!--
-        --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])"> / <a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span>
-      </div>      
+        <span style="zindex: 10; margin: -16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><!--
+        --><span py:for="index, link in enumerate(path[:-1])">/<a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
+        --><span id="selected">/<a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span><!--
+        --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])">/<a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span><!--
+        --><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </div>
     </div>  
     
     <div class="right" >

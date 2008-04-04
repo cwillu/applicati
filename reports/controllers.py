@@ -538,8 +538,8 @@ class PrimitivePresentation(WikiPresentation):
 
 class RawPresentation(WikiPresentation):
   @expose(template="reports.templates.show")
-  def show(self, obj, path, prefix=None):
-    content = obj.show(formatted=True, prefix=None)
+  def show(self, obj, path, prefix=None, formatted=True):
+    content = obj.show(formatted=formatted, prefix=None)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
  
 class Login(object):

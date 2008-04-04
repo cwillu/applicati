@@ -46,8 +46,11 @@ a.link, a, a.active {
   color: #369;
 }
 
-.toolbar a.link, .toolbar a, .toolbar a.active {
-  color: #0af;
+.toolbar a.link, .toolbar a, .toolbar a.active { color: #0af;
+}
+
+.space { 
+  padding: 2px;
 }
 
 .toolbar #selected a {
@@ -61,6 +64,11 @@ a.link, a, a.active {
   position: relative;
   bottom: -2px;
 }
+
+.path a {
+  padding: 2px;
+}
+
 .path #selected a {
   font-weight: normal;
 }
@@ -188,7 +196,7 @@ a.link, a, a.active {
 .topic-title {
   font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
   font-weight: bold;
-  font-size: 150%;  
+  font-size: 125%;  
 }
 
 h1,h2,h3,h4,h5,h6 {

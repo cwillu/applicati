@@ -39,15 +39,17 @@ tr.even td {background-color:#fff;}
   position: absolute; 
   right: 3px; 
   top: 3px;
-  z-index: -1;   
 }
 
 a.link, a, a.active {
   color: #369;
 }
 
-.toolbar a.link, .toolbar a, .toolbar a.active {
-  color: #0af;
+.toolbar a.link, .toolbar a, .toolbar a.active { color: #0af;
+}
+
+.space { 
+  padding: 2px;
 }
 
 .toolbar #selected a {
@@ -61,6 +63,11 @@ a.link, a, a.active {
   position: relative;
   bottom: -2px;
 }
+
+.path a {
+  padding: 3px;
+}
+
 .path #selected a {
   font-weight: normal;
 }
