@@ -4,7 +4,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title py:replace="''">Your title goes here</title>
-    <meta py:replace="item[:]"/>
     <style type="text/css">
         #pageLogin
         {
@@ -22,6 +21,9 @@
     <style type="text/css" media="print">
       @import "${tg.url('/static/css/print.css')}";
     </style>
+    <script src="${tg.url('/static/javascript/shortcut.js')}" language="javascript" >
+    </script>
+    <meta py:replace="item[:]"/>
 </head>
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
@@ -41,12 +43,12 @@
     <div class="left ">
       <div ><span id="selected"><a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span></div>
       <div class="path">
-        <span style="zindex: 10; margin: -16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><!--
+        <span style="z-index: 10; margin: -16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><!--
         --><span py:for="index, link in enumerate(path[:-1])">/<a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
         --><span id="selected">/<a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span><!--
         --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])">/<a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span><!--
         --><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-      </div>
+      </div>  
     </div>  
     
     <div class="right" >

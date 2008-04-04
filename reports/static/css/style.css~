@@ -1,7 +1,3 @@
-/*
- * Quick mash-up of CSS for the TG quick start page.
- */
-
 html, body {
   color: black;
   background-color: #eee;
@@ -39,7 +35,6 @@ tr.even td {background-color:#fff;}
   position: absolute; 
   right: 3px; 
   top: 3px;
-  z-index: -1;   
 }
 
 a.link, a, a.active {
@@ -54,7 +49,6 @@ a.link, a, a.active {
 }
 
 .toolbar #selected a {
-#  font-weight: bold;
   font-size: 103%;
   color: #2cf;
   text-decoration: none;
@@ -66,7 +60,7 @@ a.link, a, a.active {
 }
 
 .path a {
-  padding: 2px;
+  padding: 3px;
 }
 
 .path #selected a {
@@ -102,7 +96,7 @@ a.link, a, a.active {
 
 .search input {
   background: #fff;
-  border: 5;
+  border: 5px;
   background-color: #fff;
 }
 
@@ -128,14 +122,12 @@ a.link, a, a.active {
 .shadow {
   border: 1px solid #999;
   border-top: hidden;
-  padding 0px;
-  margin 0px;
+  margin: 0px;
 }
 #shadow1 {
   border-color: #ddd;
   
   background-color: white;
-  padding 0 0 0 0;
   position: relative;
   left: -8px;
   max-width: 640px;
@@ -143,18 +135,10 @@ a.link, a, a.active {
   margin-left: auto;
   margin-right: auto; 
 }
-#shadow2 {
-  border-color: #ccc;
-}
-#shadow3 {
-  border-color: #bbb;
-}
-#shadow4 {
-  border-color: #999;
-}
-#shadow5 {
-  border-color: #777;
-}
+#shadow2 { border-color: #ccc; }
+#shadow3 { border-color: #bbb; }
+#shadow4 { border-color: #999; }
+#shadow5 { border-color: #777; }
 
 #main_content .spacer {
   padding: 17px;
@@ -177,11 +161,17 @@ a.link, a, a.active {
   font-size: 80%;
 }
 
+table {
+  width: 240px;  
+}
+
 .footnote tr .label{
+  max-width: 240px;
   background: none;
 }
 
 .footnote td{
+  max-width: 240px;
   border: none;
   background: url(/static/images/info-gradient.png) repeat-y 0 0;
   background-color: #b8d8b8;
@@ -191,8 +181,6 @@ a.link, a, a.active {
   padding: 5px;
 }
 
-
-
 .topic-title {
   font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
   font-weight: bold;
@@ -201,7 +189,6 @@ a.link, a, a.active {
 
 h1,h2,h3,h4,h5,h6 {
   font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
-#  font-family: "Century Schoolbook L", Georgia, serif;
   font-weight: bold;
 }
 
@@ -269,16 +256,12 @@ span.code {
   background: url(/static/images/info-gradient.png) repeat-y 0 0;
   background-color: #b8d8b8;
   border: 1px solid #444;
-#  width: 100%;
   
   font-size: 120%;
   font-weight: bolder;
-#  float: right;
 }
 
 .notice {
-#  margin: 0.5em auto 0.5em auto;
-#  padding: 15px 10px 15px 55px;
   width: 100%;
   background: #eef URL('../images/info.png') left center no-repeat;
   border: 1px solid #cce;
@@ -294,4 +277,4 @@ span.code {
 .size12 { white-space:pre; font-face:Courier; font-family:monospace; font-size:8pt; } 
 .size167 { white-space:pre; font-face:Courier; font-family:monospace; font-size:6pt; line-height:150% } 
 
-.double { white-space:pre; font-face:Courier; font-family:monospace; font-family:auto; font-weight:bold; font-size:200%; line-height:50%}e
+.double { white-space:pre; font-face:Courier; font-family:monospace; font-family:auto; font-weight:bold; font-size:200%; line-height:50%}

@@ -371,10 +371,11 @@ class Presentation(object):
     seen = set()
     root = loginRoot()
     pathCut = len(root.path)
+    query = re.compile(r'\b%s\b' % re.escape(query.lower()))
     def doSearch(page):
       if not page.data:
         return
-      if query not in page.data.show(page).lower():
+      if not query.search(page.data.show(page).lower()):
         return
       if page.id in seen:
         return
