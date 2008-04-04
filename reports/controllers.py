@@ -582,7 +582,7 @@ class Constructor(object):
     self.class_ = class_
     self.links = {}
   
-  def show(self, page, prefix=None):
+  def show(self, page, prefix=None, formatted=False):
     return self.class_
     
   def save(self, page, class_):
