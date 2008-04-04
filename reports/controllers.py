@@ -687,8 +687,7 @@ class Wiki(object):
     def resolveLinks(match):
       linkType = match.group('type')
       link = match.group('name')
-      
-      assert False, link
+     
 #    content = Wiki.linkWords.split(content)
 
 
@@ -736,7 +735,7 @@ class Wiki(object):
 
       return link
 
-    return ''.join(content), nameMapping
+    return linkWords.sub(resolveLinks, content), nameMapping
 
   def resolve(self, page, name):
     return self.links.get(name, None)
