@@ -378,17 +378,25 @@ class Presentation(object):
     def doSearch(page):
       if not page.data:
         return
-      if query.search(page.path[-1].lower()):
-        assert False
-        if page.id in hits:
+
+      if page.id in hits:
+        hits[page.id][1] -= 1          
+        if query.search(page.path[-1].lower()):
           hits[page.id][0] -= 1
-          return
-      elif not query.search(page.data.show(page).lower()):
         return
       
+      titleMatches = query.search(page.path[-1].lower())
+      contentMatches = query.search(page.data.show(page).lower())
+
+      if not (titleMatches or contentMatches):
+        return
+        
       #TODO check complexity on len(hits<dict>) 
-      hits[page.id] = [0, len(hits), page.name, page.id, page.path[pathCut:]]
-      
+      hits[page.id] = [0, 0, len(hits), page.name, page.id, page.path[pathCut:]]
+      if titleMatches:
+        hits[page.id][0] -= 1
+      if contentMatches:
+        hits[page.id][1] -= 1                    
             
     visit(root, doSearch)
     
@@ -466,7 +474,7 @@ class WikiPresentation(Presentation):
       data = data.file.read()
     
     logging.getLogger('root.controller.http').debug("Wiki saving: %s %s", type(data), dir(data))
-    obj.save(data)
+    obj.save(data)      
 
     flash("Changes saved!")
     redirectToShow(path)
