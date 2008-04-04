@@ -382,7 +382,9 @@ class Presentation(object):
         hits[page.id][0] += 1
         return
         
+      #TODO check complexity on len(hits<dict>) 
       hits[page.id] = [0, len(hits), page.name, page.id, page.path[pathCut:]]
+      
             
     visit(root, doSearch)
     
