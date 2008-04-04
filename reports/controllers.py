@@ -721,34 +721,13 @@ class Wiki(object):
       if not path:
         name = 'home'        
       
-      name = name if name else path[-1] if path else None
-      
-      
-      while False:
-        assert False;
-        if path[0] == '':
-          if len(path) > 1:
-            path[0:1] = []
-          else:
-            path = []
-        else:
-          path = list(page.path) + path
-        
-  #      while '..' in path:
-  #        index = path.index('..')
-  #        path[index-1:index+1] = []
-          
-        if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
-          path = path[:-1]
-        
-        name = name if name else path[-1] if path else 'home'
-        
-        meta = findPage(loginRoot(), path)				
+      name = name if name else path[-1] if path else None	
   
       link = template % (name) 
       if not meta or not meta.id:
         if '/' in link:
           link = template % (link + '*')
+        assert False
         return link
       if meta.id in knownIds:
         nameMapping[name] = knownIds[meta.id]
