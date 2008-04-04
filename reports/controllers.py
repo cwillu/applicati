@@ -610,12 +610,14 @@ class Wiki(object):
     if not prefix:
       prefix = tuple()
 
-    def wikiLink(name):
+    def wikiLink(match):
+      name = match.group('name')
       link = name[:-1] if name.endswith('*') else name
       link = '/'.join(prefix+(link,))
       return '<a href="http:%s/">%s</a>' % (link, name)
       
-    def inlineLink(name):
+    def inlineLink(match):
+      name = match.group('name')
       extension = tuple(name.split('/'))
 
       meta = findPage(page, tuple(name.split('/')))
@@ -638,7 +640,7 @@ class Wiki(object):
     
     def replaceLink(match):
       name = match.group('name')
-      return linkTypes[match.group('type')](name)
+      return linkTypes[match.group('type')](match)
     
     lastIndent = None
     newContent = []
