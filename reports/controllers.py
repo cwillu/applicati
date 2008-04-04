@@ -379,6 +379,7 @@ class Presentation(object):
       if not page.data:
         return
       if query.search(page.path[-1].lower()):
+        assert False
         if page.id in hits:
           hits[page.id][0] -= 1
           return
