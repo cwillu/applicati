@@ -377,7 +377,7 @@ class Presentation(object):
     def doSearch(page):
       if not page.data:
         return
-      if not query.search(page.path[-1] + ' ' + page.data.show(page).lower()):
+      if not query.search(page.data.show(page).lower()):
         return
       if page.id in hits:
         hits[page.id][0] -= 1
