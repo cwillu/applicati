@@ -281,9 +281,9 @@ class Root(controllers.RootController):
  
   def find(self, path, args):
     prototype = args.pop('prototype', 'Default')
-
+    protoTypeName = None
     def onNew():
-      flash('New page: %s (%s)' % (path[-1], prototype))
+      flash('New page: %s (%s)' % (path[-1], protoTypeName))
           
     meta = findPage(loginRoot(), path, onNew=onNew)
     if not meta:
@@ -299,9 +299,10 @@ class Root(controllers.RootController):
         response.status=404
         flash('''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path)[-1])
         redirectToShow(path[:-1])
-        
+      
       obj = constructor.data.construct(constructor)
-
+      protoTypeName = obj.__class__.__name__
+      
       logging.getLogger('root.controller.http').debug("Creating prototype %s: %s", prototype, obj)
     else:
       obj = meta.data
