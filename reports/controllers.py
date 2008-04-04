@@ -389,7 +389,7 @@ class Presentation(object):
     visit(root, doSearch)
     
     results = []
-    for hit in hits:
+    for hit in hits.values():
       bisect.insort(results, hit)
     
     return dict(session=session, root=session['root'], results=results, path=self._path(path), name="Search", obj=obj)  

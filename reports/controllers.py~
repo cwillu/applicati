@@ -382,13 +382,15 @@ class Presentation(object):
         hits[page.id][0] += 1
         return
         
+      #TODO check complexity on len(hits<dict>) 
       hits[page.id] = [0, len(hits), page.name, page.id, page.path[pathCut:]]
+      
             
     visit(root, doSearch)
     
     results = []
     for hit in hits:
-      bisect.insort(results, hit)
+      bisect.insort(results, hits[hit])
     
     return dict(session=session, root=session['root'], results=results, path=self._path(path), name="Search", obj=obj)  
     
