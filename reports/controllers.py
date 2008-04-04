@@ -634,7 +634,7 @@ class Wiki(object):
   
 #    content = commentblock.split(content)
     
-    linkTypes = { "[(": lambda foo: None, "[": wikiLink, "{": inlineLink }
+    linkTypes = { "(": lambda match: match.group(0), "[(": lambda match: None, "[": wikiLink, "{": inlineLink }
     
     def replaceLink(match):
       name = match.group('name')
