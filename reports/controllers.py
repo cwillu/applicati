@@ -281,11 +281,8 @@ class Root(controllers.RootController):
  
   def find(self, path, args):
     prototype = args.pop('prototype', 'Default')
-    protoTypeName = None
-    def onNew():
-      flash('New page: %s (%s)' % (path[-1], protoTypeName))
-          
-    meta = findPage(loginRoot(), path, onNew=onNew)
+
+    meta = findPage(loginRoot(), path)
     if not meta:
       response.status=404
       flash('''%s doesn't exist.''' % (path[-1]))
@@ -302,6 +299,7 @@ class Root(controllers.RootController):
       
       obj = constructor.data.construct(constructor)
       protoTypeName = obj.__class__.__name__
+      flash('New page: %s (%s)' % (path[-1], protoTypeName))
       
       logging.getLogger('root.controller.http').debug("Creating prototype %s: %s", prototype, obj)
     else:
