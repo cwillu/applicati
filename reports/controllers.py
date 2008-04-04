@@ -377,10 +377,11 @@ class Presentation(object):
     def doSearch(page):
       if not page.data:
         return
-      if not query.search(page.path[-1].lower() + ' ' + page.data.show(page).lower()):
-        return
-      if page.id in hits:
-        hits[page.id][0] -= 1
+      if query.search(page.path[-1].lower()):
+        if page.id in hits:
+          hits[page.id][0] -= 1
+          return
+      elif not query.search(page.data.show(page).lower()):
         return
         
       #TODO check complexity on len(hits<dict>) 
