@@ -735,7 +735,7 @@ class Wiki(object):
 
       return link
 
-    return linkWords.sub(resolveLinks, content), nameMapping
+    return Wiki.linkWords.sub(resolveLinks, content), nameMapping
 
   def resolve(self, page, name):
     return self.links.get(name, None)
