@@ -373,8 +373,6 @@ class Presentation(object):
     pathCut = len(root.path)
     query = re.compile(r'\b%s\b' % re.escape(query.lower()))
     
-    hitIndex = 0
-    
     def doSearch(page):
       if not page.data:
         return
@@ -384,8 +382,7 @@ class Presentation(object):
         hits[page.id][0] += 1
         return
         
-      hits[page.id] = [0, hitIndex, page.name, page.id, page.path[pathCut:]]
-      hitIndex += 1
+      hits[page.id] = [0, len(hits), page.name, page.id, page.path[pathCut:]]
             
     visit(root, doSearch)
     

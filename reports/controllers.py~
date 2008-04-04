@@ -1,4 +1,5 @@
 import os, sys
+import bisect
 from Crypto.Cipher import Blowfish as blowfish
 from sha import sha
 from os import urandom as random
@@ -367,22 +368,30 @@ class Presentation(object):
 
   @expose(template="reports.templates.search")    
   def search(self, obj, path, query):
-    results = []
-    seen = set()
+    hits = {}
     root = loginRoot()
     pathCut = len(root.path)
     query = re.compile(r'\b%s\b' % re.escape(query.lower()))
+    
+    hitIndex = 0
+    
     def doSearch(page):
       if not page.data:
         return
       if not query.search(page.data.show(page).lower()):
         return
-      if page.id in seen:
+      if page.id in hits:
+        hits[page.id][0] += 1
         return
-      results.append((page.name, page.id, page.path[pathCut:]))
-      seen.add(page.id)
-      
+        
+      hits[page.id] = [0, hitIndex, page.name, page.id, page.path[pathCut:]]
+      hitIndex += 1
+            
     visit(root, doSearch)
+    
+    results = []
+    for hit in hits:
+      bisect.insort(results, hit)
     
     return dict(session=session, root=session['root'], results=results, path=self._path(path), name="Search", obj=obj)  
     
