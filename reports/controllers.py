@@ -725,6 +725,7 @@ class Wiki(object):
       
       
       while False:
+        assert False;
         if path[0] == '':
           if len(path) > 1:
             path[0:1] = []

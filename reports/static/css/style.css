@@ -142,18 +142,10 @@ a.link, a, a.active {
   margin-left: auto;
   margin-right: auto; 
 }
-#shadow2 {
-  border-color: #ccc;
-}
-#shadow3 {
-  border-color: #bbb;
-}
-#shadow4 {
-  border-color: #999;
-}
-#shadow5 {
-  border-color: #777;
-}
+#shadow2 { border-color: #ccc; }
+#shadow3 { border-color: #bbb; }
+#shadow4 { border-color: #999; }
+#shadow5 { border-color: #777; }
 
 #main_content .spacer {
   padding: 17px;
@@ -176,11 +168,17 @@ a.link, a, a.active {
   font-size: 80%;
 }
 
+table {
+  width: 240px;  
+}
+
 .footnote tr .label{
+  max-width: 240px;
   background: none;
 }
 
 .footnote td{
+  max-width: 240px;
   border: none;
   background: url(/static/images/info-gradient.png) repeat-y 0 0;
   background-color: #b8d8b8;
@@ -189,8 +187,6 @@ a.link, a, a.active {
 .footnote td{
   padding: 5px;
 }
-
-
 
 .topic-title {
   font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", geneva, verdana, sans-serif;
@@ -293,4 +289,4 @@ span.code {
 .size12 { white-space:pre; font-face:Courier; font-family:monospace; font-size:8pt; } 
 .size167 { white-space:pre; font-face:Courier; font-family:monospace; font-size:6pt; line-height:150% } 
 
-.double { white-space:pre; font-face:Courier; font-family:monospace; font-family:auto; font-weight:bold; font-size:200%; line-height:50%}e
+.double { white-space:pre; font-face:Courier; font-family:monospace; font-family:auto; font-weight:bold; font-size:200%; line-height:50%}
