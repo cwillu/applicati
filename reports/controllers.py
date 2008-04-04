@@ -380,7 +380,7 @@ class Presentation(object):
       if not query.search(page.data.show(page).lower()):
         return
       if page.id in hits:
-        hits[page.id][0] += 1
+        hits[page.id][0] -= 1
         return
         
       #TODO check complexity on len(hits<dict>) 
@@ -392,7 +392,7 @@ class Presentation(object):
     results = []
     for hit in hits.values():
       bisect.insort(results, hit)
-    results.reverse()
+
     return dict(session=session, root=session['root'], results=results, path=self._path(path), name="Search", obj=obj)  
     
     raise ReturnedObject(results)

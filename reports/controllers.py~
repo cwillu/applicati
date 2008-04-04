@@ -170,8 +170,6 @@ def visit(root, action, maxDepth=5):
       childNode = findPage(current, (link,))      
       if not childNode:  
         continue
-#      if childNode.id in seen:
-#        continue
       try:
         action(childNode)
         child = childNode.data      
@@ -179,6 +177,9 @@ def visit(root, action, maxDepth=5):
         continue
 
       if depth >= maxDepth:
+        continue
+
+      if childNode.id in seen:
         continue
 
       childList = getattr(child, 'list', lambda node: [])
