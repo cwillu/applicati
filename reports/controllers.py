@@ -596,8 +596,13 @@ class Wiki(object):
     self.data = data
     self.links = {}
 
-  wikiWords = re.compile(r'\[(\(?[^\ \[\]][^\[\]]*?\)?)\]')
-  inlineWords = re.compile(r'\{(\(?[^\ \[\}][^\[\}]*?\)?)\}')   
+  #This is becoming a problem
+#  wikiWords = r'(?P<type>\[\(?)(?P<name>[^\ \[\]][^\[\]]*?\)?)\]'
+#  inlineWords = r'(?P<type>\{)(?P<name>\(?[^\ \[\}][^\[\}]*?\)?)\}'
+
+  linkWords = re.compile(r'(?P<type>[\[\(\{]+)(?P<name>[^\ \[\]][^\[\]]*?\)[\]\)\}]+')
+#  wikiWords = re.compile(wikiWords)
+#  inlineWords = re.compile(inlineWords)   
   indentWords = re.compile(r'\s*\*')   
   
   def _wikiFormat(self, page, content, prefix=None):
@@ -605,19 +610,12 @@ class Wiki(object):
     if not prefix:
       prefix = tuple()
 
-    def wikiLink(match):
-      name = match.group(1)
-      if name.startswith('(') and name.endswith(')'):
-        return ''
+    def wikiLink(name):
       link = name[:-1] if name.endswith('*') else name
       link = '/'.join(prefix+(link,))
       return '<a href="http:%s/">%s</a>' % (link, name)
       
-    def inlineLink(match):
-      name = match.group(1)
-      if name.startswith('(') and name.endswith(')'):
-        return ''      
-      
+    def inlineLink(name):
       extension = tuple(name.split('/'))
 
       meta = findPage(page, tuple(name.split('/')))
@@ -636,6 +634,12 @@ class Wiki(object):
   
 #    content = commentblock.split(content)
     
+    linkTypes = { "[(": lambda foo: None, "[": wikiLink, "{": inlineLink }
+    
+    def replaceLink(match):
+      name = match.group('name')
+      return linkTypes[match.group('type')](name)
+    
     lastIndent = None
     newContent = []
     for line in content.splitlines():
@@ -650,8 +654,10 @@ class Wiki(object):
     content = '\n'.join(newContent)        
     
     content = publish_parts(content, writer_name="html")['html_body']
-    content = Wiki.inlineWords.sub(inlineLink, ''.join(content))
-    content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
+
+    content = Wiki.linkWords.sub(replaceLink, ''.join(content))
+#    content = Wiki.inlineWords.sub(inlineLink, ''.join(content))
+#    content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
     return content
     
   def show(self, page, formatted=False, prefix=None):
@@ -673,84 +679,81 @@ class Wiki(object):
     for link in self.links:
       knownIds[page.get(self.links[link]).id] = self.links[link]
 
-    nameMapping = {}
+    templates = { "[(": "[(%s)]", "[": "[%s]", "{": "{%s}" }
 
-    for linkRegex in [Wiki.wikiWords, Wiki.inlineWords]:
-      content = Wiki.wikiWords.split(content)
-      text = content[::2]
-      links = content[1::2]
+    nameMapping = {}
+    def resolveLinks(match):
+      linkType = match.group('type')
+      link = match.group('name')
+
+#    content = Wiki.linkWords.split(content)
+
+
+#    text = content[::2]
+#    links = content[1::2]
+
+#    for link in links:
+      template = templates[linkType]
       
-      new = []
-      for link in links:
-        template = "[%s]"
-        if link.startswith('(') and link.endswith(')'):
-          template = "[(%s)]"
-          link = link[1:-1]
-        
-        name = None
-        if '=' in link:        
-          name, link = link.split('=', 1)     
-          if not link:  #[name=]
-            new.append(template % name)
-            continue
-    
-        if link.endswith('*'):
-          new.append(template % link)
-          continue
+      name = None
+      if '=' in link:        
+        name, link = link.split('=', 1)     
+        if not link:  #[name=]
+          return template % name
+  
+      if link.endswith('*'):
+        return template % link
+            
+      path = link.split('/')
+      if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
+        path = path[:-1]
               
-        path = link.split('/')
+      if path[0] == '':
+        path[0:1] = []
+        meta = findPage(loginRoot(), path)
+      else:
+        meta = findPage(page, path)
+      
+      
+#      assert False, (link.split('/'), path, s)
+      if not path:
+        name = 'home'        
+      
+      name = name if name else path[-1] if path else None
+      
+      
+      while False:
+        if path[0] == '':
+          if len(path) > 1:
+            path[0:1] = []
+          else:
+            path = []
+        else:
+          path = list(page.path) + path
+        
+  #      while '..' in path:
+  #        index = path.index('..')
+  #        path[index-1:index+1] = []
+          
         if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
           path = path[:-1]
-                
-        if path[0] == '':
-          path[0:1] = []
-          meta = findPage(loginRoot(), path)
-        else:
-          meta = findPage(page, path)
         
+        name = name if name else path[-1] if path else 'home'
         
-  #      assert False, (link.split('/'), path, s)
-        if not path:
-          name = 'home'        
-        
-        name = name if name else path[-1] if path else None
-        
-        
-        while False:
-          if path[0] == '':
-            if len(path) > 1:
-              path[0:1] = []
-            else:
-              path = []
-          else:
-            path = list(page.path) + path
-          
-    #      while '..' in path:
-    #        index = path.index('..')
-    #        path[index-1:index+1] = []
-            
-          if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
-            path = path[:-1]
-          
-          name = name if name else path[-1] if path else 'home'
-          
-          meta = findPage(loginRoot(), path)				
-    
-        link = template % (name) 
-        if not meta or not meta.id:
-          if '/' in link:
-            link = template % (link + '*')
-          new.append(link)
-          continue
-        new.append(link)
-        
-        if meta.id in knownIds:
-          nameMapping[name] = knownIds[meta.id]
-        else:
-          nameMapping[name] = meta.descriptor
-        
-      content[1::2] = new 
-      content = '\n'.join(content)
+        meta = findPage(loginRoot(), path)				
+  
+      link = template % (name) 
+      if not meta or not meta.id:
+        if '/' in link:
+          link = template % (link + '*')
+        return link
+      if meta.id in knownIds:
+        nameMapping[name] = knownIds[meta.id]
+      else:
+        nameMapping[name] = meta.descriptor
+
+      return link
+
     return ''.join(content), nameMapping
 
   def resolve(self, page, name):
