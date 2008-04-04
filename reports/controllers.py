@@ -673,80 +673,84 @@ class Wiki(object):
     for link in self.links:
       knownIds[page.get(self.links[link]).id] = self.links[link]
 
-    content = Wiki.wikiWords.split(content)
-    text = content[::2]
-    links = content[1::2]
-    new = []
     nameMapping = {}
-    for link in links:
-      template = "[%s]"
-      if link.startswith('(') and link.endswith(')'):
-        template = "[(%s)]"
-        link = link[1:-1]
+
+    for linkRegex in [Wiki.wikiWords, Wiki.inlineWords]:
+      content = Wiki.wikiWords.split(content)
+      text = content[::2]
+      links = content[1::2]
       
-      name = None
-      if '=' in link:        
-        name, link = link.split('=', 1)     
-        if not link:  #[name=]
-          new.append(template % name)
-          continue
-  
-      if link.endswith('*'):
-        new.append(template % link)
-        continue
-            
-      path = link.split('/')
-      if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
-        path = path[:-1]
-              
-      if path[0] == '':
-        path[0:1] = []
-        meta = findPage(loginRoot(), path)
-      else:
-        meta = findPage(page, path)
-      
-      
-#      assert False, (link.split('/'), path, s)
-      if not path:
-        name = 'home'        
-      
-      name = name if name else path[-1] if path else None
-      
-      
-      while False:
-        if path[0] == '':
-          if len(path) > 1:
-            path[0:1] = []
-          else:
-            path = []
-        else:
-          path = list(page.path) + path
+      new = []
+      for link in links:
+        template = "[%s]"
+        if link.startswith('(') and link.endswith(')'):
+          template = "[(%s)]"
+          link = link[1:-1]
         
-  #      while '..' in path:
-  #        index = path.index('..')
-  #        path[index-1:index+1] = []
-          
+        name = None
+        if '=' in link:        
+          name, link = link.split('=', 1)     
+          if not link:  #[name=]
+            new.append(template % name)
+            continue
+    
+        if link.endswith('*'):
+          new.append(template % link)
+          continue
+              
+        path = link.split('/')
         if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
           path = path[:-1]
+                
+        if path[0] == '':
+          path[0:1] = []
+          meta = findPage(loginRoot(), path)
+        else:
+          meta = findPage(page, path)
         
-        name = name if name else path[-1] if path else 'home'
         
-        meta = findPage(loginRoot(), path)				
-  
-      link = template % (name) 
-      if not meta or not meta.id:
-        if '/' in link:
-          link = template % (link + '*')
+  #      assert False, (link.split('/'), path, s)
+        if not path:
+          name = 'home'        
+        
+        name = name if name else path[-1] if path else None
+        
+        
+        while False:
+          if path[0] == '':
+            if len(path) > 1:
+              path[0:1] = []
+            else:
+              path = []
+          else:
+            path = list(page.path) + path
+          
+    #      while '..' in path:
+    #        index = path.index('..')
+    #        path[index-1:index+1] = []
+            
+          if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
+            path = path[:-1]
+          
+          name = name if name else path[-1] if path else 'home'
+          
+          meta = findPage(loginRoot(), path)				
+    
+        link = template % (name) 
+        if not meta or not meta.id:
+          if '/' in link:
+            link = template % (link + '*')
+          new.append(link)
+          continue
         new.append(link)
-        continue
-      new.append(link)
-      
-      if meta.id in knownIds:
-        nameMapping[name] = knownIds[meta.id]
-      else:
-        nameMapping[name] = meta.descriptor
-      
-    content[1::2] = new 
+        
+        if meta.id in knownIds:
+          nameMapping[name] = knownIds[meta.id]
+        else:
+          nameMapping[name] = meta.descriptor
+        
+      content[1::2] = new 
+      content = '\n'.join(content)
     return ''.join(content), nameMapping
 
   def resolve(self, page, name):
