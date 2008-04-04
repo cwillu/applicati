@@ -381,7 +381,7 @@ class Presentation(object):
         if page.id in hits:
           hits[page.id][0] -= 1
           return
-      elif not query.search(page.data.show(page).lower())):
+      elif not query.search(page.data.show(page).lower()):
         return
         
       #TODO check complexity on len(hits<dict>) 

@@ -372,6 +372,7 @@ class Presentation(object):
     hits = {}
     root = loginRoot()
     pathCut = len(root.path)
+    assert False, query.lower()
     query = re.compile(r'\b%s\b' % re.escape(query.lower()))
     
     def doSearch(page):
