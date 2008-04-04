@@ -170,8 +170,8 @@ def visit(root, action, maxDepth=5):
       childNode = findPage(current, (link,))      
       if not childNode:  
         continue
-      if childNode.id in seen:
-        continue
+#      if childNode.id in seen:
+#        continue
       try:
         action(childNode)
         child = childNode.data      

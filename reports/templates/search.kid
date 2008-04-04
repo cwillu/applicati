@@ -15,7 +15,7 @@
             <td>
             ${name}
             <div class="path" style="float: left; clear: left;"><a href="/${'/'.join(link)}">/${'/'.join(link)}</a></div>
-            <div class="id">${id}</div>
+            <div class="id">${id} - (${rank}/${index})</div>
             </td>
           
         </tr>
