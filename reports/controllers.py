@@ -461,7 +461,7 @@ class WikiPresentation(Presentation):
     return dict(session=session, this=self, prototype=obj.__class__.__name__, root=session['root'], name=self._name(path), path=self._path(path), data=obj.show(), obj=obj)  #XXX deprecate data;  'this' can't be called 'self'
     
   @expose()
-  def save(self, obj, path, data='', submit=None):    
+  def save(self, obj, path, data='', save=None):    
     if 'file' in dir(data):  #allow file uploads, handled by the framework
       data = data.file.read()
     
