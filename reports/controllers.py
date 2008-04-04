@@ -466,7 +466,7 @@ class WikiPresentation(Presentation):
       data = data.file.read()
     
     logging.getLogger('root.controller.http').debug("Wiki saving: %s %s", type(data), dir(data))
-    obj.save(data)      
+    obj.save(data)
 
     flash("Changes saved!")
     redirectToShow(path)
