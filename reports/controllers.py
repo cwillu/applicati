@@ -390,8 +390,8 @@ class Presentation(object):
     
     results = []
     for hit in hits.values():
-      bisect.insort_left(results, hit)
-    
+      bisect.insort(results, hit)
+    results.reverse()
     return dict(session=session, root=session['root'], results=results, path=self._path(path), name="Search", obj=obj)  
     
     raise ReturnedObject(results)
