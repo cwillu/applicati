@@ -386,7 +386,7 @@ class Presentation(object):
       elif not query.search(page.data.show(page).lower()):
         return
       
-      assert False, query.findall(page.data.show(page).lower())
+      assert False, (query.findall(page.data.show(page).lower()), page.data.show(page).lower())
       
       #TODO check complexity on len(hits<dict>) 
       hits[page.id] = [0, len(hits), page.name, page.id, page.path[pathCut:]]
