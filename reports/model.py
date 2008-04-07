@@ -70,7 +70,7 @@ def _checkSignature(signedDescriptor, secret):
 class PermissionError(Exception): 
   def __init__(self, *args, **kargs):
     self.flash = kargs.get('flash', None)
-    Exception.__init__(self, *args, **kargs)
+    Exception.__init__(self, *args)
 
 def BaseComponent():
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
