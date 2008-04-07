@@ -241,10 +241,7 @@ class Root(controllers.RootController):
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)
       if not request.path.endswith('/'):
         response.status=404
-        if err.flash:
-          flash(err.flash)
-        else:
-          flash('''%s permission denied''' % (err.args[0].title(), ))
+        flash('''%s doesn't exist''' % (err.args[0].title(), ))
 
         aBlank = blank()
         return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)

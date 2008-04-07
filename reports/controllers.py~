@@ -240,7 +240,15 @@ class Root(controllers.RootController):
     try:
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)
       if not request.path.endswith('/'):
-        redirectToShow(path)
+        response.status=404
+        if err.flash:
+          flash(err.flash)
+        else:
+          flash('''%s permission denied''' % (err.args[0].title(), ))
+
+        aBlank = blank()
+        return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)
+#          redirectToShow(path)
       return self.dispatch(path, args)
     finally:
       logging.getLogger('root.controller.http').debug("Request complete")
