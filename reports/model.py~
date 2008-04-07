@@ -98,6 +98,7 @@ def BaseComponent():
       
       if self._descriptor and not isinstance(self._descriptor, tuple):
         logging.getLogger('root.model').warn("Old style descriptor, updating in place (%s)" % self._descriptor)
+        raise self.descriptor
         self._descriptor = (self._descriptor,)
       
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
@@ -324,7 +325,7 @@ def BaseComponent():
         
       targetPermissions = _modPermissions(self.permissions, capPermissions)
 
-      return Object(descriptor=id, path=path, permissions=targetPermissions)
+      return Object(descriptor=id[0], path=path, permissions=targetPermissions)
 
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)
