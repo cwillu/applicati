@@ -194,7 +194,6 @@ def BaseComponent():
     data = property(getData, _selfSetData)   
     
     def _filename(self, selector="data", id=None):
-      print id
       if id is None:
         id = self.id
 
@@ -202,13 +201,14 @@ def BaseComponent():
         return '%s/%s' % (id, selector)
 
       if isinstance(id, tuple):
+        print id, "tuple"
         return '%s/%s' % (id[0], selector)
 
 #      if id == (1,):
 #        return "1/%s" % selector
 
-      if id[0] == (1,):
-        id = ('1', ) + id[1:]        
+#      if id[0] == (1,):
+#        id = ('1', ) + id[1:]        
 
       assert not set(map(type, id)) - set([str]), ( id)      
       return '/'.join(id)
