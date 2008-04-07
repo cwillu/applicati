@@ -296,12 +296,12 @@ def BaseComponent():
         component = resolveComponent(segment)
         descriptor = (id[1:], ) + descriptor[1:]
         return component.get(descriptor, path=path)
+      assert id != ((1,),)
 
       if not _checkSignature(descriptor, componentSecret):
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
         return False                
     
-      assert id != ((1,),)
     
       capId = str(descriptor[1])  #XXX salt            
 

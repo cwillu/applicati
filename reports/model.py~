@@ -301,6 +301,8 @@ def BaseComponent():
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
         return False                
     
+      assert id != ((1,),)
+    
       capId = str(descriptor[1])  #XXX salt            
 
       if os.access('pickles/%s' % (self._filename('permissions', id)), os.F_OK):
