@@ -297,7 +297,7 @@ class Root(controllers.RootController):
       constructor = findPage(loginRoot(), path, find=('Palette', prototype))
       if not constructor:
         logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
-        response.status=400
+        response.status=404
         flash('''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path)[-1])
         return None, blank()
       
