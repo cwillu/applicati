@@ -290,13 +290,13 @@ def BaseComponent():
       
       if not path:
         path = self.path + [segment]
+      assert id != ((1,),)
       
       if len(id) > 1:
         segment = id[0]
         component = resolveComponent(segment)
         descriptor = (id[1:], ) + descriptor[1:]
         return component.get(descriptor, path=path)
-      assert id != ((1,),)
 
       if not _checkSignature(descriptor, componentSecret):
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
