@@ -334,8 +334,8 @@ def findPresentation(obj):
 
 def redirectToShow(path, status=None):
   if not path:
-    raise redirect("/", status=status)    
-  raise redirect("/%s/?op=show" % '/'.join(path), status=status)
+    raise cherrypy.HTTPRedirect("/", status=status)
+  raise cherrypy.HTTPRedirect("/%s/?op=show" % '/'.join(path), status=status)
 
 
 class Presentation(object):
