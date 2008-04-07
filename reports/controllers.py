@@ -794,7 +794,7 @@ class Wiki(object):
 class CapRoot(Wiki, Login):
   def resolve(self, page, name):
     if name == '~hand':  # I don't like this
-      return session['hand']
+      return session.get('hand', None)
     return self.links.get(name, None)
   
 class User(Wiki, Login):
