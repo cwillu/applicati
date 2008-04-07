@@ -296,7 +296,7 @@ class Root(controllers.RootController):
 
     meta = findPage(loginRoot(), path)
     if not meta:
-      raise db.PermissionError('''%s doesn't exist.''' % (path[-1]))
+      raise db.PermissionError(flash='''%s doesn't exist.''' % (path[-1]))
 #      redirectToShow(path[:-1], status=404)
            
     if not meta._query('read'):
@@ -305,7 +305,7 @@ class Root(controllers.RootController):
       constructor = findPage(loginRoot(), path, find=('Palette', prototype))
       if not constructor:
         logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
-        raise db.PermissionError('''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
+        raise db.PermissionError(flash='''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
       
       obj = constructor.data.construct(constructor)
       protoTypeName = obj.__class__.__name__
