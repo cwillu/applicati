@@ -241,7 +241,7 @@ class Root(controllers.RootController):
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)
       if not request.path.endswith('/'):
         response.status=404
-        flash('''%s doesn't exist''' % (err.args[0].title(), ))
+        flash('''%s doesn't exist''' % (request.path, ))
 
         aBlank = blank()
         return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)
