@@ -102,6 +102,9 @@ def BaseComponent():
       
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
         assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
+        
+      if self._descriptror == ((1, ), ):
+        raise selector        
 
     def _query(self, op):
       logging.getLogger('root.model').debug("Effective Permissions: %s", self.permissions)
