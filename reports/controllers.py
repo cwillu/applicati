@@ -333,6 +333,8 @@ def findPresentation(obj):
   return PrimitivePresentation()
 
 def redirectToShow(path):
+  if not path:
+    raise redirect("/")
   raise redirect("/%s/?op=show" % '/'.join(path))
 
 
