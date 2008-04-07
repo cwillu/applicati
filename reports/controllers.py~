@@ -694,7 +694,7 @@ class Wiki(object):
     self.data, self.links = self.resolveWikiLinks(page, data)
     def fixOldDescriptors(db):
       for key in db:
-        key[db] = (model._assertId(key[db][0]),) + key[db][1:]
+        key[db] = (db._assertId(key[db][0]),) + key[db][1:]
     fixOldDescriptors(self.links)
     page.data = self
             
