@@ -295,7 +295,7 @@ class Root(controllers.RootController):
     elif not meta.data:
       constructor = findPage(loginRoot(), path, find=('Palette', prototype))
       if not constructor:
-        logging.getLogger('root.controller.http').warn("Access denied for path %s:", path)
+        logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to ", path, path[:-1])
         response.status=404
         flash('''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path)[-1])
         redirectToShow(path[:-1])
