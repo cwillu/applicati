@@ -556,9 +556,10 @@ class WikiPresentation(Presentation):
 class PrimitivePresentation(WikiPresentation):
   @expose(template="reports.templates.show")
   def show(self, obj, path, prefix=None):
-    if 'show' in dir(obj):
+    try:
       content = obj.show()
-    content = html.escape("%s" % obj)
+    except:
+      content = html.escape("%s" % obj)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
 
 class RawPresentation(WikiPresentation):
