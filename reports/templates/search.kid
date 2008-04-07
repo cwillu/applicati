@@ -11,11 +11,11 @@
     <div id="main_content">
         <table border="0" >
         <tr></tr>
-        <tr py:for="rank, index, name, id, link in results">
+        <tr py:for="linkRank, contentRank, index, name, id, link in results">
             <td>
             ${name}
             <div class="path" style="float: left; clear: left;"><a href="/${'/'.join(link)}">/${'/'.join(link)}</a></div>
-            <div class="id">${id} - (${-rank}/${index})</div>
+            <div class="id">${id} - (${-linkRank}/${-contentRank}/${index})</div>
             </td>
           
         </tr>
