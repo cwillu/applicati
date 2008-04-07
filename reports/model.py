@@ -327,7 +327,7 @@ def BaseComponent():
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)
 
-  return Object(descriptor=(1,), path=[], permissions=0)
+  return Object(descriptor="1", path=[], permissions=0)
   
       
 

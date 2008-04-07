@@ -322,7 +322,7 @@ def BaseComponent():
         
       targetPermissions = _modPermissions(self.permissions, capPermissions)
 
-      return Object(descriptor=id[0], path=path, permissions=targetPermissions)
+      return Object(descriptor=id, path=path, permissions=targetPermissions)
 
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)
