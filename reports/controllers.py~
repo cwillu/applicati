@@ -212,7 +212,7 @@ class Wrapper(object):
     return self._data.__class__
   
   def __getattr__(self, name):
-    if not getattr(self._data, name):  #['retrieve_css', 'retrieve_javascript']: Turbogears junk    
+    if not getattr(self._data, name, None):  #['retrieve_css', 'retrieve_javascript']: Turbogears junk    
       return None
 
     return lambda *args, **kargs: getattr(self._data, name)(self.page, *args, **kargs)
