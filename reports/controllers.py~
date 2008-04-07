@@ -73,7 +73,7 @@ def findPageName(target, path, find=tuple()):
     if bestFoundForFind:
       return bestFoundForFind
   
-    return target, target.descriptor #XXX
+    return target, target.descriptor if target else None #XXX
 #    return (False, None)
 
 
