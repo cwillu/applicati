@@ -276,7 +276,10 @@ class Root(controllers.RootController):
 
     except db.PermissionError, err:
       response.status=403
-      flash('''%s permission denied''' % (err.args[0].title(), ))
+      if err.flash:
+        flash(err.flash)
+      else:
+        flash('''%s permission denied''' % (err.args[0].title(), ))
 
       aBlank = blank()
       return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)
