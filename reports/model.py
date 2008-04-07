@@ -57,6 +57,7 @@ def _digest(descriptor, salt, secret):
 
 def _sign(descriptor, secret):
   salt = uuid.uuid4()
+  descriptor = _assertId(descriptor)
   digest = _digest(descriptor, salt, secret)
   return (descriptor, salt, digest)
 
