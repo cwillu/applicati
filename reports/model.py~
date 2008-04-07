@@ -193,13 +193,9 @@ def BaseComponent():
      
     data = property(getData, _selfSetData)   
     
-    def _filename(self, selector="data", id=None):
-      if id == ((1, ), ):
-        raise selector
-        
+    def _filename(self, selector="data", id=None):        
       if id is None:
         id = self.id
-        print "--->", id
 
       if isinstance(id, (basestring, int, uuid.UUID)):
         return '%s/%s' % (id, selector)
