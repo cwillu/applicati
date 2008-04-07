@@ -97,7 +97,7 @@ def BaseComponent():
       self.permissions = permissions
       
       if self._descriptor and not isinstance(self._descriptor, tuple):
-        logging.getLogger('root.model').warn("Old style descriptor, updating in place")
+        logging.getLogger('root.model').warn("Old style descriptor, updating in place (%s)" % self._descriptor)
         self._descriptor = (self._descriptor,)
       
       if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
