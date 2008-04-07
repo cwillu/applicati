@@ -194,6 +194,7 @@ def BaseComponent():
     data = property(getData, _selfSetData)   
     
     def _filename(self, selector="data", id=None):
+      print id
       if id is None:
         id = self.id
 
