@@ -702,7 +702,7 @@ class Wiki(object):
     for link in self.links:
       knownIds[page.get(self.links[link]).id] = self.links[link]
 
-    templates = { "[(": "[(%s)]", "[": "[%s]", "{": "{%s}" }
+    templates = { "[(": "[(%s)]", "[": "[%s]", "{": "{%s}"}
 
     nameMapping = {}
     def resolveLinks(match):
@@ -716,7 +716,9 @@ class Wiki(object):
 #    links = content[1::2]
 
 #    for link in links:
-      template = templates[linkType]
+      template = templates.get(linkType, None)
+      if not template:
+        return match.group(0)
       
       name = None
       if '=' in link:        

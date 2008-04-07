@@ -692,6 +692,10 @@ class Wiki(object):
           
   def save(self, page, data=''):    
     self.data, self.links = self.resolveWikiLinks(page, data)
+    def fixOldDescriptors(db):
+      for key in db:
+        key[db] = (model._assertId(key[db][0]),) + key[db][1:]
+    fixOldDescriptors(self.links)
     page.data = self
             
   def list(self, page):
