@@ -355,7 +355,7 @@ class Presentation(object):
     def default(obj,  path, **args):
       op = operation
       
-      print path, args
+      print obj, path, args
       
       if not op:
         return self.show(obj, path, **args)

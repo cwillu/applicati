@@ -253,7 +253,8 @@ class Root(controllers.RootController):
 
   def dispatch(self, path, args):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
-    session.setdefault('root', tuple())
+    
+    loginRoot()
     op = args.pop('op', '')
     try:
       meta = None  
