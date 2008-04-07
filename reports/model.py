@@ -25,6 +25,7 @@ def _assertId(id):  #XXX change to assert
   if not isinstance(id, tuple): 
     assert len(str(id)) > 10 or id == '1' or id == (1, ), (id, type(id)) #XXX fix root id
 #    assert False, "WARNING: old-style descriptor in use: %s (%s)" % (id, type(id))
+    raise Exception(id, type(id))
     logging.getLogger('root.model.descriptors').warn("old-style descriptor in use: %s (%s)", id, type(id))
     return (id, )
   return id
