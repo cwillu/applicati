@@ -288,7 +288,8 @@ class Root(controllers.RootController):
     if not meta:
       response.status=404
       flash('''%s doesn't exist.''' % (path[-1]))
-      redirectToShow(path[:-1], status=404)
+      return None, blank()
+#      redirectToShow(path[:-1], status=404)
            
     if not meta._query('read'):
       return meta, blank()
@@ -298,6 +299,8 @@ class Root(controllers.RootController):
         logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
         response.status=400
         flash('''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path)[-1])
+        return None, blank()
+      
         redirectToShow(path[:-1], status=403)
       
       obj = constructor.data.construct(constructor)
