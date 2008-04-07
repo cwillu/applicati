@@ -194,6 +194,8 @@ def BaseComponent():
     data = property(getData, _selfSetData)   
     
     def _filename(self, selector="data", id=None):
+      if id == ((1, ), ):
+        raise selector
       if id is None:
         id = self.id
 
@@ -201,7 +203,6 @@ def BaseComponent():
         return '%s/%s' % (id, selector)
 
       if isinstance(id, tuple):
-        print id, "tuple"
         return '%s/%s' % (id[0], selector)
 
 #      if id == (1,):
