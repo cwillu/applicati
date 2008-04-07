@@ -4,7 +4,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title py:replace="''">Your title goes here</title>
-    <meta py:replace="item[:]"/>
     <style type="text/css">
         #pageLogin
         {
@@ -24,6 +23,7 @@
     </style>
     <script src="${tg.url('/static/javascript/shortcut.js')}" language="javascript" >
     </script>
+    <meta py:replace="item[:]"/>
 </head>
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
@@ -96,6 +96,9 @@
           </form>
       </div>
       <div class="right">
+        ${test="123"}
+        ${test}
+      
         <span py:for="perm in ['read', 'modify', 'replace', 'cross', 'override']">
           <img py:if="obj.permissions and obj.permissions[0] and perm in obj.permissions[1]"
             src="/static/images/${'set' if perm in obj.permissions[0] else 'unset'}.png" title="${perm}, changed" />

@@ -96,6 +96,7 @@
           </form>
       </div>
       <div class="right">
+      
         <span py:for="perm in ['read', 'modify', 'replace', 'cross', 'override']">
           <img py:if="obj.permissions and obj.permissions[0] and perm in obj.permissions[1]"
             src="/static/images/${'set' if perm in obj.permissions[0] else 'unset'}.png" title="${perm}, changed" />
