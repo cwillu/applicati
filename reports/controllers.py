@@ -240,12 +240,12 @@ class Root(controllers.RootController):
     try:
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)
       if not request.path.endswith('/'):
-        response.status=404
-        flash('''%s doesn't exist''' % (request.path, ))
-
-        aBlank = blank()
-        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
-#          redirectToShow(path)
+#        response.status=404
+#        flash('''%s doesn't exist''' % (request.path, ))
+#
+#        aBlank = blank()
+#        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
+        redirectToShow(path)
       return self.dispatch(path, args)
     finally:
       logging.getLogger('root.controller.http').debug("Request complete")

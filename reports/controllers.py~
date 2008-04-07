@@ -244,7 +244,7 @@ class Root(controllers.RootController):
         flash('''%s doesn't exist''' % (request.path, ))
 
         aBlank = blank()
-        return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)
+        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
 #          redirectToShow(path)
       return self.dispatch(path, args)
     finally:
