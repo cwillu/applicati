@@ -8,7 +8,7 @@ import re
 from Queue import Queue, Empty
 
 from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response
+from cherrypy import session, request, response, HTTPRedirect
 from turbogears.toolbox.catwalk import CatWalk
 from docutils.core import publish_parts
 from pydoc import html
@@ -334,8 +334,8 @@ def findPresentation(obj):
 
 def redirectToShow(path, status=None):
   if not path:
-    raise cherrypy.HTTPRedirect("/", status=status)
-  raise cherrypy.HTTPRedirect("/%s/?op=show" % '/'.join(path), status=status)
+    raise HTTPRedirect("/", status=status)
+  raise HTTPRedirect("/%s/?op=show" % '/'.join(path), status=status)
 
 
 class Presentation(object):

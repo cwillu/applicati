@@ -336,7 +336,6 @@ def redirectToShow(path, status=None):
   if not path:
     raise cherrypy.HTTPRedirect("/", status=status)
   raise cherrypy.HTTPRedirect("/%s/?op=show" % '/'.join(path), status=status)
-  raise redirect(, status=status)
 
 
 class Presentation(object):
