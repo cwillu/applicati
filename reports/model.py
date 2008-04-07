@@ -303,15 +303,15 @@ def BaseComponent():
     
       capId = str(descriptor[1])  #XXX salt            
 
-      if os.access('pickles/%s' % (self._filename('permissions', id[0])), os.F_OK):
-        perms = pickle.load(file('pickles/%s' % (self._filename('permissions', id[0]))))
+      if os.access('pickles/%s' % (self._filename('permissions', id)), os.F_OK):
+        perms = pickle.load(file('pickles/%s' % (self._filename('permissions', id))))
       else:
         perms = {}
 
       if capId not in perms:
 #        assert False
         perms[capId] = path, 0
-        pickle.dump(perms, file('pickles/%s' % (self._filename('permissions', id[0])), 'w'))
+        pickle.dump(perms, file('pickles/%s' % (self._filename('permissions', id)), 'w'))
       
       logging.getLogger('root.model').debug("Caps: %s", perms)
         
@@ -325,7 +325,7 @@ def BaseComponent():
         
       targetPermissions = _modPermissions(self.permissions, capPermissions)
 
-      return Object(descriptor=id[0], path=path, permissions=targetPermissions)
+      return Object(descriptor=id, path=path, permissions=targetPermissions)
 
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)
