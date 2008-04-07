@@ -199,7 +199,7 @@ def BaseComponent():
         
       if id is None:
         id = self.id
-        print id
+        print "--->", id
 
       if isinstance(id, (basestring, int, uuid.UUID)):
         return '%s/%s' % (id, selector)
