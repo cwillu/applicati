@@ -68,9 +68,8 @@ def _checkSignature(signedDescriptor, secret):
   return trialDigest == digest
 
 class PermissionError(Exception): 
-  def __init__(self, *args, flash=None):
-    self.flash = flash
-#    self.flash = kargs.get('flash', None)
+  def __init__(self, *args, **kargs):
+    self.flash = kargs.get('flash', None)
     Exception.__init__(self, *args)
 
 def BaseComponent():
