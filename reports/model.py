@@ -67,7 +67,9 @@ def _checkSignature(signedDescriptor, secret):
   trialDigest = _digest(descriptor, salt, secret)
   return trialDigest == digest
 
-class PermissionError(Exception): pass
+class PermissionError(Exception): 
+  def __init__(self, flash=None):
+    self.flash = flash
 
 def BaseComponent():
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
