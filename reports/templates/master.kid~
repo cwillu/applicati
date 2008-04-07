@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<?python import sitetemplate ?>
 <?python import random ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
@@ -96,8 +95,6 @@
           </form>
       </div>
       <div class="right">
-        ${test="123"}
-        ${test}
       
         <span py:for="perm in ['read', 'modify', 'replace', 'cross', 'override']">
           <img py:if="obj.permissions and obj.permissions[0] and perm in obj.permissions[1]"
