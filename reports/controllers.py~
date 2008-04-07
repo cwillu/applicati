@@ -275,7 +275,7 @@ class Root(controllers.RootController):
         redirectToShow(path + ('~hand',))
 
     except db.PermissionError, err:
-      response.status=403
+      response.status=404
       if err.flash:
         flash(err.flash)
       else:
