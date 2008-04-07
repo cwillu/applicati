@@ -361,7 +361,7 @@ class Presentation(object):
       if not op:
         return self.show(obj, path, **args)
 
-      output = getattr(obj, op)(**args)
+      output = getattr(obj, op, lambda *args, **kargs: None)(**args)
       if output is None:
         return self.show(obj, path) if op is not 'show' else None
     
