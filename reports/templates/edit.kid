@@ -19,7 +19,7 @@
       <form name="editor" id="editor" action="?op=save&amp;prototype=${prototype}" method="post">               
         <input type="submit" name="save" value="Save"/>
         <input type="reset" name="_reset" value="Reset"/>
-        <textarea style="display: inline;" name="data" py:content="data" rows="${max(19, sum([-((len(line)+1)/-55) for line in data.splitlines()]))+1}" cols="60"/><br/>
+        <textarea name="data" py:content="data" rows="${max(19, sum([-((len(line)+1)/-55) for line in data.splitlines()]))+1}" cols="60"/><br/>
         <input type="submit" name="save" value="Save"/>
         <input type="reset" name="_reset" value="Reset"/>
       </form>
