@@ -23,10 +23,4 @@ config.update(dict(package="reports"))
 
 from reports.controllers import Root
 
-try:
-  import psyco
-  psyco.full()
-except ImportError:
-  print 'Psyco not installed, the program will just run slower'
-
 start_server(Root())
