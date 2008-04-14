@@ -30,7 +30,14 @@ if not os.fork():
 # log = logging.getLogger("reports.controllers")
 
 corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
-      
+
+try:
+  import psyco
+
+except ImportError:
+  print 'Psyco not installed, the program will just run slower'
+
+@psyco.bind      
 def findPageName(target, path, find=tuple()):
   """
   Ugly mess
@@ -135,7 +142,7 @@ def findPageName(target, path, find=tuple()):
     return bestFoundForFind
   return target, descriptor
       
-  
+@psyco.bind  
 def findPage(root, path, find=tuple(), onNew=None):
   reachable, descriptor = findPageName(root, path, find=find)
       
@@ -154,6 +161,7 @@ def findPage(root, path, find=tuple(), onNew=None):
   
   return reachable
 
+@psyco.bind
 def visit(root, action, maxDepth=5):
   stack = []
   seen = set()

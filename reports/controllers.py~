@@ -266,7 +266,7 @@ class Root(controllers.RootController):
         concreteOp = getattr(presentation, op)
       except (UnicodeEncodeError, AttributeError), err:
         response.status=404
-        flash('''%s not understood by type %s''' % repr(op), obj.__class__.__name__)
+        flash('''%s not understood by type %s''' % (repr(op), obj.__class__.__name__))
         redirectToShow(path)      
 
       try:
