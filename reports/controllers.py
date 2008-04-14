@@ -33,6 +33,7 @@ corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
 try:
   import psyco
+  psyco.log()
   compile = psyco.proxy
 except ImportError:
   print 'Psyco not installed, the program will just run slower'  

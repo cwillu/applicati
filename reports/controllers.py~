@@ -33,9 +33,10 @@ corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
 try:
   import psyco
-
+  compile = psyco.proxy
 except ImportError:
-  print 'Psyco not installed, the program will just run slower'
+  print 'Psyco not installed, the program will just run slower'  
+  compile = lambda func: func
 
 @psyco.proxy      
 def findPageName(target, path, find=tuple()):
