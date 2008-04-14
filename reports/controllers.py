@@ -37,7 +37,7 @@ try:
 except ImportError:
   print 'Psyco not installed, the program will just run slower'
 
-@psyco.bind      
+@psyco.proxy      
 def findPageName(target, path, find=tuple()):
   """
   Ugly mess
@@ -142,7 +142,7 @@ def findPageName(target, path, find=tuple()):
     return bestFoundForFind
   return target, descriptor
       
-@psyco.bind  
+@psyco.proxy  
 def findPage(root, path, find=tuple(), onNew=None):
   reachable, descriptor = findPageName(root, path, find=find)
       
@@ -161,7 +161,7 @@ def findPage(root, path, find=tuple(), onNew=None):
   
   return reachable
 
-@psyco.bind
+@psyco.proxy
 def visit(root, action, maxDepth=5):
   stack = []
   seen = set()
