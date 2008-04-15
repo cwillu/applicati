@@ -35,6 +35,8 @@ try:
   import psyco
   psyco.log()
   compile = psyco.proxy
+  
+  expose = psyco.proxy(expose)
 except ImportError:
   print 'Psyco not installed, the program will just run slower'  
   compile = lambda func: func
