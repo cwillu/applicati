@@ -13,6 +13,8 @@ import weakref
 import re
 import logging
 
+from components.filesystem import FileSystemComponent
+
 actions = {}
 #actions = weakref.WeakValueDictionary()
 #actionCollections = weakref.WeakKeyDictionary()
@@ -32,7 +34,9 @@ def _assertId(id):  #XXX change to assert
 def resolveComponent(name):
   if name == "Object":
     return Object
-    
+  if name == "FileSystemComponent":
+    return FileSystemComponent
+        
   assert False, "Unknown component (%s)" % name
 
 
@@ -71,6 +75,8 @@ class PermissionError(Exception):
   def __init__(self, *args, **kargs):
     self.flash = kargs.get('flash', None)
     Exception.__init__(self, *args)
+
+
 
 def BaseComponent():
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")

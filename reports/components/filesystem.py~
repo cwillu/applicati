@@ -1,6 +1,6 @@
-from turbogears.database import PackageHub
-hub = PackageHub('reports')
-__connection__ = hub
+#from turbogears.database import PackageHub
+#hub = PackageHub('reports')
+#__connection__ = hub
 
 import thread
 import cPickle as pickle
@@ -12,6 +12,8 @@ import subprocess
 import weakref
 import re
 import logging
+
+from 
 
 actions = {}
 #actions = weakref.WeakValueDictionary()
@@ -72,8 +74,10 @@ class PermissionError(Exception):
     self.flash = kargs.get('flash', None)
     Exception.__init__(self, *args)
 
-def BaseComponent():
-  componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
+
+
+def FileSystemComponent():
+  componentSecret = uuid.UUID("7feb8db0-424b-486c-8756-d022cf39947f")
   
   """        
   return Object(descriptor=id[0], path=path)

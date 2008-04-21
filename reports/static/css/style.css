@@ -86,6 +86,22 @@ a.link, a, a.active {
   display: inline;
 }
 
+form {
+  border: 0;
+  padding: 0;
+}
+
+input {
+  padding: 0;
+  display: inline;
+}
+
+textarea {
+  border: 0;
+  padding: 0;
+  display: inline;
+  width: 100%;
+}
 
 
 #search {
