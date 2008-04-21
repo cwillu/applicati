@@ -93,7 +93,6 @@ def Log(obj):
     setattr(obj, name, Logger(name, method))
   return obj   
 
-@Log
 def BaseComponent():
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   
@@ -354,7 +353,9 @@ def BaseComponent():
 
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)
-
+  Object = Log(Object)
+  
+  
   return Object(descriptor=(1,), path=[], permissions=0)
   
       

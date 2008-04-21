@@ -89,10 +89,10 @@ def Log(obj):
       return self.method(*args, **kargs)         
 
   for name, method in inspect.getmembers(obj, inspect.ismethod):
+    print name
     setattr(obj, name, Logger(name, method))
   return obj   
 
-@Log
 def BaseComponent():
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   
@@ -105,6 +105,7 @@ def BaseComponent():
   return Object(descriptor=1)
   """
   
+  @Log
   class Object(object):
     def __init__(self, descriptor=None, data=None, onReify=None, path=[], permissions=None):
       assert not (descriptor and data), "Invalid state: descriptor and data specified"
