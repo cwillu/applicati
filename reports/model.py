@@ -89,6 +89,7 @@ def Log(obj):
       return self.method(*args, **kargs)         
 
   for name, method in inspect.getmembers(obj, inspect.ismethod):
+    print name
     setattr(obj, name, Logger(name, method))
   return obj   
 
