@@ -78,15 +78,15 @@ class PermissionError(Exception):
     self.flash = kargs.get('flash', None)
     Exception.__init__(self, *args)
 
-class Log(object):
-  def __init__(self, obj):
-    for name, method in inspect.getmembers(obj, inspect.ismethod):
-      obj.name = self.decorate(name, method)
-      
+def Log(obj):
   def decorate(self, name, method):
     def decorated(*args, **kargs):
       print name, args, kargs
       return method(*args, **kargs)         
+
+  for name, method in inspect.getmembers(obj, inspect.ismethod):
+    obj.name = self.decorate(name, method)
+      
 
 @Log
 def BaseComponent():

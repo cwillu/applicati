@@ -79,13 +79,17 @@ class PermissionError(Exception):
     Exception.__init__(self, *args)
 
 def Log(obj):
-  def decorate(self, name, method):
-    def decorated(*args, **kargs):
-      print name, args, kargs
-      return method(*args, **kargs)         
+  class Logger(object):
+    def __init__(self, name, method):
+      self.name = name
+      self.method = method
+    
+    def __call__(self, *args, **kargs):
+      print self.name, args, kargs
+      return self.method(*args, **kargs)         
 
   for name, method in inspect.getmembers(obj, inspect.ismethod):
-    obj.name = self.decorate(name, method)
+    obj.name = Log.Logger(name, method)
       
 
 @Log
