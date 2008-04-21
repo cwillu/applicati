@@ -13,6 +13,8 @@ import weakref
 import re
 import logging
 
+import inspect
+
 from components.filesystem import FileSystemComponent
 
 actions = {}
@@ -76,8 +78,17 @@ class PermissionError(Exception):
     self.flash = kargs.get('flash', None)
     Exception.__init__(self, *args)
 
+class Log(object):
+  def __init__(self, obj):
+    for name, method in inspect.getmembers(obj, inspect.ismethod):
+      obj.name = self.decorate(name, method)
+      
+  def decorate(self, name, method):
+    def decorated(*args, **kargs):
+      print name, args, kargs
+      return method(*args, **kargs)         
 
-
+@Log
 def BaseComponent():
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   

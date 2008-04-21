@@ -13,6 +13,8 @@ import weakref
 import re
 import logging
 
+import inspect, operator
+
 actions = {}
 #actions = weakref.WeakValueDictionary()
 #actionCollections = weakref.WeakKeyDictionary()
@@ -71,7 +73,6 @@ class PermissionError(Exception):
   def __init__(self, *args, **kargs):
     self.flash = kargs.get('flash', None)
     Exception.__init__(self, *args)
-
 
 
 def FileSystemComponent():
