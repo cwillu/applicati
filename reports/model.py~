@@ -105,7 +105,6 @@ def BaseComponent():
   return Object(descriptor=1)
   """
   
-  @Log
   class Object(object):
     def __init__(self, descriptor=None, data=None, onReify=None, path=[], permissions=None):
       assert not (descriptor and data), "Invalid state: descriptor and data specified"
@@ -354,7 +353,9 @@ def BaseComponent():
 
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)
-
+  Object = Log(Object)
+  
+  
   return Object(descriptor=(1,), path=[], permissions=0)
   
       

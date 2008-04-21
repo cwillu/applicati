@@ -86,7 +86,7 @@ def Log(obj):
     
     def __call__(self, *args, **kargs):
       print self.name, args, kargs
-      return self.method(*args, **kargs)         
+      return self.method(obj, *args, **kargs)         
 
   for name, method in inspect.getmembers(obj, inspect.ismethod):
     print name
