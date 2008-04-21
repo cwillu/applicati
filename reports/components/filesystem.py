@@ -98,16 +98,9 @@ def FileSystemComponent():
       self._data = data
       self.permissions = permissions
       
-      if self._descriptor and not isinstance(self._descriptor, tuple):
-        logging.getLogger('root.model').warn("Old style descriptor, updating in place (%s)" % self._descriptor)
-        assert False, self._descriptor
-        self._descriptor = (self._descriptor,)
-      
-      if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
-        assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
-        
-      if self._descriptor == ((1, ), ):
-        raise Exception(self._descriptor, descriptor)
+      if self._descriptor:
+        assert isinstance(self._descriptor, tuple), "Obsolete descriptor format supplied (%s)" %self._descriptor
+        assert set(map(type, self._descriptor)).issubet(set([str])), self._descriptor
 
     def _query(self, op):
       logging.getLogger('root.model').debug("Effective Permissions: %s", self.permissions)
