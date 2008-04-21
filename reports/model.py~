@@ -13,6 +13,8 @@ import weakref
 import re
 import logging
 
+import inspect
+
 from components.filesystem import FileSystemComponent
 
 actions = {}
