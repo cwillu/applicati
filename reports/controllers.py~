@@ -255,6 +255,7 @@ class Root(controllers.RootController):
         response.status=404
         flash('''%s doesn't exist''' % (request.path, ))
 
+        loginRoot()
         aBlank = blank()
         return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
         redirectToShow(path)
