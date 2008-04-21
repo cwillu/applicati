@@ -90,7 +90,7 @@ def Log(obj):
 
   for name, method in inspect.getmembers(obj, inspect.ismethod):
     obj.name = Log.Logger(name, method)
-      
+  return obj   
 
 @Log
 def BaseComponent():
