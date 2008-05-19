@@ -1,5 +1,19 @@
 01:22:30.02  Logging started, 05/19/08                  %%%%%%%%%%%%%%%%%%%%
 01:22:30.02  unsupported free or cell vars in expose                     % %
-01:22:55 AM.72  unsupported free or cell vars in findPage                   % %
-01:49:01 AM.49  unsupported free or cell vars in findPageName               % %
+07:11:18.50  memory usage: 12+ kb                                          %
+07:11:18.50  program exit, 05/19/08                     %%%%%%%%%%%%%%%%%%%%
+  % %
 01:49:01 AM.65  unsupported ** argument in call to warning                  % %
+07:11:18 AM.33   ______
+        #1   |29.9 %|  reloader_thread           ...ogears/startup.py:27
+        #2   |21.2 %|  main                      ...lib/autoreload.py:48
+        #3   |12.9 %|  wait                      ...n2.5/threading.py:207
+        #4   | 5.7 %|  get                       ...ython2.5/Queue.py:147
+        #5   | 4.9 %|  start                     ...rypy/_cpengine.py:78
+        #6   | 4.8 %|  <module>                    ./start-reports.py:2
+        #7   | 4.8 %|  start                     ...rypy/_cpserver.py:33
+        #8   | 4.8 %|  start_server              ...ogears/startup.py:303
+        #9   | 2.8 %|  run                       .../_cpwsgiserver.py:188
+        #10  | 1.9 %|  __bootstrap_inner         ...n2.5/threading.py:468
+07:11:18 AM.33  memory usage: 39+ kb                                          %
+07:11:18 AM.33  program exit, 19/05/08                     %%%%%%%%%%%%%%%%%%%%
