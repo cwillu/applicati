@@ -14,8 +14,8 @@ tr.odd td {background-color:#edf3fe;}
 tr.even td {background-color:#fff;}
 
 .toolbar {
-  height: 25px;  background: url(/static/images/toolbar-gradient.png) repeat-y 0 0;
-  background-color: #224;
+  height: 18px;
+  background: #224 url(/static/images/toolbar-gradient.png) repeat-y;#  background-color: #224;
   padding: 0px;
   color: #ccf;
   font-size: 125%;
@@ -28,7 +28,15 @@ tr.even td {background-color:#fff;}
   z-index: 1; 
   top: 0; 
   width: 100%;
-  height: 40px;
+  height: 29px;
+  border-bottom: 11px solid #223;
+}
+
+.bot {
+ position: absolute; 
+ bottom: 0px;
+ width: 100%;
+ border-bottom: 7px solid #223;
 }
 
 .top .right {
@@ -113,12 +121,6 @@ textarea {
 .search input {
   background: #fff;
   background-color: #fff;
-}
-
-.bot {
- position: absolute; 
- bottom: 0px;
- width: 100%;
 }
 .middle {
   position: relative;
@@ -209,6 +211,10 @@ h1,h2,h3,h4,h5,h6 {
 
 h1, h2 {
   font-size: 125%;
+}
+
+.title {
+  color: #369;
 }
 
 h1 strong {

@@ -1,6 +1,8 @@
-from turbogears.database import PackageHub
-hub = PackageHub('reports')
-__connection__ = hub
+from __future__ import absolute_import
+
+#from turbogears.database import PackageHub
+#hub = PackageHub('reports')
+#__connection__ = hub
 
 import thread
 import cPickle as pickle
@@ -14,8 +16,6 @@ import re
 import logging
 
 import inspect
-
-from components.filesystem import FileSystemComponent
 
 actions = {}
 #actions = weakref.WeakValueDictionary()
@@ -33,14 +33,13 @@ def _assertId(id):  #XXX change to assert
     return (id, )
   return id
 
+components = {}
+def registerComponent(name, obj):
+  assert name not in components, "Component already registered (%s)" % name
+  components[name] = obj
 def resolveComponent(name):
-  if name == "Object":
-    return Object
-  if name == "FileSystemComponent":
-    return FileSystemComponent
-        
-  assert False, "Unknown component (%s)" % name
-
+  assert name in components, "Unknown component (%s)" % name  
+  return components[name]
 
 def _modPermissions(source, cap):
   if cap[0] == 0:
@@ -78,21 +77,25 @@ class PermissionError(Exception):
     self.flash = kargs.get('flash', None)
     Exception.__init__(self, *args)
 
-def Log(obj):
-  class Logger(object):
-    def __init__(self, name, method):
-      self.name = name
-      self.method = method
-    
-    def __call__(self, *args, **kargs):
-      print self.name, args, kargs
-      return self.method(obj, *args, **kargs)         
-
-  for name, method in inspect.getmembers(obj, inspect.ismethod):
-    print name
-    setattr(obj, name, Logger(name, method))
-  return obj   
-
+def logger(func):
+  name = func.__name__
+  if name[0] == '_':
+    return func
+  
+  def log(*args, **kargs):
+    print ">", name, args, kargs 
+    result = func(*args, **kargs)
+    print "<", name, result
+    return result    
+  return log
+  
+def with_methods(obj, decorator):
+  try:
+    for name, method in inspect.getmembers(obj, inspect.ismethod):
+      setattr(obj, name, decorator(method))
+  except PermissionError:
+    pass
+  
 def BaseComponent():
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   
@@ -106,7 +109,7 @@ def BaseComponent():
   """
   
   class Object(object):
-    def __init__(self, descriptor=None, data=None, onReify=None, path=[], permissions=None):
+    def __init__(self, descriptor=None, data=None, onReify=None, path=[], permissions=None):      
       assert not (descriptor and data), "Invalid state: descriptor and data specified"
 #      assert descriptor or data, "Invalid state: neither descriptor nor data specified"
       assert not (descriptor and onReify), "Invalid state: descriptor and onReify specified"
@@ -127,6 +130,8 @@ def BaseComponent():
         
       if self._descriptor == ((1, ), ):
         raise Exception(self._descriptor, descriptor)
+
+      with_methods(self, logger)
 
     def _query(self, op):
       logging.getLogger('root.model').debug("Effective Permissions: %s", self.permissions)
@@ -243,10 +248,12 @@ def BaseComponent():
     
     @property
     def descriptor(self):
+      if not self.id:
+        return None
       return _sign(self.id, componentSecret)
               
     def getPerms(self):
-#      self._check('permissions')
+      self._check('read')
             
       if not self._descriptor:
 #        assert False
@@ -322,6 +329,7 @@ def BaseComponent():
 
       if not _checkSignature(descriptor, componentSecret):
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
+        #TODO make assertion
         return False                
     
     
@@ -352,11 +360,11 @@ def BaseComponent():
       return Object(descriptor=id, path=path, permissions=targetPermissions)
 
     def create(self, data=None, onReify=None, path=[]):
-      return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)
-  Object = Log(Object)
+      return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)  
   
   
   return Object(descriptor=(1,), path=[], permissions=0)
   
+#registerComponent('Object', Object)
       
 

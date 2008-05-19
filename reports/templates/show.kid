@@ -7,6 +7,13 @@
       http-equiv="Content-Type" py:replace="''"/>
 
 <title> ${name} - NeoWiki </title>
+    <script language="javascript">
+        shortcut.add("Ctrl+s", function() {
+            document.edit.submit();
+            return false;
+          }, { 'type': 'keydown', 'propagate': false, 'target': document });
+        
+    </script>
 <script language="javascript">
 
   //window.addEventListener('load', init(), false);

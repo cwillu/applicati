@@ -9,12 +9,12 @@
 </head> 
 <body>
     <div id="main_content">
-        <table border="0" >
+        <table border="0" width="100%" >
         <tr></tr>
         <tr py:for="linkRank, contentRank, index, name, id, link in results">
             <td>
-            ${name}
-            <div class="path" style="float: left; clear: left;"><a href="${'/'.join(['']+link)}/">${'/'.join(['']+link)}/</a></div>
+            <a href="${'/'.join(['']+link)}/">${name}</a>
+            <div class="path" style="float: left; clear: left;">${'/'.join(['']+link)}/</div>
             <div class="id">${id} - (${-linkRank}/${-contentRank}/${index})</div>
             </td>
           

@@ -1,6 +1,9 @@
+from __future__ import absolute_import
+
 #from turbogears.database import PackageHub
 #hub = PackageHub('reports')
 #__connection__ = hub
+
 
 import thread
 import cPickle as pickle
@@ -14,6 +17,10 @@ import re
 import logging
 
 import inspect, operator
+
+from reports import model
+
+
 
 actions = {}
 #actions = weakref.WeakValueDictionary()

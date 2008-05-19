@@ -1,6 +1,9 @@
+from __future__ import absolute_import
+
 #from turbogears.database import PackageHub
 #hub = PackageHub('reports')
 #__connection__ = hub
+
 
 import thread
 import cPickle as pickle
@@ -14,6 +17,11 @@ import re
 import logging
 
 import inspect, operator
+
+from reports import model
+
+
+assert False, dir(db)
 
 actions = {}
 #actions = weakref.WeakValueDictionary()
@@ -44,7 +52,7 @@ def _modPermissions(source, cap):
   
   mask = set(cap[0]) | set(cap[1])    
   if 'override' in cap[0]:
-    return cap[1], maskimport inspect, operator
+    return cap[1], mask
   if source == 0 or source[0] == 0:
     return set(['override']) | set(cap[1]) - set(cap[0]), mask
     

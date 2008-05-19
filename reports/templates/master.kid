@@ -2,7 +2,8 @@
 <?python import sitetemplate ?>
 <?python import random ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">
-<head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+<head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">
+    <meta name="verify-v1" content="tasE1XaBrCBulc5wEzuT4RocTBnZ0f18824WGAwujmE=" />    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title py:replace="''">Your title goes here</title>
     <style type="text/css">
         #pageLogin
@@ -28,7 +29,7 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
     <div class="left">
-      <a href="/"><img style="display: inline; position: relative; bottom: 7px; left: -2px;" src="${tg.url([
+      <a href="/"><img style="display: inline; position: absolute; bottom: 1px; left: 6px; margin: -20px 0px;" src="${tg.url([
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
@@ -38,9 +39,9 @@
         '/static/images/mantis-up.png', 
         '/static/images/mantis-rolled.png', 
         '/static/images/mantis-left.png', 
-        ][random.randrange(6)])}" /></a>
+        ][random.randrange(6)])}" /></a>    
     </div>
-    <div class="left ">
+    <div class="left" style="padding-left: 48px;">
       <div ><span id="selected"><a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span></div>
       <div class="path">
         <span style="z-index: 10; margin: -16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><!--
@@ -56,7 +57,7 @@
         <form name="search" action="/" method="get">               
           <input type="hidden" name="op" value="search" />
           <input id="search" type="text" name="query" />
-          <a href="#search" onClick="document.search.submit(); return false;">Search</a>      
+          <a href="?op=search" onClick="document.search.submit(); return false;">Search</a>      
         </form>
       </span>
       <span py:if="root[-1] == 'guest'">
@@ -86,7 +87,9 @@
       <div class="spacer" />
     </div>    <div class="bot"><div class="toolbar"> 
       <div class="left">
-          <a href="?op=edit">Edit</a>
+          <form name="edit" action="?op=edit" method="POST">
+            <a href="#edit" onClick="document.edit.submit(); return false;">Edit</a>
+          </form>
         | <a href="?op=links">Links</a>
         | <form name="select" action="?op=copy" method="POST">
             <a href="#select" onClick="document.select.submit(); return false;">Select</a>
