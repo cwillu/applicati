@@ -625,7 +625,7 @@ AutoLogin = builtins.AutoLogin
 Raw = builtins.Raw
 XML = builtins.XML
 
-metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'Presentation', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
+metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
 
 #import cPickle as pickle
 #pickle.dump([(o.name, o.data, o.id) for o in db.Object.select()], open('db.dump', 'w'))
