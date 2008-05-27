@@ -617,7 +617,7 @@ class XmlPresentation(WikiPresentation):
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
 # compatibility for old pickles
-#Login = builtins.Login
+Login = builtins.Login
 Constructor = builtins.Constructor
 Wiki = builtins.Wiki
 CapRoot = builtins.CapRoot
