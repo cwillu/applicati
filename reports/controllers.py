@@ -181,7 +181,7 @@ class Wrapper(object):
     self.watch = page.watch
     self.removeWatch = page.removeWatch
     self.changePermission = page.changePermission
-    self.permissions = page.permissions
+    self.permissions = page.permissions 
         
   @property
   def descriptor(self):
