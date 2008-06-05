@@ -161,7 +161,40 @@ def walk(root, action, maxDepth=5):
 
       childList = getattr(child, 'list', lambda node: [])
       stack.append((childNode, childList(childNode), depth+1))
-      seen.add(childNode.id)            
+      seen.add(childNode.id)        
+
+#class FixIE(object):
+def FixIE(presenter):
+  img_png = re.compile(r'<img[^>]*>')
+  attrs = re.compile(r'(\w+)="([^"]*)')
+
+  def fixPNG(match):
+    '''
+    This looks like it should work, but DXImageTransform doesn't work under wine,
+    so instead we just drop to a gif until I can confirm this works
+    '''    
+    iepng = "filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='%s');"
+  
+    img = match.group(0)
+    attributes = dict(attrs.findall(img))
+    attributes['style'] = iepng % attributes['src'] + attributes.get('style', '')
+    attributes['src'] = ''
+    return "<img %s />" % ' '.join('%s="%s"' % (key, attributes[key]) for key in attributes)
+
+  def replacePNG(match):
+    img = match.group(0)
+    attributes = dict(attrs.findall(img))
+    attributes['src'] = attributes['src'].replace('.png', '.gif')
+    return "<img %s />" % ' '.join('%s="%s"' % (key, attributes[key]) for key in attributes)
+
+  def __call__(*args, **kargs):
+    output = presenter(*args, **kargs)
+    userAgent = request.headers["User-Agent"]
+    if "MSIE" in userAgent and float(re.findall(r'MSIE (.*?);', userAgent)[0]) < 7:
+      output = img_png.sub(replacePNG, output)
+    return output
+  return __call__
+    
 
 class Wrapper(object):
   def __init__(self, data, page):    
@@ -181,7 +214,7 @@ class Wrapper(object):
     self.watch = page.watch
     self.removeWatch = page.removeWatch
     self.changePermission = page.changePermission
-    self.permissions = page.permissions 
+    self.permissions = page.permissions
         
   @property
   def descriptor(self):
@@ -312,17 +345,17 @@ class Root(controllers.RootController):
     return findPresentation(obj)
 
 def findPresentation(obj):
-  if isinstance(obj, builtins.Presentation):    
+  if isinstance(obj, Presentation):    
     Log.warn("default presentation used for object %s" % obj)
     return obj
   
   if isinstance(obj, Raw):
-    return builtins.RawPresentation()
+    return RawPresentation()
   
   if isinstance(obj, tuple(builtins.metaTypes.values())):
-    return builtins.WikiPresentation()
+    return WikiPresentation()
     
-  return builtins.PrimitivePresentation()
+  return PrimitivePresentation()
 
 def raiseRedirectToShow(path, status=None):
   if not path:
@@ -330,6 +363,118 @@ def raiseRedirectToShow(path, status=None):
   raise HTTPRedirect("/%s/" % '/'.join(path), status=status)
 
 
+class Presentation(object):
+  def _path(self, path):
+    return ('home', ) + path
+
+  def __getattr__(self, operation):
+    if operation in ['retrieve_css', 'retrieve_javascript']:  #Turbogears junk
+      return None
+    
+    def default(obj,  path, **args):
+      op = operation
+      
+      if not op:
+        return self.show(obj, path, **args)
+
+      concreteOp = getattr(obj, op)
+      if not concreteOp:
+        return self.show(obj, path) if op is not 'show' else None
+        
+      output = concreteOp(**args)
+      if output is None:
+        return self.show(obj, path) if op is not 'show' else None
+    
+      raise ReturnedObject(output)
+
+    return default
+    
+  def write(self, obj, path, data=None):
+    if not data:
+      data = findPage(loginRoot(), ('~hand',)).getData()
+
+    obj.write(data)
+    raiseRedirectToShow(path)
+
+  def copy(self, obj, path):
+    session['hand'] = obj.descriptor
+    raiseRedirectToShow(path)
+
+  @FixIE
+  @expose(template="reports.templates.search")
+  def search(self, obj, path, query=None):
+    if query is None:
+      return dict(session=session, root=session['root'], results=[], path=self._path(path), name="Search", obj=obj)
+
+    hits = {}
+    root = loginRoot()
+    pathCut = len(root.path)
+#    assert False, (query.lower(), re.escape(query.lower()))
+    query = re.compile(r'\b%s\b' % re.escape(query.lower()))
+    
+    def doSearch(page):
+      if not page.data:
+        return
+
+      if page.id in hits:
+        hits[page.id][1] -= 1          
+        if query.search(page.path[-1].lower()):
+          hits[page.id][0] -= 1
+        return
+      
+      titleMatches = query.search(page.path[-1].lower())
+      contentMatches = query.search(page.data.show(page).lower())
+
+      if not (titleMatches or contentMatches):
+        return
+        
+      #TODO check complexity on len(hits<dict>) 
+      hits[page.id] = [0, 0, len(hits), page.name, page.id, page.path[pathCut:]]
+      if titleMatches:
+        hits[page.id][0] -= 1
+      if contentMatches:
+        hits[page.id][1] -= 1                    
+            
+    walk(root, doSearch)
+    
+    results = []
+    for hit in hits.values():
+      bisect.insort(results, hit)
+
+    return dict(session=session, root=session['root'], results=results, path=self._path(path), name="Search", obj=obj)  
+    
+    raise ReturnedObject(results)
+    return '\n'.join(results)    
+
+
+  def changePermission(self, obj, path, link=None, permission=None, value=None):
+    values = {'none': None, 'true': True, 'false': False}
+    value = values[value.lower()]
+
+    obj.changePermission(link, permission, value)
+    raiseRedirectToShow(path)    
+
+  def waitForChange(self, obj, path, hash=None):
+    queue = Queue()
+    action = lambda: queue.put(True)
+    obj.watch(action)
+    try:
+#      yield '<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">\n'
+      for interval in range(60 * 60):
+        try:
+          queue.get(timeout=5)
+      #        response.status=204 #no content
+#          yield  '''
+#            <body onLoad="window.parent.location.reload()"></body></html>          
+#          '''
+          return
+        except Empty:
+          yield ' '  # requires patch to cherrypy
+    finally:
+      obj.removeWatch(action)
+#      response.status=200 #reset content
+  waitForChange._cp_config = {'response.stream': True}
+ 
 def blank():
   class Blank(object):
     @FixIE
@@ -345,6 +490,131 @@ def blank():
   return aBlank
 
 
+class WikiPresentation(Presentation):
+  def _path(self, path):
+    return ('home', ) + path
+  
+  def _name(self, path):
+    return self._path(path)[-1]
+
+  @FixIE
+  @expose(template="reports.templates.show")
+  def show(self, obj,  path, formatted=True, prefix=None):
+    content = obj.show(formatted=formatted, prefix=prefix)
+    return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
+    
+  @FixIE
+  @expose(template="reports.templates.edit")
+  def edit(self, obj,  path):    
+    return dict(session=session, this=self, prototype=obj.__class__.__name__, root=session['root'], name=self._name(path), path=self._path(path), data=obj.show(), obj=obj)  #XXX deprecate data;  'this' can't be called 'self'
+    
+  @expose()
+  def save(self, obj, path, data='', save=None):    
+    if 'file' in dir(data):  #allow file uploads, handled by the framework
+      data = data.file.read()
+    
+    logging.getLogger('root.controller.http').debug("Wiki saving: %s %s", type(data), dir(data))
+    obj.save(data)      
+
+    flash("Changes saved!")
+    raiseRedirectToShow(path)
+
+  @expose()
+  def append(self, obj, path, data='', submit=None):
+    if 'file' in dir(data):
+      data = data.file.read()     
+    return self.save(obj, path, data=obj.show() + '\n' + data, )
+    
+  @expose()
+  def prepend(self, obj, path, data='', submit=None):
+    if 'file' in dir(data):
+      data = data.file.read()
+    return self.save(obj, path, data=data + '\n' + obj.show())
+            
+  @FixIE
+  @expose(template="reports.templates.caps")    
+  def links(self, obj, path):
+    links = obj.links
+    assert links is not None
+    
+    permissions = {}
+    
+    for id in links:
+      if links[id][1] == 0:
+        links[id] = (links[id][0], {})
+        continue
+        
+      name, unset, set = links[id]
+
+      links[id] = (name, {})
+      for permission in unset:
+        links[id][1][permission] = False
+        if permission not in corePermissions:
+          corePermissions.append(permission)
+
+      for permission in set:
+        links[id][1][permission] = True
+        if permission not in corePermissions:
+          corePermissions.append(permission)
+                          
+    return dict(session=session, root=session['root'], links=links, permissions=corePermissions, path=self._path(path), name=self._name(path), obj=obj)    
+  
+  @FixIE
+  @expose(template="reports.templates.login")
+  def login(self, obj, path, user=None, password=None, login=None):        
+    while True:
+      if not user and not password:
+        response.status=403
+        return dict(message="Please log in.")
+        
+      username = user
+      user = findPage(None, [request.headers['Host'], user])
+      if not user or not user.data:
+        break        
+      user = user.data
+      if 'checkPassword' not in dir(user):
+        break
+      if not user.checkPassword(username, password):
+        break
+        
+      session['root'] = (request.headers['Host'], username,)
+      session['path'] = []    
+      
+      flash("Logged in as %s" % session['root'][-1])
+      raiseRedirectToShow(['/'])
+
+    msg=_("%s - Incorrect password or username." % username)
+    response.status=403
+    return dict(message=msg)
+
+  @expose()
+  def logout(self, obj,  path):
+    del session['root']
+    session['path'] = []    
+    flash('Logged out')
+    raiseRedirectToShow(['/'])
+
+class PrimitivePresentation(WikiPresentation):
+  @FixIE
+  @expose(template="reports.templates.show")
+  def show(self, obj, path, prefix=None):
+    try:
+      content = obj.show()
+    except:
+      content = html.escape("%s" % obj)
+    return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
+
+class RawPresentation(WikiPresentation):
+  @expose()
+  def show(self, obj, path, prefix=None, formatted=True):    
+    return obj.show(formatted=formatted, prefix=None)
+
+class XmlPresentation(WikiPresentation):
+  @FixIE
+  @expose(template="reports.templates.show")
+  def show(self, obj, path, prefix=None, formatted=True):
+    content = obj.show(formatted=formatted, prefix=None)
+    return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
 # compatibility for old pickles
 Constructor = builtins.Constructor
