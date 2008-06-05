@@ -62,8 +62,11 @@ class Wiki(object):
     def inlineLink(match):
       name = match.group('name')
       extension = tuple(name.split('/'))
-
-      meta = findPage(page, tuple(name.split('/')))
+      
+      assert len(extension) == 1, len(extension)
+      meta = page.get(page.resolve(extension[0]), extension[0])
+      #meta = findPage(page, extension)
+      
       inlineObject = meta.data
       if not inlineObject:
         return None
