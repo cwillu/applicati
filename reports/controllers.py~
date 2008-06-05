@@ -352,7 +352,7 @@ def findPresentation(obj):
   if isinstance(obj, Raw):
     return RawPresentation()
   
-  if isinstance(obj, tuple(metaTypes.values())):
+  if isinstance(obj, tuple(builtins.metaTypes.values())):
     return WikiPresentation()
     
   return PrimitivePresentation()
@@ -474,7 +474,7 @@ class Presentation(object):
       obj.removeWatch(action)
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
-
+ 
 def blank():
   class Blank(object):
     @FixIE
@@ -625,7 +625,7 @@ AutoLogin = builtins.AutoLogin
 Raw = builtins.Raw
 XML = builtins.XML
 
-metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'Presentation', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
+metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
 
 #import cPickle as pickle
 #pickle.dump([(o.name, o.data, o.id) for o in db.Object.select()], open('db.dump', 'w'))

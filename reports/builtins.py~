@@ -19,44 +19,6 @@ from . import model as db
 
 import logging
 
-class Login(object):
-  @FixIE
-  @expose(template="reports.templates.login")
-  def login(self, page,  path, user=None, password=None, login=None):        
-    assert False
-    while True:
-      if not user and not password:
-        response.status=403
-        return dict(message="Please log in.")
-        
-      username = user
-      user = findPage([user])
-      if not user or not user.data:
-        break        
-      user = user.data
-      if 'checkPassword' not in dir(user):
-        break
-      if not user.checkPassword(page, password):
-        break
-
-      session['root'] = (request.headers['Host'], username,)
-      session['path'] = []    
-#      session['root'] = (username,)
-
-      flash("Logged in as %s" % session['root'])
-      raiseRedirectToShow(path)
-
-    msg=_("%s - Incorrect password or username." % username)
-    response.status=403
-    return dict(message=msg)
-
-  @expose()
-  def logout(self, page,  path):
-    del session['root']
-    session['path'] = []    
-    flash('Logged out')
-    raiseRedirectToShow(path)
-
 class Constructor(object):
   def __init__(self, class_=None):
     self.class_ = class_
@@ -151,15 +113,7 @@ class Wiki(object):
     return self.data
           
   def save(self, page, data=''):    
-    import time
-    start = time.clock()
-  
     self.data, self.links = self.resolveWikiLinks(page, data)
-    
-    stop = time.clock()
-    print            
-    print stop-start
-    print
     
     for key in self.links:
       self.links[key] = (db._assertId(self.links[key][0]),) + self.links[key][1:]
@@ -256,14 +210,14 @@ class Wiki(object):
     self.links[name] = id
     page.data = self
     
-class CapRoot(Wiki, Login):
+class CapRoot(Wiki):
   def resolve(self, page, name):
     if name == '~hand':  # I don't like this
       return session.get('hand', None)
     return super(CapRoot, self).resolve(page, name)
 #    return self.links.get(name, None)
 
-class User(Wiki, Login):
+class User(Wiki):
   def setPassword(self, page, password=None):
     logging.getLogger('root.controller.user').info("Setting password (%s)", page)
     self.salt = sha(os.urandom(64)).hexdigest()
@@ -367,4 +321,5 @@ class XML(object):
     self.links[name] = id    
     page.data = self    
         
+metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
 

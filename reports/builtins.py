@@ -113,15 +113,7 @@ class Wiki(object):
     return self.data
           
   def save(self, page, data=''):    
-    import time
-    start = time.clock()
-  
     self.data, self.links = self.resolveWikiLinks(page, data)
-    
-    stop = time.clock()
-    print            
-    print stop-start
-    print
     
     for key in self.links:
       self.links[key] = (db._assertId(self.links[key][0]),) + self.links[key][1:]
@@ -329,4 +321,5 @@ class XML(object):
     self.links[name] = id    
     page.data = self    
         
+metaTypes = dict((name, eval(name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
 
