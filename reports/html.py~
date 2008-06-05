@@ -1,8 +1,5 @@
 from __future__ import absolute_import
-
 import re
-
-from cherrypy import request
 
 #class FixIE(object):
 def FixIE(presenter):
