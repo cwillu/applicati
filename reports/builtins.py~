@@ -19,6 +19,8 @@ from . import model as db
 
 import logging
 
+
+
 class Constructor(object):
   def __init__(self, class_=None):
     self.class_ = class_
