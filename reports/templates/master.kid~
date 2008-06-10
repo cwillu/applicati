@@ -22,24 +22,24 @@
     <style type="text/css" media="print">
       @import "${tg.url('/static/css/print.css')}";
     </style>
-    <script src="${tg.url('/static/javascript/shortcut.js')}" language="javascript" >
-    </script>
+    <!--<script src="${tg.url('/static/javascript/shortcut.js')}" language="javascript" >
+    </script>-->
     <meta py:replace="item[:]"/>
 </head>
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
     <div class="left">
-      <img width="50" height="50"  src="${tg.url([
-        'http://cwillu.com/static/images/mantis-angle.png', 
-        'http://cwillu.com/static/images/mantis-angle.png', 
-        'http://cwillu.com/static/images/mantis-angle.png', 
-        'http://cwillu.com/static/images/mantis-straight.png', 
-        'http://cwillu.com/static/images/mantis-right.png', 
-        'http://cwillu.com/static/images/mantis-right.png', 
-        'http://cwillu.com/static/images/mantis-up.png', 
-        'http://cwillu.com/static/images/mantis-rolled.png', 
-        'http://cwillu.com/static/images/mantis-left.png', 
-        ][random.randrange(6)])}" />
+      <a href="/"><img style="display: inline; position: absolute; bottom: 1px; left: 6px; margin: -20px 0px;" src="${tg.url([
+        '/static/images/mantis-angle.png', 
+        '/static/images/mantis-angle.png', 
+        '/static/images/mantis-angle.png', 
+        '/static/images/mantis-straight.png', 
+        '/static/images/mantis-right.png', 
+        '/static/images/mantis-right.png', 
+        '/static/images/mantis-up.png', 
+        '/static/images/mantis-rolled.png', 
+        '/static/images/mantis-left.png', 
+        ][random.randrange(6)])}" /></a>    
     </div>
     <div class="left" style="padding-left: 48px;">
       <div ><span id="selected"><a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span></div>
