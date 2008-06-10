@@ -616,6 +616,15 @@ class XmlPresentation(WikiPresentation):
     content = obj.show(formatted=formatted, prefix=None)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
+# compatibility for old pickles
+Constructor = builtins.Constructor
+Wiki = builtins.Wiki
+CapRoot = builtins.CapRoot
+User = builtins.User  
+AutoLogin = builtins.AutoLogin
+Raw = builtins.Raw
+XML = builtins.XML
+
 metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
 
 #import cPickle as pickle
