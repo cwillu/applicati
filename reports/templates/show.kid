@@ -3,13 +3,25 @@
       xmlns:py="http://purl.org/kid/ns#"
       py:extends="'master.kid'">
 <head>
+<meta content="text/html; charset=utf-8"
+      http-equiv="Content-Type" py:replace="''"/>
+
 <title> ${name} - NeoWiki </title>
+    <script language="javascript">
+        shortcut.add("Ctrl+s", function() {
+            document.edit.submit();
+            return false;
+          }, { 'type': 'keydown', 'propagate': false, 'target': document });
+        
+    </script>
 <script language="javascript">
 
   //window.addEventListener('load', init(), false);
 
   function monitor() {
-    var hash = Math.ceil(Math.random()*10000)
+    return;
+    
+    var hash = Math.ceil(Math.random()*10000);
     request = new XMLHttpRequest(); 
     var loc = window.location
 	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
@@ -18,8 +30,8 @@
     function onLoad(e) {
       loc.reload();
     }       
-    request.onerror = onError
-    request.onload = onLoad
+    request.onerror = onError;
+    request.onload = onLoad;
  
 	  request.send(null);
   }
@@ -30,7 +42,7 @@
 <body>
   <!--<iframe src="/static/html/waiter.html" style="width:0px; height:0px; border: 0px" />-->
 
-  <div py:replace="XML(data)">Page text goes here.</div>
+  <div id="main_content"><div py:replace="XML(data)">Page text goes here.</div></div>
 
 </body>
 </html>

@@ -21,6 +21,6 @@ else:
     update_config(configfile="prod.cfg",modulename="reports.config")
 config.update(dict(package="reports"))
 
-from reports.controllers import Root
+from reports.web import Root
 
 start_server(Root())

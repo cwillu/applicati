@@ -11,7 +11,7 @@
 <body>
     <div class="main_content">
         <table border="0">
-        <tr py:for="link in page.data.links">
+        <tr py:for="link in (page.data and page.data.links or [])">
         <td><a href="${link}">${link}</a></td>
         </tr>
         </table>       

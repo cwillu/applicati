@@ -6,12 +6,20 @@
 <meta content="text/html; charset=utf-8"
       http-equiv="Content-Type" py:replace="''"/>
 <title> Editing ${name} - NeoWiki </title>
+    <script language="javascript">
+        shortcut.add("Ctrl+s", function() {
+            document.editor.submit();
+            return false;
+          }, { 'type': 'keydown', 'propagate': false, 'target': document });
+        
+    </script>
 </head>
 <body>
-    <div class="main_content">
-      <form action="?op=save&amp;prototype=${prototype}" method="post">               
-        <textarea name="data" py:content="data" height="100" cols="60"/>
-        <input type="submit" name="submit" value="Save"/>
+    <div id="main_content">
+      <form name="editor" id="editor" action="?op=save&amp;prototype=${prototype}" method="post">               
+        <textarea name="data" py:content="data" rows="${max(19, sum([-((len(line)+1)/-55) for line in data.splitlines()]))+1}" cols="60"/><br/>
+        <input type="submit" name="save" value="Save"/>
+        <input type="reset" name="_reset" value="Reset"/>
       </form>
     </div>
 </body>
