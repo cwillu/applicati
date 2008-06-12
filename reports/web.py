@@ -275,7 +275,7 @@ class Root(controllers.RootController):
     loginRoot()
     op = args.pop('op', '')
     try:
-      meta = None  
+#      meta = None  
       meta, obj = self.find(path, args)           
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
