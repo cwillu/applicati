@@ -633,7 +633,7 @@ class WikiPresentation(Presentation):
 
       return link
 
-    return Wiki.linkWords.sub(resolveLinks, content), nameMapping
+    return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
  
   
   @FixIE

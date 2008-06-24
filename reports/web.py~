@@ -568,7 +568,8 @@ class WikiPresentation(Presentation):
     for link in links:
       print "--->", links[link]
       print link
-      knownIds[links[link][0]] = links[link]
+      knownIds[link] = links[link]
+#      knownIds[links[link][0]] = links[link]
 #      knownIds[page.get(self.links[link]).id] = self.links[link]
 
     templates = { "[(": "[(%s)]", "[": "[%s]", "{": "{%s}"}
