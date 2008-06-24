@@ -612,7 +612,7 @@ class WikiPresentation(Presentation):
         path[0:1] = []
         meta = findPage(loginRoot(), path)
       else:
-        meta = findPage(loginRoot(), objectPath + path)
+        meta = findPage(loginRoot(), objectPath + tuple(path))
       
       
 #      assert False, (link.split('/'), path, s)
