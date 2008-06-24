@@ -270,7 +270,7 @@ class Root(controllers.RootController):
         signature, path[0] = path[0].split(':', 1)
         
       return self.dispatch(path, signature, args)
-    finally:path
+    finally:
       logging.getLogger('root.controller.http').debug("Request complete")
 
 
