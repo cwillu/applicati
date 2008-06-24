@@ -566,6 +566,8 @@ class WikiPresentation(Presentation):
   def resolveWikiLinks(self, objectPath, links, content):
     knownIds = {}
     for link in links:
+      print links[link][0]
+      print link
       knownIds[links[link][0]] = links[link]
 #      knownIds[page.get(self.links[link]).id] = self.links[link]
 
