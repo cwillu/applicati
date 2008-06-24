@@ -516,7 +516,9 @@ class WikiPresentation(Presentation):
       data = data.file.read()
     
     logging.getLogger('root.controller.http').debug("Wiki saving: %s %s", type(data), dir(data))
-    obj.save(data)      
+    data, links = self.resolveWikiLinks(path, obj.links, data)    
+    
+    obj.save(data, links)      
 
     flash("Changes saved!")
     raiseRedirectToShow(path)
@@ -560,6 +562,76 @@ class WikiPresentation(Presentation):
           corePermissions.append(permission)
                           
     return dict(session=session, root=session['root'], links=links, permissions=corePermissions, path=self._path(path), name=self._name(path), obj=obj)    
+ 
+  def resolveWikiLinks(self, objectPath, links, content):
+    knownIds = {}
+    for link in links:
+      knownIds[links[link][0]] = links[link]
+#      knownIds[page.get(self.links[link]).id] = self.links[link]
+
+    templates = { "[(": "[(%s)]", "[": "[%s]", "{": "{%s}"}
+
+    nameMapping = {}
+    def resolveLinks(match):
+      linkType = match.group('type')
+      link = match.group('name')
+     
+#    content = Wiki.linkWords.split(content)
+
+
+#    text = content[::2]
+#    links = content[1::2]
+
+#    for link in links:
+      template = templates.get(linkType, None)
+      if not template:
+        return match.group(0)
+
+      if not '/' in link and not '=' in link and link in links:
+        nameMapping[link] = links[link]
+        return template % link
+
+      
+      name = None
+      if '=' in link:        
+        name, link = link.split('=', 1)     
+        if not link:  #[name=]
+          return template % name
+  
+      if link.endswith('*'):
+        return template % link
+            
+      path = link.split('/')
+      if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
+        path = path[:-1]
+              
+      if path[0] == '':
+        path[0:1] = []
+        meta = findPage(loginRoot(), path)
+      else:
+        meta = findPage(loginRoot(), objectPath + path)
+      
+      
+#      assert False, (link.split('/'), path, s)
+      if not path:
+        name = 'home'        
+      
+      name = name if name else path[-1] if path else None	
+  
+      link = template % (name) 
+      if not meta or not meta.id:
+        if '/' in link:
+          link = template % (link + '*')
+        return link
+      if meta.id in knownIds:
+        nameMapping[name] = knownIds[meta.id]
+      else:
+        nameMapping[name] = meta.descriptor
+
+      return link
+
+    return Wiki.linkWords.sub(resolveLinks, content), nameMapping
+ 
   
   @FixIE
   @expose(template="reports.templates.login")

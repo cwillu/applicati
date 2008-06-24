@@ -72,8 +72,7 @@ class Wiki(object):
       inlineObject = meta.data
       if not inlineObject:
         return None
-        
-      presentation = Presentation()
+             
       content = inlineObject.show(meta, prefix=prefix + extension, formatted=True) #XXX tuples, not list            
 #      print content
       return content
