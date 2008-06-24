@@ -239,7 +239,7 @@ class ReturnedObject(Exception):
   def __init__(self, data):
     self.data = data
 
-def loginRoot(root=None):
+def loginRoot():
   if root and root.path:
     session['root'] = tuple(root.path)
     session['path'] = []    
@@ -255,7 +255,7 @@ class Root(controllers.RootController):
   @expose()
   def default(self, *path, **args):
     try:
-      logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)
+      logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            
       if not request.path.endswith('/'):
 #        response.status=404
 #        flash('''%s doesn't exist''' % (request.path, ))
@@ -264,12 +264,17 @@ class Root(controllers.RootController):
 #        aBlank = blank()
 #        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
         raiseRedirectToShow(path)
-      return self.dispatch(path, args)
+    
+      signature = None
+      if path and ':' in path[0]:
+        signature, path[0] = path[0].split(':', 1)
+        
+      return self.dispatch(path, signature, args)
     finally:
       logging.getLogger('root.controller.http').debug("Request complete")
 
 
-  def dispatch(self, path, args):
+  def dispatch(self, path, signature, args):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
     
     loginRoot()
