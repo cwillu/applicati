@@ -4,7 +4,10 @@ import os, sys
 import bisect
 from Crypto.Cipher import Blowfish as blowfish
 from sha import sha
-from os import urandom as random
+import math
+#from os import urandom as random
+from random import SystemRandom as sysrandom
+random = sysrandom()
 import xml.dom.minidom as dom
 import re
 from Queue import Queue, Empty
@@ -28,6 +31,9 @@ if not os.fork():
   os.system('git commit -a -m "$(date)"')
   sys.exit(0)
 
+def bitString(bits, dictionary='1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+  requiredLength = math.ceil(bits / math.log(len(dictionary, 2)))
+  return ''.join(random.choice(dictionary) for x in range(requiredLength))
 
 # import logging
 # log = logging.getLogger("reports.controllers")
@@ -239,23 +245,21 @@ class ReturnedObject(Exception):
   def __init__(self, data):
     self.data = data
 
-def loginRoot(root=None):
-  if root and root.path:
-    session['root'] = tuple(root.path)
-    session['path'] = []    
+def loginRoot():
   session.setdefault('root', (request.headers['Host'], 'guest'))
   
 #  assert False, session['root']
 #  return findPage(None, session['root'])
-  return findPage(None, ('gateways', ) + session['root'])
-#  return findPage(None, session['root'])
-    
+
+#  return findPage(None, ('gateways', ) + session['root'])
+  return findPage(None, ('gateways', request.headers['Host']))
+   
 
 class Root(controllers.RootController):  
   @expose()
   def default(self, *path, **args):
     try:
-      logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)
+      logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            
       if not request.path.endswith('/'):
 #        response.status=404
 #        flash('''%s doesn't exist''' % (request.path, ))
@@ -264,18 +268,44 @@ class Root(controllers.RootController):
 #        aBlank = blank()
 #        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
         raiseRedirectToShow(path)
-      return self.dispatch(path, args)
+    
+      signature = None
+      if path and ':' in path[0]:
+        signature, path[0] = path[0].split(':', 1)
+        path = ('protected',) + path
+      else:
+        path = ('public',) + path
+        
+      return self.dispatch(path, signature, args)
     finally:
       logging.getLogger('root.controller.http').debug("Request complete")
 
+  def addProtected(self, path):
+    protectedRoot = findPage(loginRoot(), ('protected',))
+    links = protectedRoot.data.links
 
-  def dispatch(self, path, args):
+    requiredBits = math.log(len(links), 2)  #not really 'required', but nice to have (not security sensitive, these paths are signed)
+    while True:
+      protectedName = bitString(requiredBits)
+      if protectedName not in links:
+        break              
+
+    links[protectedName] = findPage(loginRoot(), path).descriptor
+    protectedRoot.data.save(protectedRoot)
+    
+  def removeProtected(self, name):
+    protectedRoot = findPage(loginRoot(), ('protected',))
+    links = protectedRoot.data.links
+    del links[name]
+    protectedRoot.data.save(protectedRoot)
+    
+
+  def dispatch(self, path, signature, args):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
     
     loginRoot()
     op = args.pop('op', '')
     try:
-      meta = None  
       meta, obj = self.find(path, args)           
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
@@ -306,7 +336,7 @@ class Root(controllers.RootController):
         flash('''%s permission denied''' % (err.args[0].title(), ))
 
       aBlank = blank()
-      return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)
+      return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
  
   def find(self, path, args):
     prototype = args.pop('prototype', 'Default')
@@ -514,7 +544,9 @@ class WikiPresentation(Presentation):
       data = data.file.read()
     
     logging.getLogger('root.controller.http').debug("Wiki saving: %s %s", type(data), dir(data))
-    obj.save(data)      
+    data, links = self.resolveWikiLinks(path, obj.links, data)    
+    
+    obj.save(data, links)      
 
     flash("Changes saved!")
     raiseRedirectToShow(path)
@@ -558,6 +590,79 @@ class WikiPresentation(Presentation):
           corePermissions.append(permission)
                           
     return dict(session=session, root=session['root'], links=links, permissions=corePermissions, path=self._path(path), name=self._name(path), obj=obj)    
+ 
+  def resolveWikiLinks(self, objectPath, links, content):
+    knownIds = {}
+    for link in links:
+      print "--->", links[link]
+      print link
+      knownIds[link] = links[link]
+#      knownIds[links[link][0]] = links[link]
+#      knownIds[page.get(self.links[link]).id] = self.links[link]
+
+    templates = { "[(": "[(%s)]", "[": "[%s]", "{": "{%s}"}
+
+    nameMapping = {}
+    def resolveLinks(match):
+      linkType = match.group('type')
+      link = match.group('name')
+     
+#    content = Wiki.linkWords.split(content)
+
+
+#    text = content[::2]
+#    links = content[1::2]
+
+#    for link in links:
+      template = templates.get(linkType, None)
+      if not template:
+        return match.group(0)
+
+      if not '/' in link and not '=' in link and link in links:
+        nameMapping[link] = links[link]
+        return template % link
+
+      
+      name = None
+      if '=' in link:        
+        name, link = link.split('=', 1)     
+        if not link:  #[name=]
+          return template % name
+  
+      if link.endswith('*'):
+        return template % link
+            
+      path = link.split('/')
+      if path and path[-1] == '':  # '/' goes to root, 'foo/bar/baz/' strips off the '/'
+        path = path[:-1]
+              
+      if path[0] == '':
+        path[0:1] = ['~hand']
+      else:
+        path = objectPath + tuple(path)
+
+      meta = findPage(loginRoot(), path)      
+      
+#      assert False, (link.split('/'), path, s)
+      if not path:
+        name = 'home'        
+      
+      name = name if name else path[-1] if path else None	
+  
+      link = template % (name) 
+      if not meta or not meta.id:
+        if '/' in link:
+          link = template % (link + '*')
+        return link
+      if meta.id in knownIds:
+        nameMapping[name] = knownIds[meta.id]
+      else:
+        nameMapping[name] = meta.descriptor
+
+      return link
+
+    return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
+ 
   
   @FixIE
   @expose(template="reports.templates.login")
