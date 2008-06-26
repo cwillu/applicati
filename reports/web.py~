@@ -4,7 +4,10 @@ import os, sys
 import bisect
 from Crypto.Cipher import Blowfish as blowfish
 from sha import sha
-from os import urandom as random
+import math
+#from os import urandom as random
+from random import SystemRandom as sysrandom
+random = sysrandom()
 import xml.dom.minidom as dom
 import re
 from Queue import Queue, Empty
@@ -28,6 +31,9 @@ if not os.fork():
   os.system('git commit -a -m "$(date)"')
   sys.exit(0)
 
+def bitString(bits, dictionary='1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+  requiredLength = math.ceil(bits / math.log(len(dictionary, 2)))
+  return ''.join(random.choice(dictionary) for x in range(requiredLength))
 
 # import logging
 # log = logging.getLogger("reports.controllers")
@@ -244,9 +250,10 @@ def loginRoot():
   
 #  assert False, session['root']
 #  return findPage(None, session['root'])
-  return findPage(None, ('gateways', ) + session['root'])
-#  return findPage(None, session['root'])
-    
+
+#  return findPage(None, ('gateways', ) + session['root'])
+  return findPage(None, ('gateways', request.headers['Host']))
+   
 
 class Root(controllers.RootController):  
   @expose()
@@ -265,11 +272,33 @@ class Root(controllers.RootController):
       signature = None
       if path and ':' in path[0]:
         signature, path[0] = path[0].split(':', 1)
+        path = ('protected',) + path
+      else:
+        path = ('public',) + path
         
       return self.dispatch(path, signature, args)
     finally:
       logging.getLogger('root.controller.http').debug("Request complete")
 
+  def addProtected(self, path):
+    protectedRoot = findPage(loginRoot(), ('protected',))
+    links = protectedRoot.data.links
+
+    requiredBits = math.log(len(links), 2)  #not really 'required', but nice to have (not security sensitive, these paths are signed)
+    while True:
+      protectedName = bitString(requiredBits)
+      if protectedName not in links:
+        break              
+
+    links[protectedName] = findPage(loginRoot(), path).descriptor
+    protectedRoot.data.save(protectedRoot)
+    
+  def removeProtected(self, name):
+    protectedRoot = findPage(loginRoot(), ('protected',))
+    links = protectedRoot.data.links
+    del links[name]
+    protectedRoot.data.save(protectedRoot)
+    
 
   def dispatch(self, path, signature, args):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
@@ -277,7 +306,6 @@ class Root(controllers.RootController):
     loginRoot()
     op = args.pop('op', '')
     try:
-#      meta = None  
       meta, obj = self.find(path, args)           
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
@@ -308,7 +336,7 @@ class Root(controllers.RootController):
         flash('''%s permission denied''' % (err.args[0].title(), ))
 
       aBlank = blank()
-      return self.findPresentation(aBlank).show(Wrapper(aBlank, meta), path)
+      return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
  
   def find(self, path, args):
     prototype = args.pop('prototype', 'Default')
@@ -609,11 +637,11 @@ class WikiPresentation(Presentation):
         path = path[:-1]
               
       if path[0] == '':
-        path[0:1] = []
-        meta = findPage(loginRoot(), path)
+        path[0:1] = ['~hand']
       else:
-        meta = findPage(loginRoot(), objectPath + path)
-      
+        path = objectPath + tuple(path)
+
+      meta = findPage(loginRoot(), path)      
       
 #      assert False, (link.split('/'), path, s)
       if not path:

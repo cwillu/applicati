@@ -116,9 +116,10 @@ class Wiki(object):
       return formatted
     return self.data
           
-  def save(self, page, data='', links={}):    
+  def save(self, page, data='', links=None):    
     self.data = data
-    self.links = links
+    if links is not None:
+      self.links = links
     
     for key in self.links:
       self.links[key] = (db._assertId(self.links[key][0]),) + self.links[key][1:]
