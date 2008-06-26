@@ -239,10 +239,7 @@ class ReturnedObject(Exception):
   def __init__(self, data):
     self.data = data
 
-def loginRoot(root=None):
-  if root and root.path:
-    session['root'] = tuple(root.path)
-    session['path'] = []    
+def loginRoot():
   session.setdefault('root', (request.headers['Host'], 'guest'))
   
 #  assert False, session['root']

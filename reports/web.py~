@@ -349,7 +349,7 @@ def findPresentation(obj):
     Log.warn("default presentation used for object %s" % obj)
     return obj
   
-  if isinstance(obj, Raw):
+  if isinstance(obj, builtins.Raw):
     return RawPresentation()
   
   if isinstance(obj, tuple(builtins.metaTypes.values())):
