@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <style type="text/css">
+        #pageLogin
+        {
+            font-size: 10px;
+            font-family: verdana;
+            text-align: right;
+        }
+    </style>
+    <style type="text/css">
+      @import "/static/css/style.css";
+    </style>
+    <style media="screen" type="text/css">
+      @import "/static/css/screen.css";
+    </style>
+    <style media="print" type="text/css">
+      @import "/static/css/print.css";
+    </style>
+    <script src="/static/javascript/shortcut.js" language="javascript">
+    </script>
+    <title> home - NeoWiki </title>
+<script language="javascript">
+
+  //window.addEventListener('load', init(), false);
+
+  function monitor() {
+    return;
+    
+    var hash = Math.ceil(Math.random()*10000);
+    request = new XMLHttpRequest(); 
+    var loc = window.location
+	  request.open("get", "?op=waitForChange;hash=" + hash, true); 
+    function onError(e) {
+    }   
+    function onLoad(e) {
+      loc.reload();
+    }       
+    request.onerror = onError;
+    request.onload = onLoad;
+ 
+	  request.send(null);
+  }
+
+  window.addEventListener('load', function() {setTimeout('monitor()', 10)}, false);
+</script>
+</head>
+<body>
+  <div class="top toolbar"> 
+    <div class="left">
+      <a href="/"><img src="/static/images/mantis-right.png" style="display: inline; position: relative; bottom: 7px; left: -2px;"></a>
+    </div>
+    <div class="left ">
+      <div><span id="selected"><a href="/">home</a></span></div>
+      <div class="path">
+        <span style="z-index: 10; margin: -16px;">        </span><!--
+        --><!--
+        --><span id="selected">/<a href="/">home</a></span><!--
+        --><!--
+        --><span>        </span>
+      </div>  
+    </div>  
+    <div class="right">
+      <span>
+        <form action="/" name="search" method="get">               
+          <input type="hidden" name="op" value="search">
+          <input type="text" id="search" name="query">
+          <a href="#search" onclick="document.search.submit(); return false;">Search</a>      
+        </form>
+      </span>
+      <span>
+        | <a href="/?op=login">Log in</a>
+      </span>
+    </div> 
+  </div>
+  <div class="middle">
+    <div id="viewer">
+      <div class="spacer"></div>
+      <div class="shadow" id="shadow1">
+        <div class="shadow" id="shadow2">
+        <div class="shadow" id="shadow3">
+        <div class="shadow" id="shadow4">
+        <div class="shadow" id="shadow5">
+  <!--<iframe src="/static/html/waiter.html" style="width:0px; height:0px; border: 0px" />-->
+  <div id="main_content"><div class="document">
+<p>Nobody's ever accused me of taste</p>
+<p>Alternatively, move along, nothing to see here :p</p>
+<p><a href="http:Tutorial/">Tutorial</a></p>
+<p><a href="http:Blog/">Blog</a></p>
+<p></p>
+<p>
+</p>
+</div>
+</div>
+        </div>
+        </div>
+        </div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+    <div class="bot"><div class="toolbar"> 
+      <div class="left">
+          <a href="?op=edit">Edit</a>
+        | <a href="?op=links">Links</a>
+        | <form action="?op=copy" name="select" method="POST">
+            <a href="#select" onclick="document.select.submit(); return false;">Select</a>
+          </form>
+        | <form action="?op=write" name="paste" method="POST">
+            <a href="#paste" onclick="document.paste.submit(); return false;">Paste</a>
+          </form>
+      </div>
+      <div class="right">
+        <span>
+          <img src="/static/images/set.png" title="read, changed">
+        </span><span>
+          <img src="/static/images/unset-off.png" title="modify">
+        </span><span>
+          <img src="/static/images/unset-off.png" title="replace">
+        </span><span>
+          <img src="/static/images/set.png" title="cross, changed">
+        </span><span>
+          <img src="/static/images/unset.png" title="override, changed">
+        </span>
+      </div>
+    </div>
+  </div>
+  </div>
+</body>
+</html>
