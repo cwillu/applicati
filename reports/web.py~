@@ -331,7 +331,7 @@ class Root(controllers.RootController):
 
   @expose()
   def logout(self):
-    del session['root']
+    session.pop('root')
     session['path'] = []    
     flash('Logged out')
     raiseRedirectToShow(['public'])
