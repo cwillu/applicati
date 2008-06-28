@@ -290,13 +290,14 @@ class Root(controllers.RootController):
       if protectedName not in links:
         break              
 
-    links[protectedName] = findPage(loginRoot(), path).descriptor
+    protectedRoot.data.link(protectedRoot, protectedName, findPage(loginRoot(), path).descriptor)
+#    links[protectedName] = 
     
     print 
     print links
     print
     
-    protectedRoot.data.save(protectedRoot)
+ #   protectedRoot.data.save(protectedRoot)
     return ('protected', protectedName)
     
   def removeProtected(self, name):

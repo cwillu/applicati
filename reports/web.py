@@ -293,10 +293,6 @@ class Root(controllers.RootController):
     protectedRoot.data.link(protectedRoot, protectedName, findPage(loginRoot(), path).descriptor)
 #    links[protectedName] = 
     
-    print 
-    print links
-    print
-    
  #   protectedRoot.data.save(protectedRoot)
     return ('protected', protectedName)
     
