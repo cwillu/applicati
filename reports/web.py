@@ -32,6 +32,7 @@ if not os.fork():
   sys.exit(0)
 
 def bitString(bits, dictionary='1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+  assert len(dictionary) == 62
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
   return ''.join(random.choice(dictionary) for x in range(requiredLength))
 
