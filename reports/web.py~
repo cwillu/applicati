@@ -284,7 +284,7 @@ class Root(controllers.RootController):
     protectedRoot = findPage(loginRoot(), ('protected',))
     links = protectedRoot.data.links
 
-    requiredBits = math.log(len(links), 2)  #not really 'required', but nice to have (not security sensitive, these paths are signed)
+    requiredBits = math.log(len(links) + 1, 2)  #not really 'required', but nice to have (not security sensitive, these paths are signed)
     while True:
       protectedName = bitString(requiredBits)
       if protectedName not in links:
