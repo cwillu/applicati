@@ -424,7 +424,7 @@ def findPresentation(obj):
     
   return PrimitivePresentation()
 
-def raiseRedirectToShow(path, status=None):
+def raiseRedirectToShow(path=None, status=None):
   if not path:
     raise HTTPRedirect("/", status=status)
   
