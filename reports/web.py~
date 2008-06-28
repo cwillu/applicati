@@ -316,10 +316,8 @@ class Root(controllers.RootController):
       userObject = userMeta.data
       if 'checkPassword' not in dir(userObject):
         break
-      if not user.checkPassword(userName, password):
+      if not userObject.checkPassword(userName, password):
         break
-        
-      
 
       session['root'] = (request.headers['Host'], userName,)
       session['path'] = []    
