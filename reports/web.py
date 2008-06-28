@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import os, sys
 import bisect
 from Crypto.Cipher import Blowfish as blowfish
-from sha import sha
+from Crypto.Hash import SHA
 import math
 #from os import urandom as random
 from random import SystemRandom as sysrandom
@@ -256,6 +256,8 @@ def loginRoot():
    
 
 class Root(controllers.RootController):  
+  componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")
+
   @expose()
   def default(self, *path, **args):
     try:
@@ -292,9 +294,17 @@ class Root(controllers.RootController):
 
     protectedRoot.data.link(protectedRoot, protectedName, findPage(loginRoot(), path).descriptor)
 #    links[protectedName] = 
+
+    protectedPath = ['protected', protectedName]
     
  #   protectedRoot.data.save(protectedRoot)
-    return ('protected', protectedName)
+    return self._signPath(protectedPath)
+
+  def _signPath(self, path):
+    path = list(path)
+    signature = reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [Root.componentSecret])
+    path[1] = "%s:%s" % (signature, path[1])        
+    return path
     
   def removeProtected(self, name):
     protectedRoot = findPage(loginRoot(), ('protected',))
