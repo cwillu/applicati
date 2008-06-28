@@ -136,8 +136,6 @@ class Wiki(object):
       for key in self.links:
         if name == key.lower():
           return self.links[key]
-    else:
-      return None      
     
   def link(self, page, name, id):
     logging.getLogger('root.controller.http').debug("Linking %s %s", name, id)
