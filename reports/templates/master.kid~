@@ -22,8 +22,8 @@
     <style type="text/css" media="print">
       @import "${tg.url('/static/css/print.css')}";
     </style>
-    <!--<script src="${tg.url('/static/javascript/shortcut.js')}" language="javascript" >
-    </script>-->
+    <script src="${tg.url('/static/javascript/shortcut.js')}" language="javascript" >
+    </script>
     <meta py:replace="item[:]"/>
 </head>
 

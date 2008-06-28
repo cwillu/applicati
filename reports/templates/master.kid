@@ -61,10 +61,10 @@
         </form>
       </span>
       <span py:if="root[-1] == 'guest'">
-        | <a href="/?op=login">Log in</a>
+        | <a href="/login">Log in</a>
       </span>
       <span py:if="root[-1] != 'guest'">
-        | ${root[-1]} | <a href="/?op=logout">Log out</a>
+        | ${root[-1]} | <a href="/logout">Log out</a>
       </span>               
     </div> 
   </div>
