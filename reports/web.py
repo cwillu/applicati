@@ -299,9 +299,9 @@ class Root(controllers.RootController):
     del links[name]
     protectedRoot.data.save(protectedRoot)
 
-  @FixIE
+#  @FixIE
   @expose(template="reports.templates.login")
-  def login2(self, user=None, password=None, login=None):
+  def login(self, user=None, password=None, login=None):
     assert False
     while True:
       if not user and not password:
