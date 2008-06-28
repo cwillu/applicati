@@ -271,8 +271,8 @@ class Root(controllers.RootController):
     
       signature = None
       if path and ':' in path[0]:
-        signature, path[0] = path[0].split(':', 1)
-        path = ('protected',) + path
+        signature, firstSegment = path[0].split(':', 1)        
+        path = ('protected', firstSegment) + path[1:]
       else:
         path = ('public',) + path
         

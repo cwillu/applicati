@@ -272,10 +272,9 @@ class Root(controllers.RootController):
       signature = None
       if path and ':' in path[0]:
         signature, path[0] = path[0].split(':', 1)
-#        path = ('protected',) + path
+        path = ('protected',) + path
       else:
-#        path = ('public',) + path
-        pass
+        path = ('public',) + path
         
       return self.dispatch(path, signature, args)
     finally:
