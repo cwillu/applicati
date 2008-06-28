@@ -291,6 +291,11 @@ class Root(controllers.RootController):
         break              
 
     links[protectedName] = findPage(loginRoot(), path).descriptor
+    
+    print 
+    print links
+    print
+    
     protectedRoot.data.save(protectedRoot)
     return ('protected', protectedName)
     
