@@ -323,7 +323,7 @@ class Root(controllers.RootController):
       session['path'] = []    
       
       flash("Logged in as %s" % session['root'][-1])
-      raiseRedirectToShow(['/'])
+      raiseRedirectToShow(['public'])
 
     msg=_("%s - Incorrect password or username." % username)
     response.status=403
@@ -334,7 +334,7 @@ class Root(controllers.RootController):
     del session['root']
     session['path'] = []    
     flash('Logged out')
-    raiseRedirectToShow(['/'])
+    raiseRedirectToShow(['public'])
     
 
   def dispatch(self, path, signature, args):

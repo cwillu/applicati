@@ -429,7 +429,7 @@ def raiseRedirectToShow(path, status=None):
     raise HTTPRedirect("/", status=status)
   
   
-  assert path[0] in ['public', 'private'], (source, path)
+  assert path[0] in ['public', 'private'], (path)
   
   source, path = path[0], path[1:]
   if source is 'public':
