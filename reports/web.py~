@@ -292,6 +292,7 @@ class Root(controllers.RootController):
 
     links[protectedName] = findPage(loginRoot(), path).descriptor
     protectedRoot.data.save(protectedRoot)
+    return ('protected', protectedName)
     
   def removeProtected(self, name):
     protectedRoot = findPage(loginRoot(), ('protected',))
@@ -307,23 +308,26 @@ class Root(controllers.RootController):
         response.status=403
         return dict(message="Please log in.")
         
-      username = user
-      user = findPage(loginRoot(), ['users', user])
-      if not user or not user.data:
+      userName = user
+      userPath = ['users', userName]
+      userMeta = findPage(loginRoot(), userPath)
+      if not userMeta or not userMeta.data:
         break        
-      user = user.data
-      if 'checkPassword' not in dir(user):
+      userObject = userMeta.data
+      if 'checkPassword' not in dir(userObject):
         break
-      if not user.checkPassword(username, password):
+      if not user.checkPassword(userName, password):
         break
         
       
 
-      session['root'] = (request.headers['Host'], username,)
+      session['root'] = (request.headers['Host'], userName,)
       session['path'] = []    
       
+      sessionPath = self.addProtected(userPath)
+      
       flash("Logged in as %s" % session['root'][-1])
-      raiseRedirectToShow()
+      raiseRedirectToShow(sessionPath)
 
     msg=_("%s - Incorrect password or username." % username)
     response.status=403
@@ -424,20 +428,17 @@ def findPresentation(obj):
     
   return PrimitivePresentation()
 
-def raiseRedirectToShow(path, status=None):
+def raiseRedirectToShow(path=None, status=None):
   if not path:
     raise HTTPRedirect("/", status=status)
-  
-  
-  assert path[0] in ['public', 'private'], (path)
-  
+
   source, path = path[0], path[1:]
   if source is 'public':
     raise HTTPRedirect("/%s/" % '/'.join(path), status=status)
   elif source is 'protected':
-    #sign
-    raise HTTPRedirect("/:%s/" % '/'.join(path), status=status)
-  assert False
+    signature = '' #sign
+    raise HTTPRedirect("/%s:%s/" % (signature, '/'.join(path), status=status))
+  assert False, source
 
 class Presentation(object):
   def _path(self, path):
