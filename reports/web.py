@@ -298,6 +298,43 @@ class Root(controllers.RootController):
     links = protectedRoot.data.links
     del links[name]
     protectedRoot.data.save(protectedRoot)
+
+  @FixIE
+  @expose(template="reports.templates.login")
+  def login(self, user=None, password=None, login=None):
+    while True:
+      if not user and not password:
+        response.status=403
+        return dict(message="Please log in.")
+        
+      username = user
+      user = findPage(loginRoot(), ['users', user])
+      if not user or not user.data:
+        break        
+      user = user.data
+      if 'checkPassword' not in dir(user):
+        break
+      if not user.checkPassword(username, password):
+        break
+        
+      
+
+      session['root'] = (request.headers['Host'], username,)
+      session['path'] = []    
+      
+      flash("Logged in as %s" % session['root'][-1])
+      raiseRedirectToShow(['/'])
+
+    msg=_("%s - Incorrect password or username." % username)
+    response.status=403
+    return dict(message=msg)
+
+  @expose()
+  def logout(self):
+    del session['root']
+    session['path'] = []    
+    flash('Logged out')
+    raiseRedirectToShow(['/'])
     
 
   def dispatch(self, path, signature, args):
@@ -662,44 +699,6 @@ class WikiPresentation(Presentation):
       return link
 
     return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
- 
-  
-  @FixIE
-  @expose(template="reports.templates.login")
-  def login(self, obj, path, user=None, password=None, login=None):        
-    while True:
-      if not user and not password:
-        response.status=403
-        return dict(message="Please log in.")
-        
-      username = user
-      user = findPage(loginRoot(), ['users', user])
-      if not user or not user.data:
-        break        
-      user = user.data
-      if 'checkPassword' not in dir(user):
-        break
-      if not user.checkPassword(username, password):
-        break
-        
-      
-
-      session['root'] = (request.headers['Host'], username,)
-      session['path'] = []    
-      
-      flash("Logged in as %s" % session['root'][-1])
-      raiseRedirectToShow(['/'])
-
-    msg=_("%s - Incorrect password or username." % username)
-    response.status=403
-    return dict(message=msg)
-
-  @expose()
-  def logout(self, obj,  path):
-    del session['root']
-    session['path'] = []    
-    flash('Logged out')
-    raiseRedirectToShow(['/'])
 
 class PrimitivePresentation(WikiPresentation):
   @FixIE
