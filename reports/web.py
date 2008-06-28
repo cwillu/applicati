@@ -301,7 +301,7 @@ class Root(controllers.RootController):
 
   @FixIE
   @expose(template="reports.templates.login")
-  def login(self, user=None, password=None, login=None):
+  def login2(self, user=None, password=None, login=None):
     assert False
     while True:
       if not user and not password:
