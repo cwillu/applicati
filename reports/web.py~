@@ -673,7 +673,7 @@ class WikiPresentation(Presentation):
         return dict(message="Please log in.")
         
       username = user
-      user = findPage(None, [request.headers['Host'], user])
+      user = findPage(loginRoot(), ['users', user])
       if not user or not user.data:
         break        
       user = user.data
@@ -682,6 +682,8 @@ class WikiPresentation(Presentation):
       if not user.checkPassword(username, password):
         break
         
+      
+
       session['root'] = (request.headers['Host'], username,)
       session['path'] = []    
       
