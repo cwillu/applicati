@@ -67,7 +67,7 @@ def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
 
 a="716811238919274012783401287309172307120971209712412"
 print a
-print hexToBase(a))
+print hexToBase(a)
 print baseToHex(hexToBase(a))
 
     
