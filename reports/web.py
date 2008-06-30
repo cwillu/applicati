@@ -466,11 +466,11 @@ def raiseRedirectToShow(path=None, status=None):
     raise HTTPRedirect("/", status=status)
 
   source, path = path[0], path[1:]
-  if source is 'public':
-    raise HTTPRedirect("/%s/" % '/'.join(path), status=status)
-  elif source is 'protected':
-    signature = '' #sign
-    raise HTTPRedirect("/%s:%s/" % (signature, '/'.join(path)), status=status)
+#  if source is 'public':
+  raise HTTPRedirect("/%s/" % '/'.join(path), status=status)
+#  elif source is 'protected':
+#    signature = '' #sign
+#    raise HTTPRedirect("/%s:%s/" % (signature, '/'.join(path)), status=status)
   assert False, source
 
 class Presentation(object):

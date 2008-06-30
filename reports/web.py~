@@ -44,9 +44,19 @@ def checkGitStatus(pid):
     
 thread.start_new_thread(checkGitStatus, (gitPid,))
 
-def bitString(bits, dictionary='1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+def bitString(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
   return ''.join(random.choice(dictionary) for x in range(requiredLength))
+
+def hexToBase(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+  base = len(dictionary)
+  bits = long(bits, 16)
+  output = []  
+  while bits:
+    output.append(dictionary[bits % base])
+    bits /= base
+  return ''.join(output)
+  
 
 # import logging
 # log = logging.getLogger("reports.controllers")
@@ -315,7 +325,7 @@ class Root(controllers.RootController):
 
   def _signPath(self, path):
     path = list(path)
-    signature = reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [str(Root.componentSecret)])
+    signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [str(Root.componentSecret)]))
     path[1] = "%s:%s" % (signature, path[1])        
     return path
     
