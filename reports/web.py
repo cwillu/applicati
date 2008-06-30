@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import os, sys
 import bisect
+import uuid
 import math
 import thread
 from Crypto.Cipher import Blowfish as blowfish
@@ -35,10 +36,13 @@ if not gitPid:
   sys.exit(0)
 
 def checkGitStatus(pid):
-  exit = os.waitpid(pid)
-  if exit:
-    print "Commit failed (%s)" % exit
-    sys.exit(exit)
+  import os #???
+  exit = os.waitpid(pid, 0)
+  print "bar", exit
+  if exit:    
+    print "\nCommit failed (%s)\n" % (exit,)
+    thread.interrupt_main()
+    
 thread.start_new_thread(checkGitStatus, (gitPid,))
 
 def bitString(bits, dictionary='1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
