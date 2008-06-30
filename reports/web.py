@@ -306,9 +306,10 @@ class Root(controllers.RootController):
       if path and ':' in path[0]:
         signature, firstSegment = path[0].split(':', 1) 
         path = ('protected', firstSegment) + path[1:]
+        
         if not self._checkSignature(path, signature):
           response.status=403          
-          flash('''bad signature (%s)''' % (request.path, ))
+          flash('''bad signature (%s) ''' % (request.path, ))
           aBlank = blank()
           return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
       else:
@@ -337,6 +338,7 @@ class Root(controllers.RootController):
     return self._signPath(protectedPath)
 
   def _checkSignature(self, path, signature):  
+    print path
     path = list(path)
     if len(path) > 128:
       return _signPath(path) == signature        

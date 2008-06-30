@@ -308,8 +308,9 @@ class Root(controllers.RootController):
         path = ('protected', firstSegment) + path[1:]
         if not self._checkSignature(path, signature):
           response.status=403          
-          flash("Logged in as %s" % session['root'][-1])
-          return
+          flash('''bad signature (%s)''' % (request.path, ))
+          aBlank = blank()
+          return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
       else:
         path = ('public',) + path
         
