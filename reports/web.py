@@ -63,6 +63,8 @@ def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
   for digit in bits:
     output *= base
     output += dictionary.index(digit)
+    
+  assert type(output) is long
   return hex(output)[2:-1]
 
 a="716811238919274012783401287309172307120971209712412"
