@@ -315,7 +315,7 @@ class Root(controllers.RootController):
 
   def _signPath(self, path):
     path = list(path)
-    signature = reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [Root.componentSecret])
+    signature = reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [str(Root.componentSecret)])
     path[1] = "%s:%s" % (signature, path[1])        
     return path
     
