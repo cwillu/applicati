@@ -2,9 +2,10 @@ from __future__ import absolute_import
 
 import os, sys
 import bisect
+import math
+import thread
 from Crypto.Cipher import Blowfish as blowfish
 from Crypto.Hash import SHA
-import math
 #from os import urandom as random
 from random import SystemRandom as sysrandom
 random = sysrandom()
@@ -25,11 +26,20 @@ import logging
 logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
-if not os.fork():
-  os.system('git add .')
-#  os.system('cg-rm -a')
-  os.system('git commit -a -m "$(date)"')
+gitPid = os.fork()
+if not gitPid:
+  exit = os.system('git add .')
+  if exit: sys.exit(exit)
+  exit = os.system('git commit -a -m "$(date)"')
+  if exit: sys.exit(exit)
   sys.exit(0)
+
+def checkGitStatus(pid):
+  exit = os.waitpid(pid)
+  if exit:
+    print "Commit failed (%s)" % exit
+    sys.exit(exit)
+thread.start_new_thread(checkGitStatus, (gitPid,))
 
 def bitString(bits, dictionary='1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
