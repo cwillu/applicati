@@ -39,7 +39,7 @@ def checkGitStatus(pid):
   import os #???
   exit = os.waitpid(pid, 0)
   print "bar", exit
-  if exit[0]:    
+  if exit[1]:
     print "\nCommit failed (%s)\n" % (exit,)
     thread.interrupt_main()
     
