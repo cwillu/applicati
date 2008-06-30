@@ -65,6 +65,9 @@ def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
     output += dictionary.index(digit)
   return hex(output)[2:]
     
+print str(Root.componentSecret)
+print hexToBase(str(Root.componentSecret))
+print baseToHex(hexToBase(str(Root.componentSecret)))
 
 # import logging
 # log = logging.getLogger("reports.controllers")
