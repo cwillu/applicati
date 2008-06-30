@@ -53,10 +53,18 @@ def hexToBase(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
   bits = long(bits, 16)
   output = []  
   while bits:
-    output.append(dictionary[bits % base])
+    output.insert(0, dictionary[bits % base])
     bits /= base
   return ''.join(output)
-  
+
+def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+  base = len(dictionary)
+  output = 0l
+  for digit in bits:
+    output *= base
+    output += dictionary.index(digit)
+  return hex(output)[2:]
+    
 
 # import logging
 # log = logging.getLogger("reports.controllers")
@@ -296,8 +304,12 @@ class Root(controllers.RootController):
     
       signature = None
       if path and ':' in path[0]:
-        signature, firstSegment = path[0].split(':', 1)        
+        signature, firstSegment = path[0].split(':', 1) 
         path = ('protected', firstSegment) + path[1:]
+        if not self._checkSignature(path, signature):
+          response.status=403          
+          flash("Logged in as %s" % session['root'][-1])
+          return
       else:
         path = ('public',) + path
         
@@ -323,6 +335,20 @@ class Root(controllers.RootController):
  #   protectedRoot.data.save(protectedRoot)
     return self._signPath(protectedPath)
 
+  def _checkSignature(self, path, signature):  
+    path = list(path)
+    if len(path) > 128:
+      return _signPath(path) == signature        
+    
+    signature = baseToHex(signature)
+    candidate = 'something?'
+    for segment in  + path:
+      candidate = SHA.new(candidate + segment).hexdigest()
+      if SHA.new(candidate + str(Root.componentSecret)).hexdigest() == signature:
+        return True
+    else:
+      return False
+    
   def _signPath(self, path):
     path = list(path)
     signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [str(Root.componentSecret)]))
