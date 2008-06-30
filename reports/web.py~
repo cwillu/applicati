@@ -60,7 +60,7 @@ def hexToBase(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
 def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   base = len(dictionary)
   output = 0l
-  for digit in bits
+  for digit in bits:
     output *= base
     output += dictionary.index(digit)
   return hex(output)[2:]

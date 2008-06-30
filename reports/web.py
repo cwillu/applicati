@@ -342,7 +342,7 @@ class Root(controllers.RootController):
     
     signature = baseToHex(signature)
     candidate = 'something?'
-    for segment in  + path:
+    for segment in path:
       candidate = SHA.new(candidate + segment).hexdigest()
       if SHA.new(candidate + str(Root.componentSecret)).hexdigest() == signature:
         return True
