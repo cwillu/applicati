@@ -68,8 +68,6 @@ def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
   return hex(output)[2:-1]
 
 assert "71681123891927401278340" == baseToHex(hexToBase("71681123891927401278340"))
-
-    
     
 # import logging
 # log = logging.getLogger("reports.controllers")

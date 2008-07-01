@@ -311,6 +311,10 @@ class Root(controllers.RootController):
         path = ('protected', firstSegment) + path[1:]
         
         if not self._checkSignature(path, signature):
+          if self._checkSignaturePath(path, signature):  
+            raiseRedirectToShow(self._signPath(path))
+            assert False
+            
           response.status=403          
           flash('''bad signature (%s) ''' % (request.path, ))
           aBlank = blank()
@@ -340,10 +344,9 @@ class Root(controllers.RootController):
  #   protectedRoot.data.save(protectedRoot)
     return self._signPath(protectedPath)
 
-  def _checkSignature(self, path, signature):  
+  def _checkSignaturePath(self, path, signature, maxDepth=128):
     print path
-    path = list(path)
-    if len(path) > 128:
+    if len(path) > maxDepth:
       return _signPath(path) == signature        
     
     signature = baseToHex(signature)
@@ -354,6 +357,9 @@ class Root(controllers.RootController):
         return True
     else:
       return False
+
+  def _checkSignature(self, path, signature):  
+    return _signPath(path) == signature        
     
   def _signPath(self, path):
     path = list(path)
