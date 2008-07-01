@@ -363,11 +363,12 @@ class Root(controllers.RootController):
       return False
 
   def _checkSignature(self, path, signature):  
-    return self._signPath(path) == signature        
+    return signature == hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [str(Root.componentSecret)]))
     
   def _signPath(self, path):
-    path = list(path)
     signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [str(Root.componentSecret)]))
+
+    path = list(path)
     path[1] = "%s:%s" % (signature, path[1])        
     return path
     

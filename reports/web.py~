@@ -312,6 +312,7 @@ class Root(controllers.RootController):
         
         if not self._checkSignature(path, signature):
           if self._checkSignaturePath(path, signature):  
+            print path
             print signature
             print self._signPath(path)
             print
