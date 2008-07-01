@@ -347,7 +347,7 @@ class Root(controllers.RootController):
   def _checkSignaturePath(self, path, signature, maxDepth=128):
     print path
     if len(path) > maxDepth:
-      return _signPath(path) == signature        
+      return self._signPath(path) == signature        
     
     signature = baseToHex(signature)
     candidate = 'something?'
@@ -359,7 +359,7 @@ class Root(controllers.RootController):
       return False
 
   def _checkSignature(self, path, signature):  
-    return _signPath(path) == signature        
+    return self._signPath(path) == signature        
     
   def _signPath(self, path):
     path = list(path)
