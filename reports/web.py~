@@ -312,7 +312,7 @@ class Root(controllers.RootController):
         
         if not self._checkSignature(path, signature):
           if self._checkSignaturePath(path, signature):  
-            raiseRedirectToShow(self._signPath(path))
+            raiseRedirectToShow(self._signPath(path[1:]))
             assert False
             
           response.status=403          
