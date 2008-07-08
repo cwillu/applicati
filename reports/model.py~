@@ -110,7 +110,7 @@ def BaseComponent():
   """
   
   class Object(object):
-    def __init__(self, descriptor=None, data=None, onReify=None, path=[], permissions=None):      
+    def __init__(self, descriptor=None, data=None, onReify=None, sourceId=None, path=[], permissions=None):      
       assert not (descriptor and data), "Invalid state: descriptor and data specified"
 #      assert descriptor or data, "Invalid state: neither descriptor nor data specified"
       assert not (descriptor and onReify), "Invalid state: descriptor and onReify specified"
@@ -119,6 +119,31 @@ def BaseComponent():
       self.onReify = onReify
       self._descriptor = descriptor
       self._data = data
+      
+      if sourceId:
+        perms = self._getPerms()        
+#        if os.access('pickles/%s' % (self._filename('permissions.db', id)), os.F_OK):
+#          perms = pickle.load(file('pickles/%s' % (self._filename('permissions', id))))
+#        else:
+#          perms = {}
+
+        if sourceId not in perms:
+          perms[sourceId] = path, 0
+          self._setPerms(perms)
+#          pickle.dump(perms, file('pickles/%s' % (self._filename('permissions', id)), 'w'))
+        
+        logging.getLogger('root.model').debug("Caps: %s", perms)
+          
+        capPermissions = perms[sourceId][1:]
+        
+  #      capNode = Object(descriptor= _assertId(id[0]) + (capId, ), path=[], permissions=0, data=0)
+  #      capPermissions = capNode.data
+  #      if capPermissions is None:
+  #        capNode.data = 0
+  #        capPermissions = 0
+          
+        permissions = _modPermissions(permissions, capPermissions)        
+
       self.permissions = permissions
       
       if self._descriptor and not isinstance(self._descriptor, tuple):
@@ -134,8 +159,8 @@ def BaseComponent():
 
       with_methods(self, logger)
 
-    def _connect(self):
-      db = sqlite3.connect('pickles/%s' % self._filename('permissions.db'))
+    def _connect(self, id=None):
+      db = sqlite3.connect('pickles/%s' % self._filename('permissions.db', id=id))
       db.execute('create table if not exists perm(source unique, permissions)')
       return db
 
@@ -260,7 +285,10 @@ def BaseComponent():
               
     def getPerms(self):
       self._check('read')
-            
+
+      return self._getPerms()            
+
+    def _getPerms(self):
       if not self._descriptor:
 #        assert False
         return {}
@@ -287,12 +315,15 @@ def BaseComponent():
       
     def setPerms(self, links):
       self._check('permissions')  
+      self._setPerms(links)
+      
+    def _setPerms(self, links):
       if not self._descriptor:
         assert False, "Unimplemented, setting permissions on unreified object"
 #        print "create"
 #        self._descriptor = str(uuid.uuid4())
 #        self.onReify and self.onReify(self)
-      perms = pickle.load(file('pickles/%s' % self._filename('permissions')))
+#      perms = pickle.load(file('pickles/%s' % self._filename('permissions')))
       db = self._connect()
       db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(links[k])) for k in links))
       db.commit()
@@ -351,32 +382,9 @@ def BaseComponent():
         #TODO make assertion
         return False                
     
-    
       capId = str(descriptor[1])  #XXX salt            
 
-      if os.access('pickles/%s' % (self._filename('permissions', id)), os.F_OK):
-        perms = pickle.load(file('pickles/%s' % (self._filename('permissions', id))))
-      else:
-        perms = {}
-
-      if capId not in perms:
-#        assert False
-        perms[capId] = path, 0
-        pickle.dump(perms, file('pickles/%s' % (self._filename('permissions', id)), 'w'))
-      
-      logging.getLogger('root.model').debug("Caps: %s", perms)
-        
-      capPermissions = perms[capId][1:]
-      
-#      capNode = Object(descriptor= _assertId(id[0]) + (capId, ), path=[], permissions=0, data=0)
-#      capPermissions = capNode.data
-#      if capPermissions is None:
-#        capNode.data = 0
-#        capPermissions = 0
-        
-      targetPermissions = _modPermissions(self.permissions, capPermissions)
-
-      return Object(descriptor=id, path=path, permissions=targetPermissions)
+      return Object(descriptor=id, path=path, sourceId=capId, permissions=self.permissions)
 
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)  
