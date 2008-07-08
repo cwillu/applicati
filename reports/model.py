@@ -133,6 +133,11 @@ def BaseComponent():
 
       with_methods(self, logger)
 
+    def _connect(self):
+      db = sqlite3.connect('pickles/%s' % self._filename('permissions.db'))
+      db.execute('create table if not exists perm(source unique, permissions)')
+      return db
+
     def _query(self, op):
       logging.getLogger('root.model').debug("Effective Permissions: %s", self.permissions)
       if self.permissions == 0 or self.permissions[0] == 0:
@@ -261,14 +266,23 @@ def BaseComponent():
 #      if self._data is not None:
 #        return self._data
         
-      try:
+      try:        
         perms = pickle.load(file('pickles/%s' % self._filename('permissions')))
-        assert perms
-        return perms
+        
+        db = self._connect()
+        db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
+        os.unlink(self._filename('permissions'))
+        db.commit()
       except IOError, err:
-        raise err
-        assert False      
-        return {}
+        pass
+      
+      db = self._connect()              
+      perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm where source=?', self._descriptor))
+      return perms
+
+#        raise err
+#        assert False      
+#        return {}
       
     def setPerms(self, links):
       self._check('permissions')  
@@ -277,8 +291,12 @@ def BaseComponent():
 #        print "create"
 #        self._descriptor = str(uuid.uuid4())
 #        self.onReify and self.onReify(self)
-        
-      return pickle.dump(links, file('pickles/%s' % self._filename('permissions'), 'w'))        
+      perms = pickle.load(file('pickles/%s' % self._filename('permissions')))
+      db = self._connect()
+      db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(links[k])) for k in links))
+      db.commit()
+
+#      return pickle.dump(links, file('pickles/%s' % self._filename('permissions'), 'w'))        
 
     def changePermission(self, link, permission, value):
       #XXX locking required, or a better reworking
