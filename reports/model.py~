@@ -272,7 +272,7 @@ def BaseComponent():
         
         db = self._connect()
         db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
-        os.unlink(self._filename('permissions'))
+#        os.unlink('pickles/%s' % self._filename('permissions'))
         db.commit()
       except IOError, err:
         pass
