@@ -387,6 +387,8 @@ def BaseComponent():
     
       capId = str(descriptor[1])  #XXX salt            
 
+      #restart here
+
       return Object(descriptor=id, path=path, sourceId=self._descriptor[0], permissions=self.permissions)
 
     def create(self, data=None, onReify=None, path=[]):
