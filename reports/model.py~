@@ -6,6 +6,7 @@ from __future__ import absolute_import
 
 import thread
 import cPickle as pickle
+import sqlite3
 import uuid
 from Crypto.Hash import SHA256
 import os
