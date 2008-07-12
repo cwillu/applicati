@@ -507,7 +507,7 @@ def findPresentation(obj):
   return PrimitivePresentation()
 
 def raiseRedirectToShow(path=None, status=None):
-  print "Redirect %s" % path
+  print "Redirect %s" % tuple(path)
   if not path:
     raise HTTPRedirect("/", status=status)
 
