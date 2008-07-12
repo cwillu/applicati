@@ -308,6 +308,7 @@ def BaseComponent():
 #        os.unlink('pickles/%s' % self._filename('permissions'))
         db.commit()
         db = self._connect()              
+        print self._descriptor
         perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
         print perms
         assert False

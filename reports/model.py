@@ -300,23 +300,23 @@ def BaseComponent():
         
       try:        
         perms = pickle.load(file('pickles/%s' % self._filename('permissions')))
-        print perms
+ #       print perms
         db = self._connect()
         db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
 #        os.rename('pickles/%s' % self._filename('permissions'), 'pickles/%s~' % self._filename('permissions'))
         
 #        os.unlink('pickles/%s' % self._filename('permissions'))
         db.commit()
-        db = self._connect()              
-        print self._descriptor
-        perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
-        print perms
-        assert False
+#        db = self._connect()              
+#        print self._descriptor
+#        perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
+#        print perms
+#        assert False
       except IOError, err:
         pass
       
       db = self._connect()              
-      perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm where source=?', self._descriptor))
+      perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
       print perms
 #      assert perms
       return perms
