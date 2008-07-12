@@ -407,5 +407,10 @@ def BaseComponent():
   return Object(descriptor=(1,), path=[], permissions=0)
   
 #registerComponent('Object', Object)
-      
-print dir(BaseComponent())
+     
+def test():
+  b = BaseComponent()
+  print dir(b)
+  print b.links
+  
+test()

@@ -408,4 +408,4 @@ def BaseComponent():
   
 #registerComponent('Object', Object)
       
-print BaseComponent()
+print dir(BaseComponent())
