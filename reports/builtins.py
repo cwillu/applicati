@@ -15,10 +15,23 @@ from turbogears.toolbox.catwalk import CatWalk
 from docutils.core import publish_parts
 from pydoc import html
 
-from . import model as db
+#from . import model as db
 
 import logging
 
+def _assertId(id):  #XXX change to assert
+  '''from model'''
+  
+  logging.getLogger('root.model.descriptors').debug("ASSERTING %s", id)
+#  if not isinstance(id, tuple) or id == (1, ): 
+#  if id == (1, ):
+#    id = (id, )
+  if not isinstance(id, tuple): 
+    assert len(str(id)) > 10 or id == '1' or id == (1, ), (id, type(id)) #XXX fix root id
+#    assert False, "WARNING: old-style descriptor in use: %s (%s)" % (id, type(id))
+    logging.getLogger('root.model.descriptors').warn("old-style descriptor in use: %s (%s)", id, type(id))
+    return (id, )
+  return id
 
 
 class Constructor(object):
@@ -122,7 +135,7 @@ class Wiki(object):
       self.links = links
     
     for key in self.links:
-      self.links[key] = (db._assertId(self.links[key][0]),) + self.links[key][1:]
+      self.links[key] = (_assertId(self.links[key][0]),) + self.links[key][1:]
     page.data = self
             
   def list(self, page):
