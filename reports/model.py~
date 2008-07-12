@@ -293,7 +293,7 @@ def BaseComponent():
 
     def _getPerms(self):
       if not self._descriptor:
-#        assert False
+        assert False
         return {}
 #      if self._data is not None:
 #        return self._data
@@ -310,6 +310,7 @@ def BaseComponent():
       
       db = self._connect()              
       perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm where source=?', self._descriptor))
+      assert perms
       return perms
 
 #        raise err
