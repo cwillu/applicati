@@ -221,7 +221,11 @@ def BaseComponent(rootFolder="pickles"):
       except IOError, err:
         if self.id in [1, (1,)] and err.errno == 2:
           logging.getLogger('root.model').error("Recreating root page!!")
-          os.makedirs(self._filename(''))
+          try: 
+            os.makedirs(self._filename(''))
+          except OSError, err:
+            if err.errno is not 17:  #path already exists (which an error for a recursive create why, exactly?)
+              raise err            
           return None
         if err.errno == 2 and 'data' not in self._filename(): #file not found
           return None
