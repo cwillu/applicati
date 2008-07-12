@@ -18,8 +18,6 @@ import logging
 
 import inspect
 
-from . import tests.model
-
 actions = {}
 #actions = weakref.WeakValueDictionary()
 #actionCollections = weakref.WeakKeyDictionary()
@@ -410,4 +408,4 @@ def BaseComponent():
   
 #registerComponent('Object', Object)
       
-
+print dir(BaseComponent())
