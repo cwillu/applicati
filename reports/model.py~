@@ -97,7 +97,7 @@ def with_methods(obj, decorator):
   except PermissionError:
     pass
   
-def BaseComponent():
+def BaseComponent(rootFolder="."):
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   
   """        
@@ -112,7 +112,7 @@ def BaseComponent():
   class Object(object):
     def __init__(self, descriptor=None, data=None, onReify=None, sourceId=None, path=[], permissions=None):      
       assert not (descriptor and data), "Invalid state: descriptor and data specified"
-#      assert descriptor or data, "Invalid state: neither descriptor nor data specified"
+#      assert descrirootFolderptor or data, "Invalid state: neither descriptor nor data specified"
       assert not (descriptor and onReify), "Invalid state: descriptor and onReify specified"
       assert permissions is not None
       self.path = path
@@ -125,15 +125,15 @@ def BaseComponent():
         print sourceId
         print
         perms = self._getPerms()        
-#        if os.access('pickles/%s' % (self._filename('permissions.db', id)), os.F_OK):
-#          perms = pickle.load(file('pickles/%s' % (self._filename('permissions', id))))
+#        if os.access( (self._filename('permissions.db', id)), os.F_OK):
+#          perms = pickle.load(file( (self._filename('permissions', id))))
 #        else:
 #          perms = {}
 
         if sourceId not in perms:
           perms[sourceId] = path, 0
           self._setPerms(perms)
-#          pickle.dump(perms, file('pickles/%s' % (self._filename('permissions', id)), 'w'))
+#          pickle.dump(perms, file( (self._filename('permissions', id)), 'w'))
         
         logging.getLogger('root.model').debug("Caps: %s", perms)
           
@@ -163,7 +163,7 @@ def BaseComponent():
       with_methods(self, logger)
 
     def _connect(self, id=None):
-      db = sqlite3.connect('pickles/%s' % self._filename('permissions.db', id=id))
+      db = sqlite3.connect( self._filename('permissions.db', id=id))
       db.execute('create table if not exists perm(source unique, permissions)')
       return db
 
@@ -217,7 +217,7 @@ def BaseComponent():
         return None
         
       try:
-        return pickle.load(file('pickles/%s' % self._filename()))
+        return pickle.load(file( self._filename()))
       except IOError, err:
         if self.id == 1 and err.errno == 2:
           logging.getLogger('root.model').error("Recreating root page!!")
@@ -245,27 +245,29 @@ def BaseComponent():
       logging.getLogger('root.model').debug("Saving %s (%s)", self.name, self.id)
 
       folder, name = self._filename().rsplit('/', 1)
-      folder = 'pickles/%s' % folder
+      folder =  folder
 
       logging.getLogger('root.model').debug("%s %s", folder, name)
       if not os.access(folder, os.F_OK):
         os.makedirs(folder)
-      result = pickle.dump(obj, file('pickles/%s' % self._filename(), 'w'))  
+      result = pickle.dump(obj, file( self._filename(), 'w'))  
     
       thread.start_new_thread(self._fireWatchEvent, tuple())
       return result
      
     data = property(getData, _selfSetData)   
     
-    def _filename(self, selector="data", id=None):        
+    def _filename(self, selector="data", id=None):              
       if id is None:
         id = self.id
 
       if isinstance(id, (basestring, int, uuid.UUID)):
-        return '%s/%s' % (id, selector)
+        return os.path.join(rootFolder, str(id), selector)
+#        return '%s/%s' % (id, selector)
 
       if isinstance(id, tuple):
-        return '%s/%s' % (id[0], selector)
+        return os.path.join(rootFolder, str(id[0]), selector)
+#       return '%s/%s' % (id[0], selector)
 
 #      if id == (1,):
 #        return "1/%s" % selector
@@ -274,7 +276,8 @@ def BaseComponent():
 #        id = ('1', ) + id[1:]        
 
       assert not set(map(type, id)) - set([str]), ( id)      
-      return '/'.join(id)
+      return os.path.join(rootFolder, *id)
+#      return '/'.join(id)
     
     @property
     def id(self):
@@ -299,13 +302,13 @@ def BaseComponent():
 #        return self._data
         
       try:        
-        perms = pickle.load(file('pickles/%s' % self._filename('permissions')))
+        perms = pickle.load(file( self._filename('permissions')))
  #       print perms
         db = self._connect()
         db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
-#        os.rename('pickles/%s' % self._filename('permissions'), 'pickles/%s~' % self._filename('permissions'))
+#        os.rename( self._filename('permissions'), 'pickles/%s~' % self._filename('permissions'))
         
-#        os.unlink('pickles/%s' % self._filename('permissions'))
+#        os.unlink( self._filename('permissions'))
         db.commit()
 #        db = self._connect()              
 #        print self._descriptor
@@ -335,12 +338,12 @@ def BaseComponent():
 #        print "create"
 #        self._descriptor = str(uuid.uuid4())
 #        self.onReify and self.onReify(self)
-#      perms = pickle.load(file('pickles/%s' % self._filename('permissions')))
+#      perms = pickle.load(file( self._filename('permissions')))
       db = self._connect()
       db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(links[k])) for k in links))
       db.commit()
 
-#      return pickle.dump(links, file('pickles/%s' % self._filename('permissions'), 'w'))        
+#      return pickle.dump(links, file( self._filename('permissions'), 'w'))        
 
     def changePermission(self, link, permission, value):
       #XXX locking required, or a better reworking
@@ -407,5 +410,10 @@ def BaseComponent():
   return Object(descriptor=(1,), path=[], permissions=0)
   
 #registerComponent('Object', Object)
-      
-print dir(BaseComponent())
+     
+def test():
+  b = BaseComponent()
+  print dir(b)
+  print b.links
+  
+test()
