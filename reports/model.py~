@@ -97,7 +97,7 @@ def with_methods(obj, decorator):
   except PermissionError:
     pass
   
-def BaseComponent(rootFolder="."):
+def BaseComponent(rootFolder="pickles"):
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   
   """        
@@ -163,7 +163,7 @@ def BaseComponent(rootFolder="."):
       with_methods(self, logger)
 
     def _connect(self, id=None):
-      db = sqlite3.connect( self._filename('permissions.db', id=id))
+      db = sqlite3.connect(self._filename('permissions.db', id=id))
       db.execute('create table if not exists perm(source unique, permissions)')
       return db
 
@@ -219,12 +219,13 @@ def BaseComponent(rootFolder="."):
       try:
         return pickle.load(file( self._filename()))
       except IOError, err:
-        if self.id == 1 and err.errno == 2:
+        if self.id in [1, (1,)] and err.errno == 2:
           logging.getLogger('root.model').error("Recreating root page!!")
+          os.mkdirs(self._filename(''))
           return None
         if err.errno == 2 and 'data' not in self._filename(): #file not found
           return None
-        logging.getLogger('root.model').error("Error retrieving page %s, %s", err.errno, dir(err))
+        logging.getLogger('root.model').error("Error retrieving page %s, %s, %s", self.id, err.errno, dir(err))
         raise err  
     def write(self, obj):
       self._check('replace')
@@ -412,7 +413,7 @@ def BaseComponent(rootFolder="."):
 #registerComponent('Object', Object)
      
 def test():
-  b = BaseComponent()
+  b = BaseComponent('test.pickles')
   print dir(b)
   print b.links
   
