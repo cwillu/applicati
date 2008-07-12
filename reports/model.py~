@@ -315,7 +315,7 @@ def BaseComponent():
       print perms
       assert perms
       return perms
-c	
+
 #        raise err
 #        assert False      
 #        return {}
