@@ -1,2 +1,7 @@
 06:45:25.84  Logging started, 07/12/08                  %%%%%%%%%%%%%%%%%%%%
 06:45:25.84  unsupported free or cell vars in expose                     % %
+06:45:26.23  unsupported free or cell vars in findPage                   % %
+06:45:48.91   ______
+        #1   |89.5 %|  reloader_thread           ...ogears/startup.py:27
+06:45:48.91  memory usage: 12+ kb                                          %
+06:45:48.91  program exit, 07/12/08                     %%%%%%%%%%%%%%%%%%%%
