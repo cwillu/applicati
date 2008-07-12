@@ -22,6 +22,7 @@ from pydoc import html
 
 from . import model as db
 from . import builtins
+from . import tests.tests as tests
 
 import logging
 logging.getLogger('root').setLevel(19)
@@ -507,7 +508,7 @@ def findPresentation(obj):
   return PrimitivePresentation()
 
 def raiseRedirectToShow(path=None, status=None):
-  print "Redirect %s" % tuple(path)
+  print "Redirect %s" % (path,)
   if not path:
     raise HTTPRedirect("/", status=status)
 
