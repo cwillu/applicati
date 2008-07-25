@@ -1,2 +1,8 @@
-04:45:59.88  Logging started, 07/25/08                  %%%%%%%%%%%%%%%%%%%%
-04:45:59.88  unsupported free or cell vars in expose                     % %
+04:46:01.24  Logging started, 07/25/08                  %%%%%%%%%%%%%%%%%%%%
+04:46:01.24  unsupported free or cell vars in expose                     % %
+04:46:02.43  memory usage: 12+ kb                                          %
+04:46:02.43  program exit, 07/25/08                     %%%%%%%%%%%%%%%%%%%%
+startup.py:27
+        #3   | 3.3 %|  psyco_start_new_thread    ...psyco/profiler.py:373
+04:46:02.33  memory usage: 12+ kb                                          %
+04:46:02.33  program exit, 07/25/08                     %%%%%%%%%%%%%%%%%%%%
