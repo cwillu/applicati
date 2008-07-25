@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-#from turbogears.database import PackageHub
+#from turbogears.dataComp import PackageHub
 #hub = PackageHub('reports')
 #__connection__ = hub
 
@@ -17,6 +17,8 @@ import re
 import logging
 
 import inspect
+
+from . import builtins
 
 actions = {}
 #actions = weakref.WeakValueDictionary()
@@ -224,7 +226,7 @@ def BaseComponent(rootFolder="pickles"):
           try: 
             os.makedirs(self._filename(''))
           except OSError, err:
-            if err.errno is not 17:
+            if err.errno is not 17:  #path already exists (which an error for a recursive create why, exactly?)
               raise err            
           return None
         if err.errno == 2 and 'data' not in self._filename(): #file not found
@@ -311,7 +313,7 @@ def BaseComponent(rootFolder="pickles"):
  #       print perms
         db = self._connect()
         db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
-#        os.rename( self._filename('permissions'), 'pickles/%s~' % self._filename('permissions'))
+        os.rename( self._filename('permissions'), 'pickles/%s~' % self._filename('permissions'))
         
 #        os.unlink( self._filename('permissions'))
         db.commit()
@@ -415,10 +417,15 @@ def BaseComponent(rootFolder="pickles"):
   return Object(descriptor=(1,), path=[], permissions=0)
   
 #registerComponent('Object', Object)
-     
+
+def createBase(base):
+  base
+  
 def test():
   b = BaseComponent('test.pickles')
   print dir(b)
   print b.links
+  
+  
   
 test()

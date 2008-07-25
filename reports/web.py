@@ -30,9 +30,9 @@ logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 gitPid = os.fork()
 if not gitPid:
   exit = os.system('git add .')
-  if exit: sys.exit(exit)
+  if exit: sys.exit(1)
   exit = os.system('git commit -a -m "$(date)"')
-  if exit: sys.exit(exit)
+  if exit: sys.exit(2)
   sys.exit(0)
 
 def checkGitStatus(pid):
@@ -88,7 +88,7 @@ except ImportError:
 def visit(root, path, op):
   target = root
   if target is None:
-    target = db.BaseComponent()
+    target = db.BaseComponent('pickles')
   if path is None:
     path = []
   
@@ -425,7 +425,34 @@ class Root(controllers.RootController):
     loginRoot()
     op = args.pop('op', '')
     try:
-      meta, obj = self.find(path, args)           
+      meta = self.find(path, args)           
+            
+      if not meta:
+        response.status=404
+        flash('''%s doesn't exist.''' % (((request.headers['Host'],) + path)[-1]))
+        aBlank = blank()
+        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
+             
+      if not meta._query('read'):
+        obj = blank()        
+      elif not meta.data:
+        constructor = findPage(loginRoot(), path, find=('Palette', prototype))
+        if not constructor:
+          logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
+          raise db.PermissionError(flash='''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
+        
+        obj = constructor.data.construct(constructor)
+        protoTypeName = obj.__class__.__name__
+        flash('New page: %s (%s)' % (path[-1], protoTypeName))
+        
+        logging.getLogger('root.controller.http').debug("Creating prototype %s: %s", prototype, obj)
+      else:
+        obj = meta.data
+        logging.getLogger('root.controller.http').debug("Loading existing page: %s", obj)
+        
+      
+      
+      
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
             
@@ -461,29 +488,8 @@ class Root(controllers.RootController):
     prototype = args.pop('prototype', 'Default')
 
     meta = findPage(loginRoot(), path)
-    if not meta:
-      raise db.PermissionError(flash='''%s doesn't exist.''' % (((request.headers['Host'],) + path)[-1]))
-#      raiseRedirectToShow(path[:-1], status=404)
-           
-    if not meta._query('read'):
-      return meta, blank()
-    elif not meta.data:
-      constructor = findPage(loginRoot(), path, find=('Palette', prototype))
-      if not constructor:
-        logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
-        raise db.PermissionError(flash='''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
+    return meta
       
-      obj = constructor.data.construct(constructor)
-      protoTypeName = obj.__class__.__name__
-      flash('New page: %s (%s)' % (path[-1], protoTypeName))
-      
-      logging.getLogger('root.controller.http').debug("Creating prototype %s: %s", prototype, obj)
-    else:
-      obj = meta.data
-      logging.getLogger('root.controller.http').debug("Loading existing page: %s", obj)
-      
-    return meta, obj
-  
   def updateCrumbTrail(self, path): 
     trail = session.get('path', [])
     if not trail or not '/'.join(trail).startswith('/'.join((path))):

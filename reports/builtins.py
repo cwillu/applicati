@@ -1,19 +1,13 @@
 from __future__ import absolute_import
 
-import os, sys
-import bisect
-from Crypto.Cipher import Blowfish as blowfish
+import os
 from sha import sha
-from os import urandom as random
 import xml.dom.minidom as dom
 import re
-from Queue import Queue, Empty
 
-from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response, HTTPRedirect
-from turbogears.toolbox.catwalk import CatWalk
+from turbogears import flash
+from cherrypy import session
 from docutils.core import publish_parts
-from pydoc import html
 
 #from . import model as db
 
@@ -206,6 +200,7 @@ class AutoLogin(Wiki):
     def login():
       if 'guest' not in session['root']:
         return
+      assert False, "findpage!?"
       user = findPage(obj, [self.links.keys()[0]])
       if not user or not user.data:
         return
@@ -216,7 +211,7 @@ class AutoLogin(Wiki):
 
     return login() or Wiki.show(self, obj, *args, **kargs)
 
-  @expose()
+#  @expose()
   def logout(self, obj,  path):
     del session['root']
     flash('Logged out')

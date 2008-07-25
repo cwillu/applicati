@@ -18,6 +18,8 @@ import logging
 
 import inspect
 
+from . import builtins
+
 actions = {}
 #actions = weakref.WeakValueDictionary()
 #actionCollections = weakref.WeakKeyDictionary()
@@ -97,7 +99,9 @@ def with_methods(obj, decorator):
   except PermissionError:
     pass
   
-def BaseComponent(rootFolder="pickles"):
+def BaseComponent(rootFolder):
+  assert rootFolder, "No root folder supplied (%s)" % rootFolder
+    
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   
   """        
@@ -311,7 +315,7 @@ def BaseComponent(rootFolder="pickles"):
  #       print perms
         db = self._connect()
         db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
-#        os.rename( self._filename('permissions'), 'pickles/%s~' % self._filename('permissions'))
+        os.rename( self._filename('permissions'), 'pickles/%s~' % self._filename('permissions'))
         
 #        os.unlink( self._filename('permissions'))
         db.commit()
@@ -415,10 +419,15 @@ def BaseComponent(rootFolder="pickles"):
   return Object(descriptor=(1,), path=[], permissions=0)
   
 #registerComponent('Object', Object)
-     
+
+def createBase(base):
+  base
+  
 def test():
   b = BaseComponent('test.pickles')
   print dir(b)
   print b.links
+  
+  
   
 test()
