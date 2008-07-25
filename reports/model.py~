@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-#from turbogears.dataComp import PackageHub
+#from turbogears.database import PackageHub
 #hub = PackageHub('reports')
 #__connection__ = hub
 
@@ -99,7 +99,9 @@ def with_methods(obj, decorator):
   except PermissionError:
     pass
   
-def BaseComponent(rootFolder="pickles"):
+def BaseComponent(rootFolder):
+  assert rootFolder, "No root folder supplied (%s)" % rootFolder
+    
   componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   
   """        
