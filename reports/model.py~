@@ -434,6 +434,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
   
   def construct(spec, newNode):
     nodeType = spec.tagName
+    print nodeType
     if nodeType is 'Reference':
       node = remembered[spec.getAttribute('id')]
       return node
