@@ -315,6 +315,7 @@ def BaseComponent(rootFolder):
  #       print perms
         db = self._connect()
         db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
+        print self._filename('permissions')
         os.rename( self._filename('permissions'), 'pickles/%s~' % self._filename('permissions'))
         
 #        os.unlink( self._filename('permissions'))
