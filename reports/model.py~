@@ -442,7 +442,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     if spec.hasAttribute('id'):
       remembered[spec.getAttribute('id')] = node
 
-    node.data = builtins.metaTypes[nodeType]
+    node.data = builtins.metaTypes[nodeType]()
     content = ''    
     
     for detail in spec.childNodes:
