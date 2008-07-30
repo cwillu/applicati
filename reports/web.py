@@ -303,6 +303,7 @@ class Root(controllers.RootController):
 #        loginRoot()
 #        aBlank = blank()
 #        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
+        print path
         raiseRedirectToShow(path)
     
       signature = None
