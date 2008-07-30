@@ -459,7 +459,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     node.data.save(node, content)
     return node      
 
-  return construct(spec, BaseComponent(baseDir))   
+  return construct(spec.childNodes[0], BaseComponent(baseDir))   
   
 def test():
   b = BaseComponent('test.pickles')

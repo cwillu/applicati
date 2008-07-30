@@ -426,10 +426,40 @@ def BaseComponent(rootFolder):
   
 #registerComponent('Object', Object)
 
-def createBase(baseDir):
-  base = BaseComponent(baseDir)
-  base.data = builtins.metaTypes['CapRoot']()
+def createBase(baseDir, template='reports/webTemplate.xml'):
+  import xml
+  spec = xml.dom.minidom.parse(template)
   
+  remembered = {}
+  
+  def construct(spec, newNode):
+    nodeType = spec.tagName
+    if nodeType is 'Reference':
+      node = remembered[spec.getAttribute('id')]
+      return node
+        
+    node = newNode
+    if spec.hasAttribute('id'):
+      remembered[spec.getAttribute('id')] = node
+
+    node.data = builtins.metaTypes[nodeType]
+    content = ''    
+    
+    for detail in spec.childNodes:
+      if detail.nodeType is not node.ELEMENT_NODE:
+        continue
+      
+      child = construct(detail, node.create())
+      name = detail.getAttribute('name')
+      permissions = detail.getAttribute('permissions') if detail.hasAttribute('permissions') else None
+
+      content += '[%s]\n' % name
+      node.data.link(node, name, child.descriptor)      
+    
+    node.data.save(node, content)
+    return node      
+
+  return construct(spec, BaseComponent(baseDir))   
   
 def test():
   b = BaseComponent('test.pickles')
