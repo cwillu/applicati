@@ -389,7 +389,7 @@ class Root(controllers.RootController):
         return dict(message="Please log in.")
         
       userName = user
-      userPath = ['users', userName]
+      userPath = ['Users', userName]
       userMeta = findPage(loginRoot(), userPath)
       if not userMeta or not userMeta.data:
         print "login fail at 1", userMeta, userMeta.data
