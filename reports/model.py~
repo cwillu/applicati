@@ -446,7 +446,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     content = ''    
     
     for detail in spec.childNodes:
-      if detail.nodeType is not node.ELEMENT_NODE:
+      if detail.nodeType is not spec.ELEMENT_NODE:
         continue
       
       child = construct(detail, node.create())
