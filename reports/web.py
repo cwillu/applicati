@@ -392,11 +392,14 @@ class Root(controllers.RootController):
       userPath = ['users', userName]
       userMeta = findPage(loginRoot(), userPath)
       if not userMeta or not userMeta.data:
+        print "login fail at 1", userMeta, userMeta.data
         break        
       userObject = userMeta.data
       if 'checkPassword' not in dir(userObject):
+        print "login fail at 2, checkPassword not in ", userObject 
         break
       if not userObject.checkPassword(userName, password):
+        print "login fail at 3, invalid password"
         break
 
       session['root'] = (request.headers['Host'], userName,)
