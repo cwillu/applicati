@@ -325,7 +325,7 @@ class Root(controllers.RootController):
           aBlank = blank()
           return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
       else:
-        #path = ('public',) + path
+        path = ('public',) + path
         pass
         
       return self.dispatch(path, signature, args)
