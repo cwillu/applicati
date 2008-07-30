@@ -380,7 +380,7 @@ def BaseComponent(rootFolder):
     links = property(getPerms, setPerms)   
     
     def __div__(self, name):
-      '''syntax abuse :p  foo/bar/baz'''
+      '''syntax abuse :p  foo/'bar'/'baz' '''
       return self.get(self.resolve(name), name)
       
     def resolve(self, name):

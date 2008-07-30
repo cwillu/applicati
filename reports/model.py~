@@ -378,6 +378,10 @@ def BaseComponent(rootFolder):
 
       self.links = links
     links = property(getPerms, setPerms)   
+    
+    def __div__(self, name):
+      '''syntax abuse :p  foo/bar/baz'''
+      return self.get(self.resolve(name), name)
       
     def resolve(self, name):
       data = self._selfGetData()
@@ -422,8 +426,10 @@ def BaseComponent(rootFolder):
   
 #registerComponent('Object', Object)
 
-def createBase(base):
-  base
+def createBase(baseDir):
+  base = BaseComponent(baseDir)
+  base.data = builtins.metaTypes['CapRoot']()
+  
   
 def test():
   b = BaseComponent('test.pickles')
