@@ -430,18 +430,21 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
   import xml
   spec = xml.dom.minidom.parse(template)
   
-  remembered = {}
+  root = BaseComponent(baseDir)
   
   def construct(spec, newNode):
     nodeType = spec.tagName
     print nodeType
     if nodeType == 'Reference':
-      node = remembered[spec.getAttribute('id')]
+      path = spec.getAttribute('path')
+      path = path.strip('/').split('/')
+      
+      node = root
+      for segment in path:
+        node = node/segment        
       return node
         
     node = newNode
-    if spec.hasAttribute('id'):
-      remembered[spec.getAttribute('id')] = node
 
     node.data = builtins.metaTypes[nodeType]()
     content = ''    
@@ -460,7 +463,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     node.data.save(node, content)
     return node      
 
-  return construct(spec.childNodes[0], BaseComponent(baseDir))   
+  return construct(spec.childNodes[0], root)   
   
 def test():
   b = BaseComponent('test.pickles')
