@@ -1,0 +1,15 @@
+<CapRoot id="1">
+  <Wiki name="gateways">
+    <Wiki name="127.0.0.1:8080">
+      
+    </Wiki>
+  </Wiki>
+  <Wiki name="users">
+    <User name="cwillu">
+      <Reference id="1" name="root" />
+    </User>
+  </Wiki>
+</CapRoot>
+
+
+<!-- Wiki User  Raw XML Constructor AutoLogin -->
