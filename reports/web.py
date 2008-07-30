@@ -407,7 +407,7 @@ class Root(controllers.RootController):
       flash("Logged in as %s" % session['root'][-1])
       raiseRedirectToShow(sessionPath)
 
-    msg=_("%s - Incorrect password or username." % username)
+    msg=_("%s - Incorrect password or username." % user)
     response.status=403
     return dict(message=msg)
 

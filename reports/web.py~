@@ -30,19 +30,14 @@ logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 gitPid = os.fork()
 if not gitPid:
   exit = os.system('git add .')
-  print exit
   if exit: sys.exit(1)
   exit = os.system('git commit -a -m "$(date)"')
-  print exit
   if exit: sys.exit(2)
-  print ">>>", exit
   sys.exit(0)
-print gitPid
+
 def checkGitStatus(pid):
   import os #???
-  print pid
   exit = os.waitpid(pid, 0)
-  print exit
   if exit[1]:
     print "\nCommit failed (%s)\n" % (exit,)
     thread.interrupt_main()
