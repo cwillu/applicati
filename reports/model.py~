@@ -425,6 +425,8 @@ def createBase(base):
   
 def test():
   b = BaseComponent('test.pickles')
+  b.data = builtins.Wiki()
+  
   print dir(b)
   print b.links
   
