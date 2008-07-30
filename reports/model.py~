@@ -441,6 +441,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
       
       node = root
       for segment in path:
+        print segment
         node = node/segment        
       return node
         

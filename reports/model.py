@@ -438,6 +438,8 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     if nodeType == 'Reference':
       path = spec.getAttribute('path')
       path = path.strip('/').split('/')
+      if path == ['']:
+        path = []
       
       node = root
       for segment in path:
