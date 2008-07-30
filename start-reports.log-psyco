@@ -1,10 +1,2 @@
-03:12:49.96  Logging started, 07/30/08                  %%%%%%%%%%%%%%%%%%%%
-03:12:49.96  unsupported free or cell vars in expose                     % %
-03:13:29 AM.21  unsupported free or cell vars in findPage                   % %
-03:15:37 AM.20   ______
-        #1   |98.1 %|  reloader_thread           ...ogears/startup.py:27
-        #2   | 0.9 %|  emit                      ...gging/__init__.py:733
-        #3   | 0.5 %|  Marshaller                ...n2.5/xmlrpclib.py:581
-        #4   | 0.4 %|  wait_for_http_ready       ...rypy/_cpserver.py:136
-03:15:37 AM.20  memory usage: 12+ kb                                          %
-03:15:37 AM.20  program exit, 30/07/08                     %%%%%%%%%%%%%%%%%%%%
+03:34:15.00  Logging started, 07/30/08                  %%%%%%%%%%%%%%%%%%%%
+03:34:15.01  unsupported free or cell vars in expose                     % %

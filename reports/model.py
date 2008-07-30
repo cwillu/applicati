@@ -305,6 +305,7 @@ def BaseComponent(rootFolder):
 
     def _getPerms(self):
       if not self._descriptor:
+        raise PermissionError()
         assert False
         return {}
 #      if self._data is not None:
