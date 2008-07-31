@@ -1,2 +1,10 @@
 07:28:37.55  Logging started, 07/31/08                  %%%%%%%%%%%%%%%%%%%%
 07:28:37.56  unsupported free or cell vars in expose                     % %
+07:28:41 AM.83   ______
+        #1   |97.8 %|  <lambda>                  ...ogears/startup.py:50
+        #2   | 1.0 %|  emit                      ...gging/__init__.py:733
+        #3   | 0.4 %|  wait_for_http_ready       ...rypy/_cpserver.py:136
+        #4   | 0.4 %|  start                     ...n2.5/threading.py:430
+        #5   | 0.3 %|  reloader_thread           ...ogears/startup.py:27
+07:28:41 AM.83  memory usage: 12+ kb                                          %
+07:28:41 AM.83  program exit, 31/07/08                     %%%%%%%%%%%%%%%%%%%%
