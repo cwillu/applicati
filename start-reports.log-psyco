@@ -1,9 +1,2 @@
-09:55:55.76  Logging started, 07/30/08                  %%%%%%%%%%%%%%%%%%%%
-09:55:55.76  unsupported free or cell vars in expose                     % %
-22:35:25.58  memory usage: 12+ kb                                          %
-22:35:25.58  program exit, 07/30/08                     %%%%%%%%%%%%%%%%%%%%
-..ogears/startup.py:27
-        #2   |19.6 %|  main                      ...lib/autoreload.py:48
-        #3   |12.3 %|  start                     ...rypy/_cpengine.py:78
-10:35:17 PM.97  memory usage: 12+ kb                                          %
-10:35:17 PM.97  program exit, 30/07/08                     %%%%%%%%%%%%%%%%%%%%
+07:28:33.82  Logging started, 07/31/08                  %%%%%%%%%%%%%%%%%%%%
+07:28:33.82  unsupported free or cell vars in expose                     % %
