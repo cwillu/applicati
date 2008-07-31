@@ -88,6 +88,9 @@ baseMeta = [None]
 
 class WebObject(builtins.Wiki):
   def start(self, meta):
+    import pkg_resources
+    pkg_resources.require("TurboGears")
+
     baseMeta[0] = meta
     from turbogears import config, update_config, start_server
     import cherrypy
