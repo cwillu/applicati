@@ -93,9 +93,13 @@ class WebObject(builtins.Wiki):
     import cherrypy
     cherrypy.lowercase_api = True
 
-    update_config(configfile="dev.cfg",modulename="reports.config")
-    config.update(dict(package="reports"))
+    print 1
 
+    update_config(configfile="dev.cfg",modulename="reports.config")
+    
+    print 2
+    config.update(dict(package="reports"))
+    print 3
     start_server(Root())
     #not really right
   

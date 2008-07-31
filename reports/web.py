@@ -95,7 +95,7 @@ class WebObject(builtins.Wiki):
 
     print 1
 
-    update_config(configfile="dev.cfg",modulename="reports.config")
+    config.update_config(configfile="dev.cfg",modulename="reports.config")
     
     print 2
     config.update(dict(package="reports"))
