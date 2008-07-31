@@ -44,6 +44,9 @@ def checkGitStatus(pid):
     
 thread.start_new_thread(checkGitStatus, (gitPid,))
 
+class WebObject(object):
+  
+
 def bitString(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
   return ''.join(random.choice(dictionary) for x in range(requiredLength))
@@ -325,7 +328,7 @@ class Root(controllers.RootController):
           aBlank = blank()
           return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
       else:
-        #path = ('public',) + path
+        path = ('public',) + path
         pass
         
       return self.dispatch(path, signature, args)

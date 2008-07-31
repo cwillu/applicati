@@ -200,6 +200,7 @@ class AutoLogin(Wiki):
     def login():
       if 'guest' not in session['root']:
         return
+      assert False, "findpage!?"
       user = findPage(obj, [self.links.keys()[0]])
       if not user or not user.data:
         return

@@ -84,6 +84,27 @@ except ImportError:
   print 'Psyco not installed, the program will just run slower'  
   compile = lambda func: func
 
+baseMeta = [None]
+
+class WebObject(builtins.Wiki):
+  def start(self, meta):
+    baseMeta[0] = meta
+    from turbogears import config, update_config, start_server
+    import cherrypy
+    cherrypy.lowercase_api = True
+
+    update_config(configfile="dev.cfg",modulename="reports.config")
+    config.update(dict(package="reports"))
+
+    start_server(Root())
+    #not really right
+  
+  def stop(self, meta):
+    import cherrypy
+    cherrypy.server.stop()
+    baseMeta[0] = None
+    
+
 @psyco.proxy
 def visit(root, path, op):
   target = root

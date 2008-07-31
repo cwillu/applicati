@@ -201,13 +201,13 @@ class AutoLogin(Wiki):
       if 'guest' not in session['root']:
         return
       assert False, "findpage!?"
-      user = findPage(obj, [self.links.keys()[0]])
-      if not user or not user.data:
-        return
-      loginRoot(user)
-      
-      flash("Logged in as %s" % session['root'][-1])
-      raiseRedirectToShow(['/'])
+      #user = findPage(obj, [self.links.keys()[0]])
+      #if not user or not user.data:
+      #  return
+      #loginRoot(user)
+      #      
+      #flash("Logged in as %s" % session['root'][-1])
+      #raiseRedirectToShow(['/'])
 
     return login() or Wiki.show(self, obj, *args, **kargs)
 

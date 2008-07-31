@@ -1,7 +1,8 @@
 <CapRoot>
+  <
+
   <Wiki name="gateways">
-    <Wiki name="127.0.0.1:8080">
-      
+    <Wiki name="127.0.0.1:8080">      
     </Wiki>
   </Wiki>
   <Wiki name="users">
