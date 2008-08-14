@@ -340,7 +340,7 @@ def BaseComponent(rootFolder, componentPath=()):
       
       db = self._connect()              
       perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
-      print perms
+      #print perms
 #      assert perms
       return perms
 

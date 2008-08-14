@@ -172,7 +172,7 @@ def BaseComponent(rootFolder, componentPath=()):
       if self._descriptor == ((1, ), ):
         raise Exception(self._descriptor, descriptor)
 
-      with_methods(self, logger)
+      # with_methods(self, logger)
 
     def _connect(self, id=None):
       db = sqlite3.connect(self._filename('permissions.db', id=id))
