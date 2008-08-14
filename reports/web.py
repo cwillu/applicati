@@ -346,7 +346,7 @@ class Root(controllers.RootController):
 
   def _checkSignaturePath(self, path, signature, maxDepth=128):
     #signature, salt = signature.split('-')       
-    hexSignature = baseToHex(signature)
+    #hexSignature = baseToHex(signature)
 
     if len(path) > maxDepth:
       return self._checkSignature(path, signature)
@@ -358,7 +358,7 @@ class Root(controllers.RootController):
     candidate = ''
     for index, segment in enumerate(path):
       candidate = SHA.new(candidate + segment).hexdigest()
-      if SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20] == hexSignature:                
+      if hexToBase(SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20]) == signature:                
         #verify the implementations are in sync
         return self._checkSignature(path[:index], signature)  
     else:      
