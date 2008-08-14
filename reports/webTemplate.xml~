@@ -28,6 +28,7 @@
       <Link path="/main gateway" name="127.0.0.1:8080" />
       <Link path="/main gateway" name="127.0.0.1" />
       <Link path="/main gateway" name="127.0.0.1" />
+      <Link path="/main gateway" name="home.cwillu.com" />
     </Wiki>
   </Wiki>
     
