@@ -533,7 +533,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   
   redirect = ''
   if signature:    
-    name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0])[0]
+    name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     redirect = "/~%s(%s-%s)" % (name, salt, signature) 
     path = path[1:]  
   
