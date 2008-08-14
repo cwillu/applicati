@@ -267,9 +267,6 @@ class Root(controllers.RootController):
   
   def __init__(self):
     class DirtyHacks(object):
-      def on_start_resource(self):
-        print "**********"
-        
       def before_main(nested):
         self._cp_filters.remove(nested)
         for index, filter in enumerate(self._cp_filters):
