@@ -7,7 +7,7 @@
 
   <Wiki name="users">
     <Link path="/test/cwillu" name="cwillu" />
-    <User name="cwillu2">
+    <User name="test">
       <Link path="/" name="root" />
     </User>
   </Wiki>

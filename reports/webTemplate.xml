@@ -19,7 +19,9 @@
   <Wiki name="main gateway">
     <Link path="/users" name="users" />
     <Link path="/public" name="public" /> 
-    <Wiki name="protected" />  
+    <Wiki name="protected" >
+      <Link path="/users/test" name="~test(abcdef)" />
+    </Wiki>  
   </Wiki>
 
   
