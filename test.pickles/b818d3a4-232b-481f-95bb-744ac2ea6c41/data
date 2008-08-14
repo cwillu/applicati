@@ -11,14 +11,14 @@ NtRp4
 (dp5
 S'data'
 p6
-V[root][test]
+V[gateways]\u000A
 p7
 sS'links'
 p8
 (dp9
-Vroot
+Vgateways
 p10
-((I1
+((S'6bd434ff-377a-49da-bcce-171a4594c2e0'
 tg1
 (cuuid
 UUID
@@ -28,7 +28,7 @@ NtRp12
 (dp13
 S'int'
 p14
-L54749724453197387610515719121175146808L
-sbS'4e20e23068c4dc0cfd58473431a20f592e62c9d5da907cf0cf7a52430c8d467e'
+L47592975184673525530472059333160431480L
+sbS'956c2ae7b8ee892d11908b10c863768887ed1343c56aedcf031ef94307fead1c'
 tp15
 ssb.

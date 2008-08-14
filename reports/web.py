@@ -855,7 +855,7 @@ metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', '
 
 def test():
   server.wait()
-  from urllib2 import urlopen
+  from urllib2 import urlopen, HTTPError
   assert "OK" == urlopen('http://127.0.0.1:8080').msg 
   assert "OK" == urlopen('http://127.0.0.1:8080/').msg 
   assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs').msg
@@ -871,7 +871,11 @@ def test():
   assert "OK" == urlopen('http://127.0.0.1:8080/%s/root/' % signed).msg
   
   assert "OK" == urlopen('http://127.0.0.1:8080/?op=save;data=[root][test]').msg
-  assert "OK" == urlopen('http://127.0.0.1:8080/test/').msg
+  
+  try:    
+    assert False, urlopen('http://127.0.0.1:8080/test/').msg
+  except HTTPError:
+    pass
   
   print "\033[1;34m" + "Tests OK" + "\033[0m"
   
