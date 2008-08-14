@@ -365,15 +365,15 @@ class Root(controllers.RootController):
       return False
 
   def _checkSignature(self, path, signature):
-    #signature, salt = signature.split('-')
-    path = list(path)
-    trial = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), path + [str(Root.componentSecret)])[:20])
-    return signature == trial
+    ##signature, salt = signature.split('-')
+    #path = list(path)
+    #trial = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
+    return signature == _signPath(path)
     
   def _signPath(self, path):
     path = list(path)
 
-    signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), path + [str(Root.componentSecret)])[:20])
+    signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
 
     #path[1] = "%s:%s" % (signature, path[1])
     return signature
