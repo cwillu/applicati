@@ -24,3 +24,5 @@ config.update(dict(package="reports"))
 from reports.web import Root
 
 start_server(Root())
+
+print ("***" * 30 + "\n") * 10

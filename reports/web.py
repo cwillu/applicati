@@ -8,25 +8,26 @@ import thread
 from Crypto.Cipher import Blowfish as blowfish
 from Crypto.Hash import SHA
 #from os import urandom as random
-from random import SystemRandom as sysrandom
-random = sysrandom()
+from random import SystemRandom as sysrandom; random = sysrandom()
 import xml.dom.minidom as dom
 import re
 from Queue import Queue, Empty
 
 from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response, HTTPRedirect
+from cherrypy import session, request, response, HTTPRedirect, server
 from turbogears.toolbox.catwalk import CatWalk
 from docutils.core import publish_parts
-from pydoc import html
+import pydoc
 
 from . import model as db
 from . import builtins
+from . import html
 
 import logging
 logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
+gitPid = True
 gitPid = os.fork()
 if not gitPid:
   exit = os.system('git add .')
@@ -84,39 +85,14 @@ except ImportError:
   print 'Psyco not installed, the program will just run slower'  
   compile = lambda func: func
 
-baseMeta = [None]
-
-class WebObject(builtins.Wiki):
-  def start(self, meta):
-    import pkg_resources
-    pkg_resources.require("TurboGears")
-
-    baseMeta[0] = meta
-    from turbogears import config, update_config, start_server
-    import cherrypy
-    cherrypy.lowercase_api = True
-
-    print 1
-
-    config.update_config(configfile="dev.cfg",modulename="reports.config")
-    
-    print 2
-    config.update(dict(package="reports"))
-    print 3
-    start_server(Root())
-    #not really right
-  
-  def stop(self, meta):
-    import cherrypy
-    cherrypy.server.stop()
-    baseMeta[0] = None
-    
+baseMeta = db.BaseComponent('test.pickles')/'web'
 
 @psyco.proxy
 def visit(root, path, op):
   target = root
   if target is None:
-    target = db.BaseComponent('pickles')
+    #target = db.BaseComponent('pickles')
+    target = baseMeta
   if path is None:
     path = []
   
@@ -231,39 +207,6 @@ def walk(root, action, maxDepth=5):
       stack.append((childNode, childList(childNode), depth+1))
       seen.add(childNode.id)        
 
-#class FixIE(object):
-def FixIE(presenter):
-  img_png = re.compile(r'<img[^>]*>')
-  attrs = re.compile(r'(\w+)="([^"]*)')
-
-  def fixPNG(match):
-    '''
-    This looks like it should work, but DXImageTransform doesn't work under wine,
-    so instead we just drop to a gif until I can confirm this works
-    '''    
-    iepng = "filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='%s');"
-  
-    img = match.group(0)
-    attributes = dict(attrs.findall(img))
-    attributes['style'] = iepng % attributes['src'] + attributes.get('style', '')
-    attributes['src'] = ''
-    return "<img %s />" % ' '.join('%s="%s"' % (key, attributes[key]) for key in attributes)
-
-  def replacePNG(match):
-    img = match.group(0)
-    attributes = dict(attrs.findall(img))
-    attributes['src'] = attributes['src'].replace('.png', '.gif')
-    return "<img %s />" % ' '.join('%s="%s"' % (key, attributes[key]) for key in attributes)
-
-  def __call__(*args, **kargs):
-    output = presenter(*args, **kargs)
-    userAgent = request.headers["User-Agent"]
-    if "MSIE" in userAgent and float(re.findall(r'MSIE (.*?);', userAgent)[0]) < 7:
-      output = img_png.sub(replacePNG, output)
-    return output
-  return __call__
-    
-
 class Wrapper(object):
   def __init__(self, data, page):    
     self._data = data
@@ -315,13 +258,35 @@ def loginRoot():
 
 #  return findPage(None, ('gateways', ) + session['root'])
   return findPage(None, ('gateways', request.headers['Host']))
-   
+
+#import cherrypy
+#print dir(cherrypy.root._cp_filters), cherrypy.root._cp_filters 
 
 class Root(controllers.RootController):  
   componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")
-
+  
+  def __init__(self):
+    class DirtyHacks(object):
+      def on_start_resource(self):
+        print "**********"
+        
+      def before_main(nested):
+        self._cp_filters.remove(nested)
+        for index, filter in enumerate(self._cp_filters):
+          if filter.__class__.__name__ == 'NestedVariablesFilter':            
+            self._cp_filters.remove(filter)            
+            break  
+    self._cp_filters = [DirtyHacks()]
+    
   @expose()
   def default(self, *path, **args):
+    print "\033[1;34m" + "*" * 80 + "\033[0m"
+    print "\033[1;35m" + str(path) + str(args) + "\033[0m"
+    print "\033[1;35m" + str(request.query_string) + "\033[0m"
+    #print "\033[1;35m" + str(request.path_info) + "\033[0m"
+    print "\033[1;35m" + str(request.browser_url) + "\033[0m"
+    
+    #print "\033[1;35m" + str(request.request_line) + "\033[0m"
     try:
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            
       if not request.path.endswith('/'):
@@ -333,76 +298,85 @@ class Root(controllers.RootController):
 #        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
         print path
         raiseRedirectToShow(path)
-    
-      signature = None
-      if path and ':' in path[0]:
-        signature, firstSegment = path[0].split(':', 1) 
-        path = ('protected', firstSegment) + path[1:]
-        
+         
+      slug = re.findall(r'^~(.*)\((.*)-(.*)\)$', path[0]) if path else None
+      if slug:
+        name, salt, signature = slug.pop()
+
+        path = ('protected', "~%s(%s)" % (name, salt)) + path[1:]
+
         if not self._checkSignature(path, signature):
           if self._checkSignaturePath(path, signature):  
             print path
-            print signature
+            print slug, signature
             print self._signPath(path)
             print
-            raiseRedirectToShow(self._signPath(path))
+            signature = self._signPath(path)
+            raiseRedirectToShow(path, signature)
             assert False
             
           response.status=403          
           flash('''bad signature (%s) ''' % (request.path, ))
           aBlank = blank()
-          return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
+          return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)               
       else:
         path = ('public',) + path
         pass
         
-      return self.dispatch(path, signature, args)
+      return self.dispatch(path, args)
     finally:
       logging.getLogger('root.controller.http').debug("Request complete")
 
   def addProtected(self, path):
     protectedRoot = findPage(loginRoot(), ('protected',))
     links = protectedRoot.data.links
+    name = path[-1]
 
-    requiredBits = math.log(len(links) + 1, 2)  #not really 'required', but nice to have (not security sensitive, these paths are signed)
+    requiredBits = max(32, math.log(len(links) + 1, 2))  
     while True:
-      protectedName = bitString(requiredBits)
-      if protectedName not in links:
+      salt = bitString(requiredBits)
+      if salt + ":" + name not in links:
         break              
-
-    protectedRoot.data.link(protectedRoot, protectedName, findPage(loginRoot(), path).descriptor)
-#    links[protectedName] = 
-
-    protectedPath = ['protected', protectedName]
+   
+    name = "~%s(%s)" % (name, salt)
+    
+    protectedRoot.data.link(protectedRoot, name, findPage(loginRoot(), path).descriptor)
+   
+    protectedPath = ['protected', name]
     
  #   protectedRoot.data.save(protectedRoot)
-    return self._signPath(protectedPath)
+    return name, self._signPath(protectedPath)
 
   def _checkSignaturePath(self, path, signature, maxDepth=128):
-    print path
-    if len(path) > maxDepth:
-      return self._signPath(path) == signature        
-    
+    #signature, salt = signature.split('-')       
     signature = baseToHex(signature)
-    candidate = 'something?'
-    for segment in path:
+
+    if len(path) > maxDepth:
+      return self._checkSignature(path, signature)
+      #return self._signPath(path) == signature        
+    
+    candidate = ''
+    for index, segment in enumerate(path):
       candidate = SHA.new(candidate + segment).hexdigest()
-      if SHA.new(candidate + str(Root.componentSecret)).hexdigest() == signature:
-        return True
+      if SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20] == signature:
+        #verify the implementations are in sync
+        return self._checkSignature(path[:index], signature)  
     else:
       return False
 
-  def _checkSignature(self, path, signature):  
+  def _checkSignature(self, path, signature):
+    #signature, salt = signature.split('-')
     path = list(path)
-    return signature == hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [str(Root.componentSecret)]))
+    trial = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), path + [str(Root.componentSecret)])[:20])
+    return signature == trial
     
   def _signPath(self, path):
     path = list(path)
 
-    signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), ['something?'] + path + [str(Root.componentSecret)]))
+    signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), path + [str(Root.componentSecret)])[:20])
 
-    path[1] = "%s:%s" % (signature, path[1])        
-    return path
+    #path[1] = "%s:%s" % (signature, path[1])
+    return signature
     
   def removeProtected(self, name):
     protectedRoot = findPage(loginRoot(), ('protected',))
@@ -419,7 +393,7 @@ class Root(controllers.RootController):
         return dict(message="Please log in.")
         
       userName = user
-      userPath = ['Users', userName]
+      userPath = ['users', userName]
       userMeta = findPage(loginRoot(), userPath)
       if not userMeta or not userMeta.data:
         print "login fail at 1", userMeta, userMeta.data
@@ -432,13 +406,14 @@ class Root(controllers.RootController):
         print "login fail at 3, invalid password"
         break
 
-      session['root'] = (request.headers['Host'], userName,)
-      session['path'] = []    
+      #session['root'] = (request.headers['Host'], userName,)
+      session['path'] = () 
       
-      sessionPath = self.addProtected(userPath)
+      name, signature = self.addProtected(userPath)
       
-      flash("Logged in as %s" % session['root'][-1])
-      raiseRedirectToShow(sessionPath)
+      #flash("Logged in as %s" % session['root'][-1])
+      flash("Logged in as %s" % userName)
+      raiseRedirectToShow(['protected', name], signature)
 
     msg=_("%s - Incorrect password or username." % user)
     response.status=403
@@ -447,19 +422,20 @@ class Root(controllers.RootController):
   @expose()
   def logout(self):
     session.pop('root', None)
-    session['path'] = []    
+    session['path'] = ()   
     flash('Logged out')
     raiseRedirectToShow()
     
 
-  def dispatch(self, path, signature, args):
+  def dispatch(self, path, args):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
     
     loginRoot()
     op = args.pop('op', '')
+    prototype = args.pop('prototype', 'Default')
     try:
       meta = self.find(path, args)           
-            
+              
       if not meta:
         response.status=404
         flash('''%s doesn't exist.''' % (((request.headers['Host'],) + path)[-1]))
@@ -524,10 +500,10 @@ class Root(controllers.RootController):
     return meta
       
   def updateCrumbTrail(self, path): 
-    trail = session.get('path', [])
+    trail = session.get('path', ())
     if not trail or not '/'.join(trail).startswith('/'.join((path))):
       logging.getLogger('root.controller.http').debug("Updating crumb trail: %s %s", trail, path)
-      session['path'] = (path)
+      session['path'] = path
  
   def findPresentation(self, obj):
     return findPresentation(obj)
@@ -545,14 +521,25 @@ def findPresentation(obj):
     
   return PrimitivePresentation()
 
-def raiseRedirectToShow(path=None, status=None):
+def raiseRedirectToShow(path=None, signature=None, status=None):
+  import traceback
+  traceback.print_stack()
   print "Redirect %s" % (path,)
   if not path:
     raise HTTPRedirect("/", status=status)
 
   source, path = path[0], path[1:]
 #  if source is 'public':
-  raise HTTPRedirect("/%s/" % '/'.join(path), status=status)
+  
+  redirect = ''
+  if signature:
+    name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0])
+    redirect = "/~%s(%s-%s)" % (name, salt, signature) 
+    path = path[1:]  
+  
+  redirect += "/%s/?op=show" % '/'.join(path)
+    
+  raise HTTPRedirect(redirect, status=status)
 #  elif source is 'protected':
 #    signature = '' #sign
 #    raise HTTPRedirect("/%s:%s/" % (signature, '/'.join(path)), status=status)
@@ -595,7 +582,7 @@ class Presentation(object):
     session['hand'] = obj.descriptor
     raiseRedirectToShow(path)
 
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.search")
   def search(self, obj, path, query=None):
     if query is None:
@@ -672,7 +659,7 @@ class Presentation(object):
  
 def blank():
   class Blank(object):
-    @FixIE
+    @html.FixIE
     def show(self, meta, formatted=None, prefix=None):
       return ''
       '''    @expose(template="reports.templates.show")
@@ -687,18 +674,26 @@ def blank():
 
 class WikiPresentation(Presentation):
   def _path(self, path):
-    return ('home', ) + path
+    path = ('home', ) + path[1:]
+    index = len(path)-1
+    path += session['path'][len(path):]
+    path = (index, [('/'.join(('',) + path[1:index+1] + ('',)), segment) for index, segment in enumerate(path)])
+    
+    print "\033[1;31m" + str(path) + "\033[0m"
+    print "\033[1;31m" + str(session['path']) + "\033[0m"
+    
+    return path
   
   def _name(self, path):
-    return self._path(path)[-1]
+    return path[-1]
 
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.show")
   def show(self, obj,  path, formatted=True, prefix=None):
     content = obj.show(formatted=formatted, prefix=prefix)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.edit")
   def edit(self, obj,  path):    
     return dict(session=session, this=self, prototype=obj.__class__.__name__, root=session['root'], name=self._name(path), path=self._path(path), data=obj.show(), obj=obj)  #XXX deprecate data;  'this' can't be called 'self'
@@ -728,7 +723,7 @@ class WikiPresentation(Presentation):
       data = data.file.read()
     return self.save(obj, path, data=data + '\n' + obj.show())
             
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.caps")    
   def links(self, obj, path):
     links = obj.links
@@ -806,6 +801,7 @@ class WikiPresentation(Presentation):
       else:
         path = objectPath + tuple(path)
 
+      print "  >>>  ", loginRoot(), path
       meta = findPage(loginRoot(), path)      
       
 #      assert False, (link.split('/'), path, s)
@@ -829,13 +825,13 @@ class WikiPresentation(Presentation):
     return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
 
 class PrimitivePresentation(WikiPresentation):
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.show")
   def show(self, obj, path, prefix=None):
     try:
       content = obj.show()
     except:
-      content = html.escape("%s" % obj)
+      content = pydoc.html.escape("%s" % obj)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
 
 class RawPresentation(WikiPresentation):
@@ -844,7 +840,7 @@ class RawPresentation(WikiPresentation):
     return obj.show(formatted=formatted, prefix=None)
 
 class XmlPresentation(WikiPresentation):
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.show")
   def show(self, obj, path, prefix=None, formatted=True):
     content = obj.show(formatted=formatted, prefix=None)
@@ -860,3 +856,12 @@ metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', '
 #  db.Object(name=name, data=data, ident=id)
 
 
+def test():
+  server.wait()
+  from urllib2 import urlopen
+  assert "OK" == urlopen('http://127.0.0.1:8080/').msg 
+  assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs/').msg
+  print "\033[1;34m" + "Tests OK" + "\033[0m"
+  
+
+thread.start_new_thread(test, [])

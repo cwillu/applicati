@@ -41,7 +41,9 @@ components = {}
 def registerComponent(name, obj):
   assert name not in components, "Component already registered (%s)" % name
   components[name] = obj
-def resolveComponent(name):
+def resolveComponent(componentDescriptor):
+  name = componentDescriptor[0]
+  args = componentDescriptor[1:]
   assert name in components, "Unknown component (%s)" % name  
   return components[name]
 
@@ -100,10 +102,15 @@ def with_methods(obj, decorator):
   except PermissionError:
     pass
   
-def BaseComponent(rootFolder):
+def BaseComponent(rootFolder, componentPath=()):
   assert rootFolder, "No root folder supplied (%s)" % rootFolder
+  
+  try:
+    componentSecret = eval(open(os.path.join(rootFolder, 'secret')).read())
+  except IOError:
+    componentSecret = uuid.uuid4()
+    print >>open(os.path.join(rootFolder, 'secret'), 'w'), "uuid.%s" % `componentSecret`
     
-  componentSecret = uuid.UUID("01ec9bf6-78ad-4996-912a-6b673992f877")
   
   """        
   return Object(descriptor=id[0], path=path)
@@ -230,6 +237,7 @@ def BaseComponent(rootFolder):
             os.makedirs(self._filename(''))
           except OSError, err:
             if err.errno is not 17:  #path already exists (which an error for a recursive create why, exactly?)
+              print self._filename(''), self._filename()
               raise err            
           return None
         if err.errno == 2 and 'data' not in self._filename(): #file not found
@@ -292,12 +300,12 @@ def BaseComponent(rootFolder):
     @property
     def id(self):
       return self._descriptor
-    
+          
     @property
     def descriptor(self):
       if not self.id:
         return None
-      return _sign(self.id, componentSecret)
+      return _sign(componentPath + self.id, componentSecret)
               
     def getPerms(self):
       self._check('read')
@@ -403,8 +411,14 @@ def BaseComponent(rootFolder):
         path = self.path + [segment]
       
       if len(id) > 1:
+        print id
         segment = id[0]
-        component = resolveComponent(segment)
+        
+        metaComponent = self.get(segment)
+        print metaComponent        
+        ## get(None, segment) because I'm still on the fence about auto wrapping data objects with their meta object        
+        component = metaComponent.data.get(None, componentPath + (segment,))
+        #component = resolveComponent(segment, componentPath=componentPath)
         descriptor = (id[1:], ) + descriptor[1:]
         return component.get(descriptor, path=path)
 
@@ -427,28 +441,45 @@ def BaseComponent(rootFolder):
   
 #registerComponent('Object', Object)
 
+class Component(object):
+  def __init__(self, path):
+    self.path = path
+  
+  def get(self, meta, componentPath):
+    return BaseComponent(self.path, componentPath)
+
 def createBase(baseDir, template='reports/webTemplate.xml'):
   import xml
   spec = xml.dom.minidom.parse(template)
   
   root = BaseComponent(baseDir)
   
-  def construct(spec, newNode):
+  def walk(path):
+    path = path.strip('/').split('/')
+    if path == ['']:
+      path = []
+    
+    node = root  #
+    for segment in path:
+      print segment
+      node /= segment         
+    return node
+  
+  def construct(spec, node):
     nodeType = spec.tagName
     print nodeType
-    if nodeType == 'Reference':
-      path = spec.getAttribute('path')
-      path = path.strip('/').split('/')
-      if path == ['']:
-        path = []
+    if nodeType == 'Link':
+      return walk(spec.getAttribute('path')).descriptor
+    elif nodeType == 'Component':
+      path = spec.getAttribute('file')
+      node.data = Component(path)
+      return node.descriptor
+    elif nodeType == 'Reference':
+      descriptor = eval(spec.getAttribute('descriptor')) #XXX
+      component = walk(spec.getAttribute('component'))
+      print "XXXXXXXX", ((component.descriptor,) + descriptor[0],) + descriptor[1:]              
+      return ((component.descriptor,) + descriptor[0],) + descriptor[1:]
       
-      node = root
-      for segment in path:
-        print segment
-        node = node/segment        
-      return node
-        
-    node = newNode
 
     node.data = builtins.metaTypes[nodeType]()
     content = ''    
@@ -457,25 +488,20 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
       if detail.nodeType is not spec.ELEMENT_NODE:
         continue
       
-      child = construct(detail, node.create())
+      descriptor = construct(detail, node.create())
       name = detail.getAttribute('name')
       permissions = detail.getAttribute('permissions') if detail.hasAttribute('permissions') else None
 
       content += '[%s]\n' % name
-      node.data.link(node, name, child.descriptor)      
+      node.data.link(node, name, descriptor)      
     
     node.data.save(node, content)
-    return node      
+    return node.descriptor     
 
-  return construct(spec.childNodes[0], root)   
+  construct(spec.childNodes[0], root)
+  return root   
   
 def test():
-  b = BaseComponent('test.pickles')
-  b.data = builtins.Wiki()
-  
-  print dir(b)
-  print b.links
-  
-  
+  createBase('test.pickles')  
   
 test()

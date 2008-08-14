@@ -12,14 +12,13 @@ import sys
 # if it's not on the command line, then
 # look for setup.py in this directory. If it's not there, this script is
 # probably installed
-#if len(sys.argv) > 1:
-#    update_config(configfile=sys.argv[1],
-#        modulename="reports.config")
-#elif exists(join(dirname(__file__), "setup.py")):
-#    update_config(configfile="dev.cfg",modulename="reports.config")
-#else:
-#    update_config(configfile="prod.cfg",modulename="reports.config")
-config.update_config(configfile="dev.cfg",modulename="reports.config")
+if len(sys.argv) > 1:
+    update_config(configfile=sys.argv[1],
+        modulename="reports.config")
+elif exists(join(dirname(__file__), "setup.py")):
+    update_config(configfile="dev.cfg",modulename="reports.config")
+else:
+    update_config(configfile="prod.cfg",modulename="reports.config")
 config.update(dict(package="reports"))
 
 from reports.web import Root

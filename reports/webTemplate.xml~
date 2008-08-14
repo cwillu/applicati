@@ -1,15 +1,38 @@
 <CapRoot>
-  <Wiki name="gateways">
-    <Wiki name="127.0.0.1:8080">
-      
-    </Wiki>
+  <Component name="original" file="pickles" />
+  <Reference name="test" component="/original" descriptor="(('1',), '078e9482-0563-4dd0-9ac5-feb5d484138f', '1841522ab4f69f04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />  
+
+  <Wiki name="prototype">    
   </Wiki>
+
   <Wiki name="users">
-    <User name="cwillu">
-      <Reference path="/" name="root" />
+    <Link path="/test/cwillu" name="cwillu" />
+    <User name="cwillu2">
+      <Link path="/" name="root" />
     </User>
   </Wiki>
+
+  <Wiki name="public">
+    <Link path="/" name="root" />
+  </Wiki>
+
+  <Wiki name="main gateway">
+    <Link path="/users" name="users" />
+    <Link path="/public" name="public" /> 
+    <Wiki name="protected" />  
+  </Wiki>
+
+  
+  <Wiki name="web">
+    <Wiki name="gateways">
+      <Link path="/main gateway" name="127.0.0.1:8080" />
+      <Link path="/main gateway" name="127.0.0.1" />
+      <Link path="/main gateway" name="127.0.0.1" />
+    </Wiki>
+  </Wiki>
+    
 </CapRoot>
 
 
 <!-- Wiki User  Raw XML Constructor AutoLogin -->
+<!--  <Reference component="/original" descriptor="('1', '078e9482-0563-4dd0-9ac5-feb5d484138f', '1841522ab4f69f04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />-->
