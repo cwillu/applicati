@@ -360,6 +360,7 @@ class Root(controllers.RootController):
       candidate = SHA.new(candidate + segment).hexdigest()
       if hexToBase(SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20]) == signature:                
         #verify the implementations are in sync
+        assert False, "ok"
         return self._checkSignature(path[:index], signature)  
     else:      
       return False
