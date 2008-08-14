@@ -410,10 +410,12 @@ def BaseComponent(rootFolder, componentPath=()):
       if not path:
         path = self.path + [segment]
       
-      if len(id) > 1:        
+      if len(id) > 1:
+        print id
         segment = id[0]
         
-        metaComponent = self.get(segment)        
+        metaComponent = self.get(segment)
+        print metaComponent        
         ## get(None, segment) because I'm still on the fence about auto wrapping data objects with their meta object        
         component = metaComponent.data.get(None, componentPath + (segment,))
         #component = resolveComponent(segment, componentPath=componentPath)
