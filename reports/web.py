@@ -673,7 +673,7 @@ class WikiPresentation(Presentation):
   def _path(self, path):
     path = ('home', ) + path[1:]
     index = len(path)-1
-    path += session.get('path', ())[len(path):]
+    path += session.setdefault('path', ())[len(path):]
     path = (index, [('/'.join(('',) + path[1:index+1] + ('',)), segment) for index, segment in enumerate(path)])
     
     print "\033[1;31m" + str(path) + "\033[0m"
