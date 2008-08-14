@@ -861,7 +861,6 @@ def test():
   assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs/').msg
   
   import cherrypy
-  print dir(server)
   name, signature = cherrypy.root.addProtected(['users', 'test'])
   assert "OK" == urlopen(('http://127.0.0.1:8080/%s' % name)[:-1] + signature + ")").msg  
   
