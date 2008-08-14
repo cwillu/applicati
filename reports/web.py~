@@ -522,8 +522,7 @@ def findPresentation(obj):
   return PrimitivePresentation()
 
 def raiseRedirectToShow(path=None, signature=None, status=None):
-  import traceback
-  traceback.print_stack()
+  #import traceback; traceback.print_stack()
   print "Redirect %s" % (path,)
   if not path:
     raise HTTPRedirect("/", status=status)
