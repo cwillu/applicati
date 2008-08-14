@@ -857,7 +857,9 @@ metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', '
 def test():
   server.wait()
   from urllib2 import urlopen
+  assert "OK" == urlopen('http://127.0.0.1:8080').msg 
   assert "OK" == urlopen('http://127.0.0.1:8080/').msg 
+  assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs').msg
   assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs/').msg
   
   import cherrypy
@@ -866,6 +868,8 @@ def test():
   signed = '~test(abcdef-%s)' % signature 
   print signed
   assert "OK" == urlopen('http://127.0.0.1:8080/%s/' % signed).msg
+  assert "OK" == urlopen('http://127.0.0.1:8080/%s/test' % signed).msg
+  assert "OK" == urlopen('http://127.0.0.1:8080/%s/test/' % signed).msg
   
   print "\033[1;34m" + "Tests OK" + "\033[0m"
   
