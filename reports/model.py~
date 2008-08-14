@@ -133,9 +133,6 @@ def BaseComponent(rootFolder, componentPath=()):
       self._data = data
       
       if sourceId:
-        print 
-        print sourceId
-        print
         perms = self._getPerms()        
 #        if os.access( (self._filename('permissions.db', id)), os.F_OK):
 #          perms = pickle.load(file( (self._filename('permissions', id))))

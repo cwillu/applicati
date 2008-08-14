@@ -458,13 +458,13 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     
     node = root  #
     for segment in path:
-      print segment
+      #print segment
       node /= segment         
     return node
   
   def construct(spec, node):
     nodeType = spec.tagName
-    print nodeType
+    #print nodeType
     if nodeType == 'Link':
       return walk(spec.getAttribute('path')).descriptor
     elif nodeType == 'Component':
@@ -474,7 +474,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     elif nodeType == 'Reference':
       descriptor = eval(spec.getAttribute('descriptor')) #XXX
       component = walk(spec.getAttribute('component'))
-      print "XXXXXXXX", ((component.descriptor,) + descriptor[0],) + descriptor[1:]              
+      #print "XXXXXXXX", ((component.descriptor,) + descriptor[0],) + descriptor[1:]              
       return ((component.descriptor,) + descriptor[0],) + descriptor[1:]
       
 
