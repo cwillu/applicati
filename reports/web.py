@@ -799,7 +799,7 @@ class WikiPresentation(Presentation):
         path = objectPath + tuple(path)
 
       print "  >>>  ", loginRoot(), path
-      meta = findPage(loginRoot(), path)      
+      meta = findPage(loginRoot(), path)      #<-- should be current meta 
       
 #      assert False, (link.split('/'), path, s)
       if not path:
