@@ -354,10 +354,11 @@ class Root(controllers.RootController):
     
     candidate = ''
     print path
+    assert self._checkSignature(path[:-1], signature)
+    
     for index, segment in enumerate(path):
       candidate = SHA.new(candidate + segment).hexdigest()
-      if SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20] == signature:     
-        assert False   
+      if SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20] == signature:                
         #verify the implementations are in sync
         return self._checkSignature(path[:index], signature)  
     else:      

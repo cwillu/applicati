@@ -353,6 +353,7 @@ class Root(controllers.RootController):
       #return self._signPath(path) == signature        
     
     candidate = ''
+    print path
     for index, segment in enumerate(path):
       candidate = SHA.new(candidate + segment).hexdigest()
       if SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20] == signature:     
