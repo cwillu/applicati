@@ -368,7 +368,7 @@ class Root(controllers.RootController):
     ##signature, salt = signature.split('-')
     #path = list(path)
     #trial = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
-    return signature == _signPath(path)
+    return signature == self._signPath(path)
     
   def _signPath(self, path):
     path = list(path)

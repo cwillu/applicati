@@ -346,19 +346,19 @@ class Root(controllers.RootController):
 
   def _checkSignaturePath(self, path, signature, maxDepth=128):
     #signature, salt = signature.split('-')       
-    #signature = baseToHex(signature)
+    hexSignature = baseToHex(signature)
 
     if len(path) > maxDepth:
       return self._checkSignature(path, signature)
       #return self._signPath(path) == signature        
     
-    candidate = ''
     print path
     assert self._checkSignature(path[:-1], signature)
     
+    candidate = ''
     for index, segment in enumerate(path):
       candidate = SHA.new(candidate + segment).hexdigest()
-      if SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20] == signature:                
+      if SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20] == hexSignature:                
         #verify the implementations are in sync
         return self._checkSignature(path[:index], signature)  
     else:      
