@@ -531,12 +531,10 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   source, path = path[0], path[1:]
 #  if source is 'public':
   
-  redirect = ''
   if signature:    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
-    redirect = "/~%s(%s-%s)" % (name, salt, signature) 
-    path = path[1:]      
-  redirect += "/%s/?op=show" % '/'.join(path)
+    path = ("~%s(%s-%s)/" % (name, salt, signature), ) + path[1:]      
+  redirect = "/%s/?op=show" % '/'.join(path)
   assert '//' not in redirect
     
   raise HTTPRedirect(redirect, status=status)
