@@ -413,7 +413,7 @@ class Root(controllers.RootController):
       
       #flash("Logged in as %s" % session['root'][-1])
       flash("Logged in as %s" % userName)
-      raiseRedirectToShow(['protected', name], signature)
+      raiseRedirectToShow(('protected', name), signature)
 
     msg=_("%s - Incorrect password or username." % user)
     response.status=403
