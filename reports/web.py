@@ -294,7 +294,7 @@ class Root(controllers.RootController):
 #        aBlank = blank()
 #        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
         print path
-        raiseRedirectToShow(path)
+        raiseRedirectToShow((None,) + path)
          
       slug = re.findall(r'^~(.*)\((.*)-(.*)\)$', path[0]) if path else None
       if slug:
@@ -530,7 +530,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
 
   source, path = path[0], path[1:]
 #  if source is 'public':
-  assert source in ['public', 'protected'], source
+  assert source in ['public', 'protected', None], source
   if signature:    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      

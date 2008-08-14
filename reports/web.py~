@@ -530,7 +530,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
 
   source, path = path[0], path[1:]
 #  if source is 'public':
-  
+  assert source in ['public', 'protected'], source
   if signature:    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      
