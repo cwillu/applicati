@@ -536,6 +536,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     redirect = "/~%s(%s-%s)" % (name, salt, signature) 
     path = path[1:]  
+    assert not redirect.endswith('/')
   
   redirect += "/%s/?op=show" % '/'.join(path)
     
