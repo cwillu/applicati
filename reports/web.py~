@@ -28,7 +28,7 @@ logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 gitPid = True
-#gitPid = os.fork()
+gitPid = os.fork()
 if not gitPid:
   exit = os.system('git add .')
   if exit: sys.exit(1)
