@@ -407,17 +407,20 @@ def BaseComponent(rootFolder, componentPath=()):
       if not path:
         path = self.path + [segment]
       
-      if len(id) > 1:
-        print id
-        segment = id[0]
-        
-        metaComponent = self.get(segment)
-        print metaComponent        
-        ## get(None, segment) because I'm still on the fence about auto wrapping data objects with their meta object        
-        component = metaComponent.data.get(None, componentPath + (segment,))
-        #component = resolveComponent(segment, componentPath=componentPath)
-        descriptor = (id[1:], ) + descriptor[1:]
-        return component.get(descriptor, path=path)
+      try:
+        if len(id) > 1:
+          print id
+          segment = id[0]
+          
+          metaComponent = self.get(segment)
+          print metaComponent        
+          ## get(None, segment) because I'm still on the fence about auto wrapping data objects with their meta object        
+          component = metaComponent.data.get(None, componentPath + (segment,))
+          #component = resolveComponent(segment, componentPath=componentPath)
+          descriptor = (id[1:], ) + descriptor[1:]
+          return component.get(descriptor, path=path)
+      except AttributeError:
+        pass
 
       if not _checkSignature(descriptor, componentSecret):
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
