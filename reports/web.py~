@@ -833,21 +833,12 @@ def test():
   except HTTPError, err:
     assert err.code == 404, err.code
   try:
-    a=urlopen('http://127.0.0.1:8080/test/invalid/')
-    print dir(a)
-    print a.msg
-    print a.code
-    assert False, a.msg
+    assert False, urlopen('http://127.0.0.1:8080/test/invalid/').msg
   except HTTPError, err:
     assert err.code == 404, err.code    
     
   assert "OK" == urlopen('http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678').msg
   assert "qwerty12345678" in urlopen('http://127.0.0.1:8080/').read()
-  
-  try:    
-    assert False, urlopen('http://127.0.0.1:8080/test/').msg
-  except HTTPError:
-    pass
   
   print "\033[1;34m" + "Tests OK" + "\033[0m"
   

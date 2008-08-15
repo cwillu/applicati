@@ -389,7 +389,7 @@ class Root(controllers.RootController):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
     
     loginRoot()
-    op = args.pop('op', '')
+    op = str(args.pop('op', ''))
     prototype = args.pop('prototype', 'Default')
     try:
       meta = self.find(path, args)           
