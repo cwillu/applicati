@@ -382,7 +382,7 @@ class Root(controllers.RootController):
     session.pop('root', None)
     session['path'] = ()   
     flash('Logged out')
-    raiseRedirectToShow()
+    raiseRedirectToShow(('public',))
     
 
   def dispatch(self, path, args):
@@ -486,7 +486,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
     raise HTTPRedirect("/", status=status)
 
   source, path = path[0], path[1:]
-  assert source in ['public', 'protected', None], source
+  assert source in ['public', 'protected', None], source  
   if signature:    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      
