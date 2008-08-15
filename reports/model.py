@@ -410,7 +410,7 @@ def BaseComponent(rootFolder, componentPath=()):
       if not _checkSignature(descriptor, componentSecret):
         for cut in reversed(range(len(id)-1)):
           trial = id[cut:]
-          print trial
+          print "Trial:", trial
           segment = trial[0]
           
           metaComponent = self.get(segment)
@@ -422,10 +422,10 @@ def BaseComponent(rootFolder, componentPath=()):
           result = component.get(trialDescriptor, path=path)
           if result:
             return result
-
-        logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
-        #TODO make assertion
-        return False                         
+        else:
+          logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
+          #TODO make assertion
+          return False                         
     
       capId = str(descriptor[1])  #XXX salt            
 

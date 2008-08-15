@@ -425,13 +425,7 @@ def BaseComponent(rootFolder, componentPath=()):
 
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
         #TODO make assertion
-        return False                
-          
-      except AttributeError:
-        logging.getLogger('root.model').warn("Broken cross-component descriptor %s", descriptor)
-        id = id[1:]
-        #TODO make assertion
-
+        return False                         
     
       capId = str(descriptor[1])  #XXX salt            
 
