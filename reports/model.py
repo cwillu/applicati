@@ -420,7 +420,8 @@ def BaseComponent(rootFolder, componentPath=()):
           descriptor = (id[1:], ) + descriptor[1:]
           return component.get(descriptor, path=path)
       except AttributeError:
-        pass
+        logging.getLogger('root.model').warn("Broken cross-component descriptor %s", descriptor)
+        id = id[1:]
 
       if not _checkSignature(descriptor, componentSecret):
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
