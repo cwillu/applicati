@@ -426,11 +426,8 @@ def BaseComponent(rootFolder, componentPath=()):
           logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
           #TODO make assertion
           return False                         
-      id = id[-1:]
-    
-      capId = str(descriptor[1])  #XXX salt            
-
-      #restart here
+      
+      id = id[-1:] # signature checked out, it's ours, so strip off the descriptor path
 
       return Object(descriptor=id, path=path, sourceId=self._descriptor[0], permissions=self.permissions)
 
