@@ -335,7 +335,7 @@ def BaseComponent(rootFolder, componentPath=()):
       except IOError, err:
         pass
       
-      db = self._connect()              
+      db = self._connect()    
       perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
       #print perms
 #      assert perms
@@ -407,26 +407,31 @@ def BaseComponent(rootFolder, componentPath=()):
       if not path:
         path = self.path + [segment]
       
-      try:
-        if len(id) > 1:
-          print id
-          segment = id[0]
+      if not _checkSignature(descriptor, componentSecret):
+        for cut in reversed(range(len(id)-1)):
+          trial = id[cut:]
+          print trial
+          segment = trial[0]
           
           metaComponent = self.get(segment)
           print metaComponent        
           ## get(None, segment) because I'm still on the fence about auto wrapping data objects with their meta object        
           component = metaComponent.data.get(None, componentPath + (segment,))
           #component = resolveComponent(segment, componentPath=componentPath)
-          descriptor = (id[1:], ) + descriptor[1:]
-          return component.get(descriptor, path=path)
-      except AttributeError:
-        logging.getLogger('root.model').warn("Broken cross-component descriptor %s", descriptor)
-        id = id[1:]
+          trialDescriptor = (trial[1:], ) + descriptor[1:]
+          result = component.get(trialDescriptor, path=path)
+          if result:
+            return result
 
-      if not _checkSignature(descriptor, componentSecret):
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
         #TODO make assertion
         return False                
+          
+      except AttributeError:
+        logging.getLogger('root.model').warn("Broken cross-component descriptor %s", descriptor)
+        id = id[1:]
+        #TODO make assertion
+
     
       capId = str(descriptor[1])  #XXX salt            
 
