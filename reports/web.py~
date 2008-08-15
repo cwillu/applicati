@@ -390,7 +390,7 @@ class Root(controllers.RootController):
     
     loginRoot()
     op = str(args.pop('op', ''))
-    prototype = args.pop('prototype', 'Default')
+    prototype = str(args.pop('prototype', 'Default'))
     try:
       meta = self.find(path, args)           
               
@@ -452,7 +452,7 @@ class Root(controllers.RootController):
       return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
  
   def find(self, path, args):
-    prototype = args.pop('prototype', 'Default')
+    prototype = str(args.pop('prototype', 'Default'))
 
     meta = findPage(loginRoot(), path)
     return meta

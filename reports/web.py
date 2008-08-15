@@ -486,7 +486,6 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
     raise HTTPRedirect("/", status=status)
 
   source, path = path[0], path[1:]
-#  if source is 'public':
   assert source in ['public', 'protected', None], source
   if signature:    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
@@ -495,10 +494,6 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   assert '//' not in redirect, (path, redirect)
     
   raise HTTPRedirect(redirect, status=status)
-#  elif source is 'protected':
-#    signature = '' #sign
-#    raise HTTPRedirect("/%s:%s/" % (signature, '/'.join(path)), status=status)
-  assert False, source
 
 class Presentation(object):
   def _path(self, path):
@@ -546,7 +541,6 @@ class Presentation(object):
     hits = {}
     root = loginRoot()
     pathCut = len(root.path)
-#    assert False, (query.lower(), re.escape(query.lower()))
     query = re.compile(r'\b%s\b' % re.escape(query.lower()))
     
     def doSearch(page):
@@ -612,20 +606,10 @@ class Presentation(object):
 #      response.status=200 #reset content
   waitForChange._cp_config = {'response.stream': True}
  
-def blank():
-  class Blank(object):
-    @html.FixIE
-    def show(self, meta, formatted=None, prefix=None):
-      return ''
-      '''    @expose(template="reports.templates.show")
-    def blank(self, *args, **kargs):
-      response.status=403
-      return dict(session=session, root=session['root'], data='', path=(session['root'] + path), name=(session['root'] + path)[-1], obj=self)
-     '''
-  aBlank = Blank()
-
-  return aBlank
-
+class blank(object):
+  @html.FixIE
+  def show(self, meta, formatted=None, prefix=None):
+    return ''    
 
 class WikiPresentation(Presentation):
   def _path(self, path):
@@ -709,11 +693,7 @@ class WikiPresentation(Presentation):
   def resolveWikiLinks(self, objectPath, links, content):
     knownIds = {}
     for link in links:
-      print "--->", links[link]
-      print link
       knownIds[link] = links[link]
-#      knownIds[links[link][0]] = links[link]
-#      knownIds[page.get(self.links[link]).id] = self.links[link]
 
     templates = { "[(": "[(%s)]", "[": "[%s]", "{": "{%s}"}
 
@@ -722,13 +702,6 @@ class WikiPresentation(Presentation):
       linkType = match.group('type')
       link = match.group('name')
      
-#    content = Wiki.linkWords.split(content)
-
-
-#    text = content[::2]
-#    links = content[1::2]
-
-#    for link in links:
       template = templates.get(linkType, None)
       if not template:
         return match.group(0)
@@ -756,10 +729,8 @@ class WikiPresentation(Presentation):
       else:
         path = objectPath + tuple(path)
 
-      print "  >>>  ", loginRoot(), path
-      meta = findPage(loginRoot(), path)      #<-- should be current meta 
+      meta = findPage(loginRoot(), path) 
       
-#      assert False, (link.split('/'), path, s)
       if not path:
         name = 'home'        
       
@@ -801,15 +772,8 @@ class XmlPresentation(WikiPresentation):
     content = obj.show(formatted=formatted, prefix=None)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
-metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
-
-#import cPickle as pickle
-#pickle.dump([(o.name, o.data, o.id) for o in db.Object.select()], open('db.dump', 'w'))
-
-#for name, data, id in pickle.load(open('db.dump')):
-#  print name
-#  db.Object(name=name, data=data, ident=id)
-
+#metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
+metaTypes = builtins.metaTypes
 
 def test():
   server.wait()
