@@ -424,7 +424,7 @@ def BaseComponent(rootFolder, componentPath=()):
             return result
         else:
           logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
-          raise PermissionError(descriptor)
+          raise PermissionError("Access")
       
       id = id[-1:] # signature checked out, it's ours, so strip off the descriptor path
 
