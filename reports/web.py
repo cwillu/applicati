@@ -833,7 +833,11 @@ def test():
   except HTTPError, err:
     assert err.code == 404, err.code
   try:
-    assert False, urlopen('http://127.0.0.1:8080/test/invalid/').msg
+    a=urlopen('http://127.0.0.1:8080/test/invalid/')
+    print dir(a)
+    print a.msg
+    print a.code
+    assert False, a.msg
   except HTTPError, err:
     assert err.code == 404, err.code    
     
