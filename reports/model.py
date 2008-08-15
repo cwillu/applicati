@@ -422,6 +422,7 @@ def BaseComponent(rootFolder, componentPath=()):
       except AttributeError:
         logging.getLogger('root.model').warn("Broken cross-component descriptor %s", descriptor)
         id = id[1:]
+        #TODO make assertion
 
       if not _checkSignature(descriptor, componentSecret):
         logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
@@ -441,6 +442,20 @@ def BaseComponent(rootFolder, componentPath=()):
   return Object(descriptor=(1,), path=[], permissions=0)
   
 #registerComponent('Object', Object)
+
+class Wrapper(object):
+  def __init__(self, path):    
+    self._path = path
+            
+  def __getattr__(self, name):
+    component = BaseComponent(self.path, componentPath)
+    if not getattr(self._data, name, None):
+      return None
+
+    return lambda *args, **kargs: getattr(self._data, name)(self.page, *args, **kargs)
+
+  def __str__(self):
+    return str(self._data)
 
 class Component(object):
   def __init__(self, path):
