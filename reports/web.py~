@@ -709,7 +709,6 @@ class WikiPresentation(Presentation):
       if not '/' in link and not '=' in link and link in links:
         nameMapping[link] = links[link]
         return template % link
-
       
       name = None
       if '=' in link:        

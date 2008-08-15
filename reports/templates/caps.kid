@@ -25,7 +25,7 @@
     var request = new XMLHttpRequest(); 
 	  request.open("get", "?op=changePermission;link="+name+";permission="+perm+";value="+value, false); 
 	  request.send(null);
-    return request.status == 200
+    return request.status == 302
 	}
 	
   function permClicked(e) {
