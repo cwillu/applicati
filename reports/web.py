@@ -829,11 +829,11 @@ def test():
   assert "OK" == urlopen('http://127.0.0.1:8080/%s/root/' % signed).msg
   
   try:
-    assert False, urlopen('http://127.0.0.1:8080/nonexisting/').msg
+    assert False, urlopen('http://127.0.0.1:8080/test/nonexisting/').msg
   except HTTPError, err:
     assert err.code == 404, err.code
   try:
-    assert False, urlopen('http://127.0.0.1:8080/invalid/').msg
+    assert False, urlopen('http://127.0.0.1:8080/test/invalid/').msg
   except HTTPError, err:
     assert err.code == 404, err.code    
     
