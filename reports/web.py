@@ -828,8 +828,11 @@ def test():
   assert "OK" == urlopen('http://127.0.0.1:8080/%s/root' % signed).msg
   assert "OK" == urlopen('http://127.0.0.1:8080/%s/root/' % signed).msg
   
-  assert "OK" == urlopen('http://127.0.0.1:8080/broken/').msg
-  
+  try:
+    assert False, urlopen('http://127.0.0.1:8080/broken/').msg
+  except HTTPError, err:
+    assert False, err
+    
   assert "OK" == urlopen('http://127.0.0.1:8080/?op=save;data=[root]+qwerty12345678').msg
   assert "qwerty12345678" in urlopen('http://127.0.0.1:8080/').read()
   
