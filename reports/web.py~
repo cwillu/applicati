@@ -483,7 +483,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   #import traceback; traceback.print_stack()
   print "Redirect %s" % (path,)
   if not path:
-    raise HTTPRedirect("#", status=status)
+    raise HTTPRedirect(";", status=status)
 
   source, path = path[0], path[1:]
   assert source in ['public', 'protected', None], source  
