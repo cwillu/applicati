@@ -8,7 +8,6 @@ from Crypto.Hash import SHA256
 import os
 import subprocess
 
-import weakref
 import re
 import logging
 
@@ -17,8 +16,6 @@ import inspect
 from . import builtins
 
 actions = {}
-#actions = weakref.WeakValueDictionary()
-#actionCollections = weakref.WeakKeyDictionary()
 
 def _assertId(id):  #XXX change to assert
   logging.getLogger('root.model.descriptors').debug("ASSERTING %s", id)
@@ -105,7 +102,6 @@ def BaseComponent(rootFolder, componentPath=()):
   class Object(object):
     def __init__(self, descriptor=None, data=None, onReify=None, sourceId=None, path=[], permissions=None):      
       assert not (descriptor and data), "Invalid state: descriptor and data specified"
-#      assert descrirootFolderptor or data, "Invalid state: neither descriptor nor data specified"
       assert not (descriptor and onReify), "Invalid state: descriptor and onReify specified"
       assert permissions is not None
       self.path = path
@@ -115,26 +111,14 @@ def BaseComponent(rootFolder, componentPath=()):
       
       if sourceId:
         perms = self._getPerms()        
-#        if os.access( (self._filename('permissions.db', id)), os.F_OK):
-#          perms = pickle.load(file( (self._filename('permissions', id))))
-#        else:
-#          perms = {}
 
         if sourceId not in perms:
           perms[sourceId] = path, 0
           self._setPerms(perms)
-#          pickle.dump(perms, file( (self._filename('permissions', id)), 'w'))
         
         logging.getLogger('root.model').debug("Caps: %s", perms)
           
-        capPermissions = perms[sourceId][1:]
-        
-  #      capNode = Object(descriptor= _assertId(id[0]) + (capId, ), path=[], permissions=0, data=0)
-  #      capPermissions = capNode.data
-  #      if capPermissions is None:
-  #        capNode.data = 0
-  #        capPermissions = 0
-          
+        capPermissions = perms[sourceId][1:]                 
         permissions = _modPermissions(permissions, capPermissions)        
 
       self.permissions = permissions
@@ -150,7 +134,7 @@ def BaseComponent(rootFolder, componentPath=()):
       if self._descriptor == ((1, ), ):
         raise Exception(self._descriptor, descriptor)
 
-      # with_methods(self, logger)
+      # with_methods(self, logger) #debugging aid
 
     def _connect(self, id=None):
       db = sqlite3.connect(self._filename('permissions.db', id=id))
@@ -174,7 +158,6 @@ def BaseComponent(rootFolder, componentPath=()):
       possible = set()
       actionList = actions.setdefault(self._descriptor, possible)
       actionList.add(func)
-#      actionCollections[func] = actionList
       logging.getLogger('root.model.watches').debug("Outstanding watches: %s", len(actionList))
 
     def removeWatch(self, func):
@@ -214,7 +197,7 @@ def BaseComponent(rootFolder, componentPath=()):
           try: 
             os.makedirs(self._filename(''))
           except OSError, err:
-            if err.errno is not 17:  #path already exists (which an error for a recursive create why, exactly?)
+            if err.errno is not 17:  #path already exists (which is an error for a recursive create why exactly?)
               print self._filename(''), self._filename()
               raise err            
           return None
@@ -259,21 +242,12 @@ def BaseComponent(rootFolder, componentPath=()):
 
       if isinstance(id, (basestring, int, uuid.UUID)):
         return os.path.join(rootFolder, str(id), selector)
-#        return '%s/%s' % (id, selector)
 
       if isinstance(id, tuple):
         return os.path.join(rootFolder, str(id[0]), selector)
-#       return '%s/%s' % (id[0], selector)
-
-#      if id == (1,):
-#        return "1/%s" % selector
-
-#      if id[0] == (1,):
-#        id = ('1', ) + id[1:]        
 
       assert not set(map(type, id)) - set([str]), ( id)      
       return os.path.join(rootFolder, *id)
-#      return '/'.join(id)
     
     @property
     def id(self):
@@ -295,36 +269,21 @@ def BaseComponent(rootFolder, componentPath=()):
         raise PermissionError()
         assert False
         return {}
-#      if self._data is not None:
-#        return self._data
         
-      try:        
+      try:                
         perms = pickle.load(file(self._filename('permissions')))
- #       print perms
+        print "Rewriting old permissions format"
         db = self._connect()
         db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
         print self._filename('permissions')
         os.rename(self._filename('permissions'), '%s~' % self._filename('permissions'))
-        
-#        os.unlink( self._filename('permissions'))
         db.commit()
-#        db = self._connect()              
-#        print self._descriptor
-#        perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
-#        print perms
-#        assert False
       except IOError, err:
         pass
       
       db = self._connect()    
       perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
-      #print perms
-#      assert perms
       return perms
-
-#        raise err
-#        assert False      
-#        return {}
       
     def setPerms(self, links):
       self._check('permissions')  
@@ -333,15 +292,10 @@ def BaseComponent(rootFolder, componentPath=()):
     def _setPerms(self, links):
       if not self._descriptor:
         assert False, "Unimplemented, setting permissions on unreified object"
-#        print "create"
-#        self._descriptor = str(uuid.uuid4())
-#        self.onReify and self.onReify(self)
-#      perms = pickle.load(file( self._filename('permissions')))
+
       db = self._connect()
       db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(links[k])) for k in links))
       db.commit()
-
-#      return pickle.dump(links, file( self._filename('permissions'), 'w'))        
 
     def changePermission(self, link, permission, value):
       #XXX locking required, or a better reworking
@@ -372,18 +326,14 @@ def BaseComponent(rootFolder, componentPath=()):
       
     def resolve(self, name):
       data = self._selfGetData()
-#      if not data:  
-#        return None
       return data.resolve(self, name)
 
-#    @classmethod
     def get(self, descriptor, segment=None, path=None):
 #      self._check('read')   #XXX ideally would be 'traverse', but current resolving requires reading the actual object anyway
       assert isinstance(descriptor, tuple), descriptor    
       id = _assertId(descriptor[0])
       if id == ((1,),):
         id = (1,)
-#      id = descriptor[0]
       
       if not path:
         path = self.path + [segment]
@@ -397,8 +347,7 @@ def BaseComponent(rootFolder, componentPath=()):
           metaComponent = self.get(segment)
           print metaComponent        
           ## get(None, segment) because I'm still on the fence about auto wrapping data objects with their meta object        
-          component = metaComponent.data.get(None, componentPath + (segment,))
-          #component = resolveComponent(segment, componentPath=componentPath)
+          component = metaComponent.data.get(None, componentPath + (segment,))          
           trialDescriptor = (trial[1:], ) + descriptor[1:]
           result = component.get(trialDescriptor, path=path)
           if result:
@@ -407,7 +356,7 @@ def BaseComponent(rootFolder, componentPath=()):
           logging.getLogger('root.model').warn("Invalid signature on %s", descriptor)
           raise PermissionError("Access")
       
-      id = id[-1:] # signature checked out, it's ours, so strip off the descriptor path
+      id = id[-1:] # signature checked out: it's ours, so strip off the component path
 
       return Object(descriptor=id, path=path, sourceId=self._descriptor[0], permissions=self.permissions)
 
@@ -435,15 +384,13 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     if path == ['']:
       path = []
     
-    node = root  #
-    for segment in path:
-      #print segment
+    node = root
+    for segment in path:      
       node /= segment         
     return node
   
   def construct(spec, node):
     nodeType = spec.tagName
-    #print nodeType
     if nodeType == 'Link':
       return walk(spec.getAttribute('path')).descriptor
     elif nodeType == 'Component':
@@ -453,7 +400,6 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
     elif nodeType == 'Reference':
       descriptor = eval(spec.getAttribute('descriptor')) #XXX
       component = walk(spec.getAttribute('component'))
-      #print "XXXXXXXX", ((component.descriptor,) + descriptor[0],) + descriptor[1:]              
       return ((component.descriptor,) + descriptor[0],) + descriptor[1:]
       
 
