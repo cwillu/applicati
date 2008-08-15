@@ -1,16 +1,17 @@
 <CapRoot>
   <Component name="original" file="pickles" />
-  <Reference name="test" component="/original" descriptor="(('1',), '078e9482-0563-4dd0-9ac5-feb5d484138f', '1841522ab4f69f04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />    
+  <Reference name="root" component="/original" descriptor="(('1',), '078e9482-0563-4dd0-9ac5-feb5d484138f', '1841522ab4f69f04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />    
+
+  <Wiki name="test">
+    <Link path="/" name="root" />
+    <Reference name="invalid" component="/original" descriptor="(('1',), 'deadbeaf-0563-4dd0-9ac5-feb5d484138f', '00000deadbeeff04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />
+  </Wiki>
 
   <Wiki name="prototype">    
   </Wiki>
 
   <Wiki name="users">
-    <Link path="/test/cwillu" name="cwillu" />
-    <User name="test">
-      <Link path="/" name="root" />
-      <Reference name="invalid" component="/original" descriptor="(('1',), 'deadbeaf-0563-4dd0-9ac5-feb5d484138f', '00000deadbeeff04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />
-    </User>
+    <Link path="/root/cwillu" name="cwillu" />
   </Wiki>
 
   <Wiki name="public">
@@ -21,7 +22,7 @@
     <Link path="/users" name="users" />
     <Link path="/public" name="public" /> 
     <Wiki name="protected" >
-      <Link path="/users/test" name="~test(abcdef)" />
+      <Link path="/test" name="~test(abcdef)" />
     </Wiki>  
   </Wiki>
 
