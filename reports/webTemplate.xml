@@ -1,7 +1,6 @@
 <CapRoot>
   <Component name="original" file="pickles" />
-  <Reference name="test" component="/original" descriptor="(('1',), '078e9482-0563-4dd0-9ac5-feb5d484138f', '1841522ab4f69f04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />  
-  <Reference name="broken" component="/original" descriptor="(('1',), 'deadbeaf-0563-4dd0-9ac5-feb5d484138f', '00000deadbeeff04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />
+  <Reference name="test" component="/original" descriptor="(('1',), '078e9482-0563-4dd0-9ac5-feb5d484138f', '1841522ab4f69f04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />    
 
   <Wiki name="prototype">    
   </Wiki>
@@ -10,6 +9,7 @@
     <Link path="/test/cwillu" name="cwillu" />
     <User name="test">
       <Link path="/" name="root" />
+      <Reference name="invalid" component="/original" descriptor="(('1',), 'deadbeaf-0563-4dd0-9ac5-feb5d484138f', '00000deadbeeff04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />
     </User>
   </Wiki>
 
