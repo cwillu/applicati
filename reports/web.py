@@ -583,7 +583,7 @@ class Presentation(object):
     value = values[value.lower()]
 
     obj.changePermission(link, permission, value)
-    raiseRedirectToShow(path)    
+    raiseRedirectToShow()    
 
   def waitForChange(self, obj, path, hash=None):
     queue = Queue()
