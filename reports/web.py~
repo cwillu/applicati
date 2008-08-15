@@ -70,9 +70,6 @@ def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
 
 assert "71681123891927401278340" == baseToHex(hexToBase("71681123891927401278340"))
     
-# import logging
-# log = logging.getLogger("reports.controllers")
-
 corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
 try:
@@ -252,15 +249,7 @@ class ReturnedObject(Exception):
 
 def loginRoot():
   session.setdefault('root', (request.headers['Host'], 'guest'))
-  
-#  assert False, session['root']
-#  return findPage(None, session['root'])
-
-#  return findPage(None, ('gateways', ) + session['root'])
   return findPage(None, ('gateways', request.headers['Host']))
-
-#import cherrypy
-#print dir(cherrypy.root._cp_filters), cherrypy.root._cp_filters 
 
 class Root(controllers.RootController):  
   componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")
@@ -280,37 +269,21 @@ class Root(controllers.RootController):
     print "\033[1;34m" + "*" * 80 + "\033[0m"
     print "\033[1;35m" + str(path) + str(args) + "\033[0m"
     print "\033[1;35m" + str(request.query_string) + "\033[0m"
-    #print "\033[1;35m" + str(request.path_info) + "\033[0m"
     print "\033[1;35m" + str(request.browser_url) + "\033[0m"
     
-    #print "\033[1;35m" + str(request.request_line) + "\033[0m"
     try:
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            
       if not request.path.endswith('/'):
-#        response.status=404
-#        flash('''%s doesn't exist''' % (request.path, ))
-#
-#        loginRoot()
-#        aBlank = blank()
-#        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
-        print path
         raiseRedirectToShow((None,) + path)
          
       slug = re.findall(r'^~(.*)\((.*)-(.*)\)$', path[0]) if path else None
       if slug:
         name, salt, signature = slug.pop()
-
         path = ('protected', "~%s(%s)" % (name, salt)) + path[1:]
 
         if not self._checkSignature(path, signature):
           if self._checkSignaturePath(path, signature):  
-            print path
-            print slug, signature
-            print self._signPath(path)
-            print
-            signature = self._signPath(path)
-            raiseRedirectToShow(path, signature)
-            assert False
+            raiseRedirectToShow(path, self._signPath(path))
             
           response.status=403          
           flash('''bad signature (%s) ''' % (request.path, ))
@@ -338,22 +311,13 @@ class Root(controllers.RootController):
     name = "~%s(%s)" % (name, salt)
     
     protectedRoot.data.link(protectedRoot, name, findPage(loginRoot(), path).descriptor)
-   
     protectedPath = ['protected', name]
     
- #   protectedRoot.data.save(protectedRoot)
     return name, self._signPath(protectedPath)
 
   def _checkSignaturePath(self, path, signature, maxDepth=128):
-    #signature, salt = signature.split('-')       
-    #hexSignature = baseToHex(signature)
-
     if len(path) > maxDepth:
-      return self._checkSignature(path, signature)
-      #return self._signPath(path) == signature        
-    
-    print path
-    assert self._checkSignature(path[:-1], signature)
+      return self._checkSignature(path, signature)       
     
     candidate = ''
     for index, segment in enumerate(path):
@@ -365,17 +329,11 @@ class Root(controllers.RootController):
       return False
 
   def _checkSignature(self, path, signature):
-    ##signature, salt = signature.split('-')
-    #path = list(path)
-    #trial = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
     return signature == self._signPath(path)
     
   def _signPath(self, path):
     path = list(path)
-
     signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
-
-    #path[1] = "%s:%s" % (signature, path[1])
     return signature
     
   def removeProtected(self, name):
