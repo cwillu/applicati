@@ -138,11 +138,12 @@ class Wiki(object):
   def resolve(self, meta, name):
     if name in self.links:
       return self.links[name]
-    elif name.lower() in '\n'.join(list(self.links)).lower():
-      name = name.lower()
-      for key in self.links:
-        if name == key.lower():
-          return self.links[key]
+    
+    #elif name.lower() in '\n'.join(list(self.links)).lower():
+    name = name.lower()
+    for key in self.links:
+      if hasattr(key, 'lower') and name == key.lower():
+        return self.links[key]
     
   def link(self, meta, name, id):
     logging.getLogger('root.controller.http').debug("Linking %s %s", name, id)
