@@ -270,7 +270,8 @@ class Root(controllers.RootController):
     print "\033[1;35m" + str(path) + str(args) + "\033[0m"
     print "\033[1;35m" + str(request.query_string) + "\033[0m"
     print "\033[1;35m" + str(request.browser_url) + "\033[0m"
-    
+    print
+    print request.headers
     try:
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            
       if not request.path.endswith('/'):
