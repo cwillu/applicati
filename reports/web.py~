@@ -269,7 +269,7 @@ class Root(controllers.RootController):
     print "\033[1;34m" + "*" * 80 + "\033[0m"
     print "\033[1;35m" + str(path) + str(args) + "\033[0m"
     print "\033[1;35m" + str(request.query_string) + "\033[0m"
-    print "\033[1;35m->" + str(request.browser_url) + "\033[0m"
+    print "\033[1;35m" + str(request.browser_url) + "\033[0m"
     print
     print request.headers
     try:
@@ -480,19 +480,22 @@ def findPresentation(obj):
   return PrimitivePresentation()
 
 def raiseRedirectToShow(path=None, signature=None, status=None):
-  #import traceback; traceback.print_stack()
-  import cherrypy
-  print cherrypy.request_path  
+  #import traceback; traceback.print_stack()  
+  protocol = request.headers.get('X-Protocol', 'http')
+  originalPath = request.browser_url.split('?', 1)[0]
+          
   print "Redirect %s" % (path,)
   if not path:
-    raise HTTPRedirect("?op=show", status=status)
+    raise HTTPRedirect("%s://%s/?op=show" % (protocol, originalPath), status=status)
+
+  
 
   source, path = path[0], path[1:]
   assert source in ['public', 'protected', None], source  
   if path and signature and re.findall(r'^~(.*)\((.*)\)$', path[0]):    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      
-  redirect = "%s/?op=show" % '/'.join(('',)+path)
+  redirect = "%s:/%s/?op=show" % (protocol, '/'.join(('',)+path))
   assert '//' not in redirect, (path, redirect)
     
   raise HTTPRedirect(redirect, status=status)
