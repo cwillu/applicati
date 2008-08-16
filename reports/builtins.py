@@ -55,7 +55,7 @@ class Wiki(object):
       name = match.group('name')
       link = name[:-1] if name.endswith('*') else name
       link = '/'.join(prefix+(link,))
-      return '<a href="%s/">%s</a>' % (urllib.quote(link), urllib.quote(link))
+      return '<a href="%s/">%s</a>' % (urllib.quote(link), name)
       
     def inlineLink(match):
       name = match.group('name')
