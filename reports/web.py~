@@ -268,7 +268,7 @@ class Root(controllers.RootController):
   def default(self, *path, **args):
     print "\033[1;34m" + "*" * 80 + "\033[0m"
     print "\033[1;35m" + str(path) + str(args) + "\033[0m"
-    print "\033[1;35m" + str(request.query_string) + "\033[0m"
+    print "\033[1;35m->" + str(request.query_string) + "\033[0m"
     print "\033[1;35m" + str(request.browser_url) + "\033[0m"
     print
     print request.headers
