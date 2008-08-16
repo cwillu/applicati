@@ -583,7 +583,7 @@ class Presentation(object):
     value = values[value.lower()]
 
     obj.changePermission(link, permission, value)
-    return ''
+    return ' '
     #raiseRedirectToShow()    
 
   def waitForChange(self, obj, path, hash=None):
