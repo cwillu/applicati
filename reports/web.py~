@@ -640,7 +640,7 @@ class WikiPresentation(Presentation):
   def edit(self, obj,  path):    
     return dict(session=session, this=self, prototype=obj.__class__.__name__, root=session['root'], name=self._name(path), path=self._path(path), data=obj.show(), obj=obj)  #XXX deprecate data;  'this' can't be called 'self'
     
-  @expose()
+  #@expose()
   def save(self, obj, path, data='', save=None):    
     if 'file' in dir(data):  #allow file uploads, handled by the framework
       data = data.file.read()
@@ -653,13 +653,13 @@ class WikiPresentation(Presentation):
     flash("Changes saved!")
     #raiseRedirectToShow()
 
-  @expose()
+  #@expose()
   def append(self, obj, path, data='', submit=None):
     if 'file' in dir(data):
       data = data.file.read()     
     return self.save(obj, path, data=obj.show() + '\n' + data, )
     
-  @expose()
+  #@expose()
   def prepend(self, obj, path, data='', submit=None):
     if 'file' in dir(data):
       data = data.file.read()

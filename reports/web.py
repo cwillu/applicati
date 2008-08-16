@@ -417,9 +417,6 @@ class Root(controllers.RootController):
         obj = meta.data
         logging.getLogger('root.controller.http').debug("Loading existing page: %s", obj)
         
-      
-      
-      
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
             
