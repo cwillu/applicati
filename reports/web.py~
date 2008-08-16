@@ -248,6 +248,7 @@ class ReturnedObject(Exception):
     self.data = data
 
 def loginRoot():
+  request.headers['Host']
   session.setdefault('root', (request.headers['Host'], 'guest'))
   return findPage(None, ('gateways', request.headers['Host']))
 
@@ -583,7 +584,7 @@ class Presentation(object):
     value = values[value.lower()]
 
     obj.changePermission(link, permission, value)
-    return ' '
+    #return ''
     #raiseRedirectToShow()    
 
   def waitForChange(self, obj, path, hash=None):
