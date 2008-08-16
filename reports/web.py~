@@ -247,9 +247,10 @@ class ReturnedObject(Exception):
     self.data = data
 
 def loginRoot():
-  print request.headers['Host']
-  session.setdefault('root', (request.headers['Host'], 'guest'))
-  return findPage(None, ('gateways', request.headers['Host']))
+  gateway = "%s://%s" % (protocol, request.headers['Host'])
+  print gateway  
+  session.setdefault('root', (gateway, 'guest'))
+  return findPage(None, ('gateways', gateway))
 
 class Root(controllers.RootController):  
   componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")

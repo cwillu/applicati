@@ -247,6 +247,7 @@ class ReturnedObject(Exception):
     self.data = data
 
 def loginRoot():
+  protocol = request.headers.get('X-Protocol', 'http')
   gateway = "%s://%s" % (protocol, request.headers['Host'])
   print gateway  
   session.setdefault('root', (gateway, 'guest'))
