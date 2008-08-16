@@ -109,6 +109,7 @@ textarea {
   padding: 0;
   display: inline;
   width: 100%;
+  overflow: auto;
 }
 
 

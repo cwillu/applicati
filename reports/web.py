@@ -2,42 +2,74 @@ from __future__ import absolute_import
 
 import os, sys
 import bisect
-from Crypto.Cipher import Blowfish as blowfish
-from sha import sha
+import uuid
 import math
+import thread
+from Crypto.Cipher import Blowfish as blowfish
+from Crypto.Hash import SHA
 #from os import urandom as random
-from random import SystemRandom as sysrandom
-random = sysrandom()
+from random import SystemRandom as sysrandom; random = sysrandom()
 import xml.dom.minidom as dom
 import re
 from Queue import Queue, Empty
 
 from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response, HTTPRedirect
+from cherrypy import session, request, response, HTTPRedirect, server
 from turbogears.toolbox.catwalk import CatWalk
 from docutils.core import publish_parts
-from pydoc import html
+import pydoc
 
 from . import model as db
 from . import builtins
+from . import html
 
 import logging
 logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
-if not os.fork():
-  os.system('git add .')
-#  os.system('cg-rm -a')
-  os.system('git commit -a -m "$(date)"')
+gitPid = True
+gitPid = os.fork()
+if not gitPid:
+  exit = os.system('git add .')
+  if exit: sys.exit(1)
+  exit = os.system('git commit -a -m "$(date)"')
+  if exit: sys.exit(2)
   sys.exit(0)
 
-def bitString(bits, dictionary='1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
-  requiredLength = math.ceil(bits / math.log(len(dictionary, 2)))
+def checkGitStatus(pid):
+  import os #???
+  exit = os.waitpid(pid, 0)
+  if exit[1]:
+    print "\nCommit failed (%s)\n" % (exit,)
+    thread.interrupt_main()
+    
+thread.start_new_thread(checkGitStatus, (gitPid,))
+
+def bitString(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+  requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
   return ''.join(random.choice(dictionary) for x in range(requiredLength))
 
-# import logging
-# log = logging.getLogger("reports.controllers")
+def hexToBase(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+  base = len(dictionary)
+  bits = long(bits, 16)
+  output = []  
+  while bits:
+    output.insert(0, dictionary[bits % base])
+    bits /= base
+  return ''.join(output)
 
+def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+  base = len(dictionary)
+  output = 0l
+  for digit in bits:
+    output *= base
+    output += dictionary.index(digit)
+    
+  assert type(output) is long
+  return hex(output)[2:-1]
+
+assert "71681123891927401278340" == baseToHex(hexToBase("71681123891927401278340"))
+    
 corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
 try:
@@ -50,11 +82,15 @@ except ImportError:
   print 'Psyco not installed, the program will just run slower'  
   compile = lambda func: func
 
+baseMeta = db.BaseComponent('test.pickles')/'web'
+
 @psyco.proxy
 def visit(root, path, op):
+  print path
   target = root
   if target is None:
-    target = db.BaseComponent()
+    #target = db.BaseComponent('pickles')
+    target = baseMeta
   if path is None:
     path = []
   
@@ -169,39 +205,6 @@ def walk(root, action, maxDepth=5):
       stack.append((childNode, childList(childNode), depth+1))
       seen.add(childNode.id)        
 
-#class FixIE(object):
-def FixIE(presenter):
-  img_png = re.compile(r'<img[^>]*>')
-  attrs = re.compile(r'(\w+)="([^"]*)')
-
-  def fixPNG(match):
-    '''
-    This looks like it should work, but DXImageTransform doesn't work under wine,
-    so instead we just drop to a gif until I can confirm this works
-    '''    
-    iepng = "filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='%s');"
-  
-    img = match.group(0)
-    attributes = dict(attrs.findall(img))
-    attributes['style'] = iepng % attributes['src'] + attributes.get('style', '')
-    attributes['src'] = ''
-    return "<img %s />" % ' '.join('%s="%s"' % (key, attributes[key]) for key in attributes)
-
-  def replacePNG(match):
-    img = match.group(0)
-    attributes = dict(attrs.findall(img))
-    attributes['src'] = attributes['src'].replace('.png', '.gif')
-    return "<img %s />" % ' '.join('%s="%s"' % (key, attributes[key]) for key in attributes)
-
-  def __call__(*args, **kargs):
-    output = presenter(*args, **kargs)
-    userAgent = request.headers["User-Agent"]
-    if "MSIE" in userAgent and float(re.findall(r'MSIE (.*?);', userAgent)[0]) < 7:
-      output = img_png.sub(replacePNG, output)
-    return output
-  return __call__
-    
-
 class Wrapper(object):
   def __init__(self, data, page):    
     self._data = data
@@ -217,8 +220,6 @@ class Wrapper(object):
       self.links = []
       return
     self.write = page.write
-    self.watch = page.watch
-    self.removeWatch = page.removeWatch
     self.changePermission = page.changePermission
     self.permissions = page.permissions
         
@@ -245,68 +246,181 @@ class ReturnedObject(Exception):
   def __init__(self, data):
     self.data = data
 
-def loginRoot():
-  session.setdefault('root', (request.headers['Host'], 'guest'))
+def gateway():
+  protocol = request.headers.get('X-Protocol', 'http')
+  return "%s://%s" % (protocol, request.headers['Host'])
   
-#  assert False, session['root']
-#  return findPage(None, session['root'])
-
-#  return findPage(None, ('gateways', ) + session['root'])
-  return findPage(None, ('gateways', request.headers['Host']))
-   
+def loginRoot():
+  session.setdefault('root', (gateway(), 'guest'))
+  return findPage(None, ('gateways', gateway()))
 
 class Root(controllers.RootController):  
+  componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")
+  
+  def __init__(self):
+    class DirtyHacks(object):
+      def before_main(nested):
+        self._cp_filters.remove(nested)
+        for index, filter in enumerate(self._cp_filters):
+          if filter.__class__.__name__ == 'NestedVariablesFilter':            
+            self._cp_filters.remove(filter)            
+            break  
+    self._cp_filters = [DirtyHacks()]
+    
   @expose()
   def default(self, *path, **args):
+    print "\033[1;34m" + "*" * 80 + "\033[0m"
+    print "\033[1;35m" + gateway() + str(path) + str(args) + "\033[0m"
+    print "\033[1;35m" + str(request.query_string) + "\033[0m"
+    print "\033[1;35m" + str(request.browser_url) + "\033[0m"
+    print 
+    print request.headers
     try:
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            
       if not request.path.endswith('/'):
-#        response.status=404
-#        flash('''%s doesn't exist''' % (request.path, ))
-#
-#        loginRoot()
-#        aBlank = blank()
-#        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
-        raiseRedirectToShow(path)
-    
-      signature = None
-      if path and ':' in path[0]:
-        signature, path[0] = path[0].split(':', 1)
-        path = ('protected',) + path
+        raiseRedirectToShow((None,) + path)
+         
+      slug = re.findall(r'^~(.*)\((.*)-(.*)\)$', path[0]) if path else None
+      if slug:
+        name, salt, signature = slug.pop()
+        path = ('protected', "~%s(%s)" % (name, salt)) + path[1:]
+
+        if not self._checkSignature(path, signature):
+          if self._checkSignaturePath(path, signature):  
+            raiseRedirectToShow(path, self._signPath(path))
+            
+          response.status=403          
+          flash('''bad signature (%s) ''' % (request.path, ))
+          aBlank = blank()
+          return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)               
       else:
         path = ('public',) + path
+        pass
         
-      return self.dispatch(path, signature, args)
+      return self.dispatch(path, args)
     finally:
       logging.getLogger('root.controller.http').debug("Request complete")
 
   def addProtected(self, path):
     protectedRoot = findPage(loginRoot(), ('protected',))
     links = protectedRoot.data.links
+    name = path[-1]
 
-    requiredBits = math.log(len(links), 2)  #not really 'required', but nice to have (not security sensitive, these paths are signed)
+    requiredBits = max(32, math.log(len(links) + 1, 2))  
     while True:
-      protectedName = bitString(requiredBits)
-      if protectedName not in links:
+      salt = bitString(requiredBits)
+      if salt + ":" + name not in links:
         break              
+   
+    name = "~%s(%s)" % (name, salt)
+    
+    protectedRoot.data.link(protectedRoot, name, findPage(loginRoot(), path).descriptor)
+    protectedPath = ['protected', name]
+    
+    return name, self._signPath(protectedPath)
 
-    links[protectedName] = findPage(loginRoot(), path).descriptor
-    protectedRoot.data.save(protectedRoot)
+  def _checkSignaturePath(self, path, signature, maxDepth=128):
+    if len(path) > maxDepth:
+      return self._checkSignature(path, signature)       
+    
+    candidate = ''
+    for index, segment in enumerate(path):
+      candidate = SHA.new(candidate + segment).hexdigest()
+      if hexToBase(SHA.new(candidate + str(Root.componentSecret)).hexdigest()[:20]) == signature:                
+        #verify the implementations are in sync
+        return self._checkSignature(path[:index+1], signature)  
+    else:      
+      return False
+
+  def _checkSignature(self, path, signature):
+    return signature == self._signPath(path)
+    
+  def _signPath(self, path):
+    path = list(path)
+    signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
+    return signature
     
   def removeProtected(self, name):
     protectedRoot = findPage(loginRoot(), ('protected',))
     links = protectedRoot.data.links
     del links[name]
     protectedRoot.data.save(protectedRoot)
+
+#  @FixIE
+  @expose(template="reports.templates.login")
+  def login(self, user=None, password=None, login=None):
+    while True:
+      if not user and not password:
+        response.status=403
+        return dict(message="Please log in.")
+        
+      userName = user
+      userPath = ['users', userName]
+      userMeta = findPage(loginRoot(), userPath)
+      if not userMeta or not userMeta.data:
+        print "login fail at 1", userMeta, userMeta.data
+        break        
+      userObject = userMeta.data
+      if 'checkPassword' not in dir(userObject):
+        print "login fail at 2, checkPassword not in ", userObject 
+        break
+      if not userObject.checkPassword(userName, password):
+        print "login fail at 3, invalid password"
+        break
+
+      #session['root'] = (request.headers['Host'], userName,)
+      session['path'] = () 
+      
+      name, signature = self.addProtected(userPath)
+      
+      #flash("Logged in as %s" % session['root'][-1])
+      flash("Logged in as %s" % userName)
+      raiseRedirectToShow(('protected', name), signature)
+
+    msg=_("%s - Incorrect password or username." % user)
+    response.status=403
+    return dict(message=msg)
+
+  @expose()
+  def logout(self):
+    session.pop('root', None)
+    session['path'] = ()   
+    flash('Logged out')
+    raiseRedirectToShow(('public',))
     
 
-  def dispatch(self, path, signature, args):
+  def dispatch(self, path, args):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
     
     loginRoot()
-    op = args.pop('op', '')
+    op = str(args.pop('op', ''))
+    prototype = str(args.pop('prototype', 'Default'))
     try:
-      meta, obj = self.find(path, args)           
+      meta = self.find(path, args)           
+              
+      if not meta:
+        response.status=404
+        flash('''%s doesn't exist.''' % (((request.headers['Host'],) + path)[-1]))
+        aBlank = blank()
+        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
+             
+      if not meta._query('read'):
+        obj = blank()        
+      elif not meta.data:
+        constructor = findPage(loginRoot(), path, find=('Palette', prototype))
+        if not constructor:
+          logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
+          raise db.PermissionError(flash='''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
+        
+        obj = constructor.data.construct(constructor)
+        protoTypeName = obj.__class__.__name__
+        flash('New page: %s (%s)' % (path[-1], protoTypeName))
+        
+        logging.getLogger('root.controller.http').debug("Creating prototype %s: %s", prototype, obj)
+      else:
+        obj = meta.data
+        logging.getLogger('root.controller.http').debug("Loading existing page: %s", obj)
+        
       presentation = self.findPresentation(obj)
       self.updateCrumbTrail(path)
             
@@ -315,18 +429,18 @@ class Root(controllers.RootController):
       except (UnicodeEncodeError, AttributeError), err:
         response.status=404
         flash('''%s not understood by type %s''' % (repr(op), obj.__class__.__name__))
-        raiseRedirectToShow(path)      
+        raiseRedirectToShow(path, self._signPath(path))      
 
       try:
         result = concreteOp(Wrapper(obj, meta), path, **args)
         if not result:
-          raiseRedirectToShow(path)
+          raiseRedirectToShow(path, self._signPath(path))
         return result        
       except ReturnedObject, obj:
         meta = meta.create()
         meta.data = obj.data
         session['hand'] = meta.descriptor
-        raiseRedirectToShow(path + ('~hand',))
+        raiseRedirectToShow(path + ('~hand',), self._signPath(path + ('~hand',)))
 
     except db.PermissionError, err:
       response.status=404
@@ -339,37 +453,18 @@ class Root(controllers.RootController):
       return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)
  
   def find(self, path, args):
-    prototype = args.pop('prototype', 'Default')
+    prototype = str(args.pop('prototype', 'Default'))
 
     meta = findPage(loginRoot(), path)
-    if not meta:
-      raise db.PermissionError(flash='''%s doesn't exist.''' % (((request.headers['Host'],) + path)[-1]))
-#      raiseRedirectToShow(path[:-1], status=404)
-           
-    if not meta._query('read'):
-      return meta, blank()
-    elif not meta.data:
-      constructor = findPage(loginRoot(), path, find=('Palette', prototype))
-      if not constructor:
-        logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
-        raise db.PermissionError(flash='''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
+    return meta
       
-      obj = constructor.data.construct(constructor)
-      protoTypeName = obj.__class__.__name__
-      flash('New page: %s (%s)' % (path[-1], protoTypeName))
-      
-      logging.getLogger('root.controller.http').debug("Creating prototype %s: %s", prototype, obj)
-    else:
-      obj = meta.data
-      logging.getLogger('root.controller.http').debug("Loading existing page: %s", obj)
-      
-    return meta, obj
-  
   def updateCrumbTrail(self, path): 
-    trail = session.get('path', [])
+  
+  
+    trail = session.get('path', ())
     if not trail or not '/'.join(trail).startswith('/'.join((path))):
       logging.getLogger('root.controller.http').debug("Updating crumb trail: %s %s", trail, path)
-      session['path'] = (path)
+      session['path'] = path
  
   def findPresentation(self, obj):
     return findPresentation(obj)
@@ -387,11 +482,26 @@ def findPresentation(obj):
     
   return PrimitivePresentation()
 
-def raiseRedirectToShow(path, status=None):
+def raiseRedirectToShow(path=None, signature=None, status=None):
+  #import traceback; traceback.print_stack()  
+  protocol = request.headers.get('X-Protocol', 'http')
+  originalPath = request.browser_url.split('?', 1)[0]
+          
+  print "Redirect %s" % (path,)
   if not path:
-    raise HTTPRedirect("/", status=status)
-  raise HTTPRedirect("/%s/" % '/'.join(path), status=status)
+    raise HTTPRedirect("%s://%s/" % (protocol, originalPath), status=status)
 
+  
+
+  source, path = path[0], path[1:]
+  assert source in ['public', 'protected', None], source  
+  if path and signature and re.findall(r'^~(.*)\((.*)\)$', path[0]):    
+    name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
+    path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      
+  redirect = "%s/" % '/'.join(('',)+path)
+  assert '//' not in redirect, (path, redirect)
+    
+  raise HTTPRedirect('%s://%s' % (protocol, request.headers['host']) +redirect, status=status)
 
 class Presentation(object):
   def _path(self, path):
@@ -424,13 +534,13 @@ class Presentation(object):
       data = findPage(loginRoot(), ('~hand',)).getData()
 
     obj.write(data)
-    raiseRedirectToShow(path)
+    #raiseRedirectToShow(path)
 
   def copy(self, obj, path):
     session['hand'] = obj.descriptor
-    raiseRedirectToShow(path)
+    #raiseRedirectToShow(path)
 
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.search")
   def search(self, obj, path, query=None):
     if query is None:
@@ -439,7 +549,6 @@ class Presentation(object):
     hits = {}
     root = loginRoot()
     pathCut = len(root.path)
-#    assert False, (query.lower(), re.escape(query.lower()))
     query = re.compile(r'\b%s\b' % re.escape(query.lower()))
     
     def doSearch(page):
@@ -482,63 +591,59 @@ class Presentation(object):
     value = values[value.lower()]
 
     obj.changePermission(link, permission, value)
-    raiseRedirectToShow(path)    
+    #return ''
+    #raiseRedirectToShow()    
 
-  def waitForChange(self, obj, path, hash=None):
-    queue = Queue()
-    action = lambda: queue.put(True)
-    obj.watch(action)
-    try:
-#      yield '<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">\n'
-      for interval in range(60 * 60):
-        try:
-          queue.get(timeout=5)
-      #        response.status=204 #no content
-#          yield  '''
-#            <body onLoad="window.parent.location.reload()"></body></html>          
-#          '''
-          return
-        except Empty:
-          yield ' '  # requires patch to cherrypy
-    finally:
-      obj.removeWatch(action)
-#      response.status=200 #reset content
-  waitForChange._cp_config = {'response.stream': True}
+#  def waitForChange(self, obj, path, hash=None):
+#    queue = Queue()
+#    action = lambda: queue.put(True)
+#    obj.watch(action)
+#    try:
+##      yield '<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">\n'
+#      for interval in range(60 * 60):
+#        try:
+#          queue.get(timeout=5)
+#      #        response.status=204 #no content
+##          yield  '''
+##            <body onLoad="window.parent.location.reload()"></body></html>          
+##          '''
+#          return
+#        except Empty:
+#          yield ' '  # requires patch to cherrypy
+#    finally:
+#      obj.removeWatch(action)
+##      response.status=200 #reset content
+#  waitForChange._cp_config = {'response.stream': True}
  
-def blank():
-  class Blank(object):
-    @FixIE
-    def show(self, meta, formatted=None, prefix=None):
-      return ''
-      '''    @expose(template="reports.templates.show")
-    def blank(self, *args, **kargs):
-      response.status=403
-      return dict(session=session, root=session['root'], data='', path=(session['root'] + path), name=(session['root'] + path)[-1], obj=self)
-     '''
-  aBlank = Blank()
-
-  return aBlank
-
+class blank(object):
+  @html.FixIE
+  def show(self, meta, formatted=None, prefix=None):
+    return ''    
 
 class WikiPresentation(Presentation):
   def _path(self, path):
-    return ('home', ) + path
+    path = ('home', ) + path[1:]
+    index = len(path)-1
+    path += session.setdefault('path', ())[len(path):]
+    path = (index, [('/'.join(('',) + path[1:index+1] + ('',)), segment) for index, segment in enumerate(path)])
+    
+    return path
   
   def _name(self, path):
-    return self._path(path)[-1]
+    return path[-1]
 
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.show")
   def show(self, obj,  path, formatted=True, prefix=None):
     content = obj.show(formatted=formatted, prefix=prefix)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.edit")
   def edit(self, obj,  path):    
     return dict(session=session, this=self, prototype=obj.__class__.__name__, root=session['root'], name=self._name(path), path=self._path(path), data=obj.show(), obj=obj)  #XXX deprecate data;  'this' can't be called 'self'
     
-  @expose()
+  #@expose()
   def save(self, obj, path, data='', save=None):    
     if 'file' in dir(data):  #allow file uploads, handled by the framework
       data = data.file.read()
@@ -549,21 +654,21 @@ class WikiPresentation(Presentation):
     obj.save(data, links)      
 
     flash("Changes saved!")
-    raiseRedirectToShow(path)
+    #raiseRedirectToShow()
 
-  @expose()
+  #@expose()
   def append(self, obj, path, data='', submit=None):
     if 'file' in dir(data):
       data = data.file.read()     
     return self.save(obj, path, data=obj.show() + '\n' + data, )
     
-  @expose()
+  #@expose()
   def prepend(self, obj, path, data='', submit=None):
     if 'file' in dir(data):
       data = data.file.read()
     return self.save(obj, path, data=data + '\n' + obj.show())
             
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.caps")    
   def links(self, obj, path):
     links = obj.links
@@ -594,11 +699,7 @@ class WikiPresentation(Presentation):
   def resolveWikiLinks(self, objectPath, links, content):
     knownIds = {}
     for link in links:
-      print "--->", links[link]
-      print link
       knownIds[link] = links[link]
-#      knownIds[links[link][0]] = links[link]
-#      knownIds[page.get(self.links[link]).id] = self.links[link]
 
     templates = { "[(": "[(%s)]", "[": "[%s]", "{": "{%s}"}
 
@@ -607,13 +708,6 @@ class WikiPresentation(Presentation):
       linkType = match.group('type')
       link = match.group('name')
      
-#    content = Wiki.linkWords.split(content)
-
-
-#    text = content[::2]
-#    links = content[1::2]
-
-#    for link in links:
       template = templates.get(linkType, None)
       if not template:
         return match.group(0)
@@ -621,7 +715,6 @@ class WikiPresentation(Presentation):
       if not '/' in link and not '=' in link and link in links:
         nameMapping[link] = links[link]
         return template % link
-
       
       name = None
       if '=' in link:        
@@ -641,9 +734,8 @@ class WikiPresentation(Presentation):
       else:
         path = objectPath + tuple(path)
 
-      meta = findPage(loginRoot(), path)      
+      meta = findPage(loginRoot(), path) 
       
-#      assert False, (link.split('/'), path, s)
       if not path:
         name = 'home'        
       
@@ -662,53 +754,15 @@ class WikiPresentation(Presentation):
       return link
 
     return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
- 
-  
-  @FixIE
-  @expose(template="reports.templates.login")
-  def login(self, obj, path, user=None, password=None, login=None):        
-    while True:
-      if not user and not password:
-        response.status=403
-        return dict(message="Please log in.")
-        
-      username = user
-      user = findPage(loginRoot(), ['users', user])
-      if not user or not user.data:
-        break        
-      user = user.data
-      if 'checkPassword' not in dir(user):
-        break
-      if not user.checkPassword(username, password):
-        break
-        
-      
-
-      session['root'] = (request.headers['Host'], username,)
-      session['path'] = []    
-      
-      flash("Logged in as %s" % session['root'][-1])
-      raiseRedirectToShow(['/'])
-
-    msg=_("%s - Incorrect password or username." % username)
-    response.status=403
-    return dict(message=msg)
-
-  @expose()
-  def logout(self, obj,  path):
-    del session['root']
-    session['path'] = []    
-    flash('Logged out')
-    raiseRedirectToShow(['/'])
 
 class PrimitivePresentation(WikiPresentation):
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.show")
   def show(self, obj, path, prefix=None):
     try:
       content = obj.show()
     except:
-      content = html.escape("%s" % obj)
+      content = pydoc.html.escape("%s" % obj)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
 
 class RawPresentation(WikiPresentation):
@@ -717,19 +771,45 @@ class RawPresentation(WikiPresentation):
     return obj.show(formatted=formatted, prefix=None)
 
 class XmlPresentation(WikiPresentation):
-  @FixIE
+  @html.FixIE
   @expose(template="reports.templates.show")
   def show(self, obj, path, prefix=None, formatted=True):
     content = obj.show(formatted=formatted, prefix=None)
     return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)  
     
-metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
+#metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
+metaTypes = builtins.metaTypes
 
-#import cPickle as pickle
-#pickle.dump([(o.name, o.data, o.id) for o in db.Object.select()], open('db.dump', 'w'))
+def test():
+  server.wait()
+  from urllib2 import urlopen, HTTPError
+  assert "OK" == urlopen('http://127.0.0.1:8080').msg 
+  assert "OK" == urlopen('http://127.0.0.1:8080/').msg 
+  assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs').msg
+  assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs/').msg
+  
+  import cherrypy
+  name = '~test(abcdef)'
+  signature = cherrypy.root._signPath(('protected', name))
+  signed = '~test(abcdef-%s)' % signature 
+  print signed
+  assert "OK" == urlopen('http://127.0.0.1:8080/%s/' % signed).msg
+  assert "OK" == urlopen('http://127.0.0.1:8080/%s/root' % signed).msg
+  assert "OK" == urlopen('http://127.0.0.1:8080/%s/root/' % signed).msg
+  
+  try:
+    assert False, urlopen('http://127.0.0.1:8080/test/nonexisting/').msg
+  except HTTPError, err:
+    assert err.code == 404, err.code
+  try:
+    assert False, urlopen('http://127.0.0.1:8080/test/invalid/').msg
+  except HTTPError, err:
+    assert err.code == 404, err.code    
+    
+  assert "OK" == urlopen('http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678').msg
+  assert "qwerty12345678" in urlopen('http://127.0.0.1:8080/').read()
+  
+  print "\033[1;34m" + "Tests OK" + "\033[0m"
+  
 
-#for name, data, id in pickle.load(open('db.dump')):
-#  print name
-#  db.Object(name=name, data=data, ident=id)
-
-
+thread.start_new_thread(test, [])

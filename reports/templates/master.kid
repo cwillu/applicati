@@ -29,7 +29,7 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >  <div class="top toolbar"> 
     <div class="left">
-      <a href="/"><img style="display: inline; position: absolute; bottom: 1px; left: 6px; margin: -20px 0px;" src="${tg.url([
+      <a href="/"><img style="display: inline; position: absolute; bottom: 0px; left: 6px; margin: -20px 0px;" src="${tg.url([
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
         '/static/images/mantis-angle.png', 
@@ -42,12 +42,13 @@
         ][random.randrange(6)])}" /></a>    
     </div>
     <div class="left" style="padding-left: 48px;">
-      <div ><span id="selected"><a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span></div>
+      <div ><span id="selected"><a href="${path[1][path[0]][0]}/">${name}</a></span></div>
       <div class="path">
+        <!-- /foo/bar/BAZ/bing/bob/ -->
         <span style="z-index: 10; margin: -16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><!--
-        --><span py:for="index, link in enumerate(path[:-1])">/<a href="${'/'.join(('',)+path[1:index+1])}/">${link}</a></span><!--
-        --><span id="selected">/<a href="${'/'.join(('',)+path[1:])}/">${path[-1]}</a></span><!--
-        --><span py:for="index, link in enumerate(session.get('path',[])[len(path)-1:])">/<a href="${'/'.join(('',)+session['path'][:index+len(path)])}/">${link}</a></span><!--
+        --><span py:for="segment in path[1][:path[0]]">/<a href="${segment[0]}">${segment[1]}</a></span><!--
+        --><span id="selected">/<a href="${path[1][path[0]][0]}">${path[1][path[0]][1]}</a></span><!--
+        --><span py:for="segment in path[1][path[0]+1:]">/<a href="${segment[0]}">${segment[1]}</a></span><!--
         --><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
       </div>  
     </div>  
@@ -61,10 +62,10 @@
         </form>
       </span>
       <span py:if="root[-1] == 'guest'">
-        | <a href="/?op=login">Log in</a>
+        | <a href="/login">Log in</a>
       </span>
       <span py:if="root[-1] != 'guest'">
-        | ${root[-1]} | <a href="/?op=logout">Log out</a>
+        | ${root[-1]} | <a href="/logout">Log out</a>
       </span>               
     </div> 
   </div>

@@ -1,24 +1,25 @@
 from __future__ import absolute_import
 
-import os, sys
-import bisect
-from Crypto.Cipher import Blowfish as blowfish
+import os
 from sha import sha
-from os import urandom as random
 import xml.dom.minidom as dom
 import re
-from Queue import Queue, Empty
 
-from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response, HTTPRedirect
-from turbogears.toolbox.catwalk import CatWalk
+from turbogears import flash
+from cherrypy import session
 from docutils.core import publish_parts
-from pydoc import html
-
-from . import model as db
 
 import logging
 
+def _assertId(id):  #XXX change to assert
+  '''from model'''
+  
+  logging.getLogger('root.model.descriptors').debug("ASSERTING %s", id)
+  if not isinstance(id, tuple): 
+    assert len(str(id)) > 10 or id == '1' or id == (1, ), (id, type(id)) #XXX fix root id
+    logging.getLogger('root.model.descriptors').warn("old-style descriptor in use: %s (%s)", id, type(id))
+    return (id, )
+  return id
 
 
 class Constructor(object):
@@ -26,14 +27,14 @@ class Constructor(object):
     self.class_ = class_
     self.links = {}
   
-  def show(self, page, prefix=None, formatted=False):
+  def show(self, meta, prefix=None, formatted=False):
     return self.class_
     
-  def save(self, page, class_):
+  def save(self, meta, class_):
     self.class_ = class_
-    page.data = self
+    meta.data = self
 
-  def construct(self, page):    
+  def construct(self, meta):    
     return metaTypes[self.class_]()
 
 class Wiki(object):
@@ -41,17 +42,10 @@ class Wiki(object):
     self.data = data
     self.links = {}
 
-  #This is becoming a problem
-#  wikiWords = r'(?P<type>\[\(?)(?P<name>[^\ \[\]][^\[\]]*?\)?)\]'
-#  inlineWords = r'(?P<type>\{)(?P<name>\(?[^\ \[\}][^\[\}]*?\)?)\}'
-
   linkWords = re.compile(r'(?P<type>[\[\(\{]+)(?P<name>[^\ \[\]\(\)\{\}][^\[\]]*?)[\]\)\}]+')
-#  wikiWords = re.compile(wikiWords)
-#  inlineWords = re.compile(inlineWords)   
   indentWords = re.compile(r'\s*\*')   
   
-  def _wikiFormat(self, page, content, prefix=None):
-    #  name = html.escape(name)
+  def _wikiFormat(self, meta, content, prefix=None):
     if not prefix:
       prefix = tuple()
 
@@ -59,29 +53,21 @@ class Wiki(object):
       name = match.group('name')
       link = name[:-1] if name.endswith('*') else name
       link = '/'.join(prefix+(link,))
-      return '<a href="http:%s/">%s</a>' % (link, name)
+      return '<a href="%s/">%s</a>' % (link, name)
       
     def inlineLink(match):
       name = match.group('name')
       extension = tuple(name.split('/'))
       
-      #meta = findPage(page, extension)
       assert len(extension) == 1, len(extension)
-      meta = page.get(page.resolve(extension[0]), extension[0])
+      linkMeta = meta.get(meta.resolve(extension[0]), extension[0])
       
-      inlineObject = meta.data
+      inlineObject = linkMeta.data
       if not inlineObject:
         return None
              
-      content = inlineObject.show(meta, prefix=prefix + extension, formatted=True) #XXX tuples, not list            
-#      print content
+      content = inlineObject.show(linkMeta, prefix=prefix + extension, formatted=True) #XXX tuples, not list            
       return content
-#      return dom.parseString(content).getElementsByTagName('body')[0].toxml()
-        
-#      return findPage(page, name.split('/')).show(formatted=True, prefix=prefix+[name])
-#      return '<a href="http:%s/">%s</a>' % name
-  
-#    content = commentblock.split(content)
     
     linkTypes = { "(": lambda match: match.group(0), "[(": lambda match: None, "[": wikiLink, "{": inlineLink }
     
@@ -89,86 +75,69 @@ class Wiki(object):
       name = match.group('name')
       return linkTypes[match.group('type')](match)
     
-#    lastIndent = None
-#    newContent = []
-#    for line in content.splitlines():
-#      matches = resolveWiki.indentWords.findall(line)
-#      if matches and len(matches[0]) != lastIndent:
-#        if lastIndent: 
-#          newContent.append('\n')
-#        lastIndent = len(matches[0])
-#      if not matches:
-#        lastIndent = None
-#      newContent.append(line)
-#    content = '\n'.join(newContent)        
     settings = { 'halt_level': 10, 'report_level': 10 }
     content = publish_parts(content, writer_name="html", settings_overrides=settings)['html_body']
 
     content = Wiki.linkWords.sub(replaceLink, ''.join(content))
-#    content = Wiki.inlineWords.sub(inlineLink, ''.join(content))
-#    content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
     return content
     
-  def show(self, page, formatted=False, prefix=None):
+  def show(self, meta, formatted=False, prefix=None):
     if formatted:
-      formatted = self._wikiFormat(page, self.data, prefix)
-#      print formatted
+      formatted = self._wikiFormat(meta, self.data, prefix)
       return formatted
     return self.data
           
-  def save(self, page, data='', links={}):    
+  def save(self, meta, data='', links=None):    
     self.data = data
-    self.links = links
+    if links is not None:
+      self.links = links
     
     for key in self.links:
-      self.links[key] = (db._assertId(self.links[key][0]),) + self.links[key][1:]
-    page.data = self
+      self.links[key] = (_assertId(self.links[key][0]),) + self.links[key][1:]
+    meta.data = self
             
-  def list(self, page):
+  def list(self, meta):
     return self.links
 
-  def resolve(self, page, name):
+  def resolve(self, meta, name):
     if name in self.links:
       return self.links[name]
-    elif name.lower() in '\n'.join(list(self.links)).lower():
-      name = name.lower()
-      for key in self.links:
-        if name == key.lower():
-          return self.links[key]
-    else:
-      return None      
     
-  def link(self, page, name, id):
+    name = name.lower()
+    for key in self.links:
+      if hasattr(key, 'lower') and name == key.lower():
+        return self.links[key]
+    
+  def link(self, meta, name, id):
     logging.getLogger('root.controller.http').debug("Linking %s %s", name, id)
     if 'links' not in dir(self):
       self.links = {}
   
     self.links[name] = id
-    page.data = self
+    meta.data = self
     
 class CapRoot(Wiki):
-  def resolve(self, page, name):
+  def resolve(self, meta, name):
     if name == '~hand':  # I don't like this
       return session.get('hand', None)
-    return super(CapRoot, self).resolve(page, name)
-#    return self.links.get(name, None)
+    return super(CapRoot, self).resolve(meta, name)
 
 class User(Wiki):
-  def setPassword(self, page, password=None):
-    logging.getLogger('root.controller.user').info("Setting password (%s)", page)
+  def setPassword(self, meta, password=None):
+    logging.getLogger('root.controller.user').info("Setting password (%s)", meta)
     self.salt = sha(os.urandom(64)).hexdigest()
-    self.token = self.getToken(page, password)
-    page.data = self
+    self.token = self.getToken(meta, password)
+    meta.data = self
     flash("Password set successfully")
 
-  def checkPassword(self, page, password):
-    logging.getLogger('root.controller.user').info("Checking password (%s)", page)
+  def checkPassword(self, meta, password):
+    logging.getLogger('root.controller.user').info("Checking password (%s)", meta)
     if 'salt' not in dir(self) or not self.salt:
       return True
-    return self.getToken(page, password) == self.token
+    return self.getToken(meta, password) == self.token
     
-  def getToken(self, page, password):
-    logging.getLogger('root.controller.user').debug("User: %s", page)
+  def getToken(self, meta, password):
+    logging.getLogger('root.controller.user').debug("User: %s", meta)
     logging.getLogger('root.controller.user').debug("Salt: %s", self.salt)
     
     token = sha(password).hexdigest()
@@ -184,27 +153,29 @@ class User(Wiki):
 
     return token 
 
-  def resolve(self, page, name):
+  def resolve(self, meta, name):
     if name == '~hand':  #FIXME I don't like this
       return session['hand']
-    return super(User, self).resolve(page, name)
+    return super(User, self).resolve(meta, name)
 
 class AutoLogin(Wiki):
+  '''Broken, relied on privileged access to findpage'''
+  
   def show(self, obj, *args, **kargs):
     def login():
       if 'guest' not in session['root']:
         return
-      user = findPage(obj, [self.links.keys()[0]])
-      if not user or not user.data:
-        return
-      loginRoot(user)
-      
-      flash("Logged in as %s" % session['root'][-1])
-      raiseRedirectToShow(['/'])
+      assert False, "findpage!?"
+      #user = findPage(obj, [self.links.keys()[0]])
+      #if not user or not user.data:
+      #  return
+      #loginRoot(user)
+      #      
+      #flash("Logged in as %s" % session['root'][-1])
+      #raiseRedirectToShow(['/'])
 
     return login() or Wiki.show(self, obj, *args, **kargs)
 
-  @expose()
   def logout(self, obj,  path):
     del session['root']
     flash('Logged out')
@@ -215,47 +186,65 @@ class Raw(object):
     self.data = data
     self.links = {}
 
-  def show(self, page, prefix=None, formatted=False):
+  def show(self, meta, prefix=None, formatted=False):
     return self.data
     
-  def save(self, page, data=''):
+  def save(self, meta, data=''):
     self.data = data
-    page.data = self
+    meta.data = self
     
-  def list(self, page):
+  def list(self, meta):
     return self.links
 
-  def resolve(self, page, name):
+  def resolve(self, meta, name):
     return self.links.get(name, None)
     
-  def link(self, page, name, id):
+  def link(self, meta, name, id):
     self.links[name] = id    
-    page.data = self
+    meta.data = self
 
 class XML(object):
   def __init__(self, data=''):
     self.data = data
     self.links = {}
 
-  def show(self, page, prefix=None, formatted=False):
+  def show(self, meta, prefix=None, formatted=False):
     if not formatted or not self.data:
       return self.data
 
     return dom.parseString(self.data).getElementsByTagName('body')[0].toxml()
     
-  def save(self, page, data=''):
+  def save(self, meta, data=''):
     self.data = data
-    page.data = self
-    
-  def list(self, page):
+    meta.data = self
+                                
+  def list(self, meta):
     return self.links
 
-  def resolve(self, page, name):
+  def resolve(self, meta, name):
     return self.links.get(name, None)
     
-  def link(self, page, name, id):
+  def link(self, meta, name, id):
     self.links[name] = id    
-    page.data = self    
+    meta.data = self    
         
-metaTypes = dict((name, eval(name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
+class Clone(object):
+  def __init__(self, source=""):
+    self.source = source
+    self.data = None
+    
+  def setSource(self, meta, source=""):
+    self.source = source
+    meta.data = self
+            
+  def show(self, meta):
+    if not self.data:
+      meta.data = self
+    
+    return self.data
+    
+    
+        
+        
+metaTypes = dict((name, eval(name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin', 'Clone'))
 
