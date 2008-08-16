@@ -487,7 +487,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
 
   source, path = path[0], path[1:]
   assert source in ['public', 'protected', None], source  
-  if signature and re.findall(r'^~(.*)\((.*)\)$', path[0]):    
+  if path and signature and re.findall(r'^~(.*)\((.*)\)$', path[0]):    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      
   redirect = "%s/?op=show" % '/'.join(('',)+path)
