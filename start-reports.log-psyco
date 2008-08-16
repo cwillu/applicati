@@ -1,2 +1,6 @@
 04:59:43.95  Logging started, 08/16/08                  %%%%%%%%%%%%%%%%%%%%
 04:59:43.99  unsupported free or cell vars in expose                     % %
+04:59:45 AM.56  unsupported free or cell vars in findPage                   % %
+04:59:47 AM.26  unsupported free or cell vars in findPageName               % %
+04:59:47 AM.27  unsupported ** argument in call to debug                    % %
+04:59:47 AM.28  unsupported ** argument in call to warning                  % %
