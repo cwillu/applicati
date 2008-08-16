@@ -100,7 +100,7 @@ def BaseComponent(rootFolder, componentPath=()):
   """
   
   class Object(object):
-    def __init__(self, descriptor=None, data=None, onReify=None, sourceId=None, path=[], permissions=None):      
+    def __init__(self, descriptor=None, data=None, onReify=None, source=None, _sourceId=None, path=[], permissions=None):      
       assert not (descriptor and data), "Invalid state: descriptor and data specified"
       assert not (descriptor and onReify), "Invalid state: descriptor and onReify specified"
       assert permissions is not None
@@ -109,19 +109,23 @@ def BaseComponent(rootFolder, componentPath=()):
       self._descriptor = descriptor
       self._data = data
       
-      if sourceId:
+      if source:
         perms = self._getPerms()        
         print "\033[1;31m" + str(perms) + "\033[0m"
-        print "\033[1;31m" + str(sourceId) + "\033[0m"
+        print "\033[1;31m" + str(source) + "\033[0m"
         
-        if sourceId not in perms:
-          print "\033[1;31m" + 'new' + "\033[0m"
-          perms[sourceId] = path, 0
+        if source not in perms:
+          if _sourceId and _sourceId in perms:
+            print "\033[1;31m" + 'Updating obsolete permissions' + "\033[0m"
+            perms[source] = perms[_sourceId]
+          else:
+            print "\033[1;31m" + 'new' + "\033[0m"
+            perms[source] = path, 0
           self._setPerms(perms)
           
         logging.getLogger('root.model').debug("Caps: %s", perms)
           
-        capPermissions = perms[sourceId][1:]                 
+        capPermissions = perms[source][1:]                 
         permissions = _modPermissions(permissions, capPermissions)        
 
       self.permissions = permissions
@@ -341,7 +345,10 @@ def BaseComponent(rootFolder, componentPath=()):
       
       id = id[-1:] # signature checked out: it's ours, so strip off the component path
 
-      return Object(descriptor=id, path=path, sourceId=self._descriptor[0], permissions=self.permissions)
+      # use the descriptor digest rather than the our id, so that multiple links between the same two nodes
+      # can have different permissions.  
+      return Object(descriptor=id, path=path, source=descriptor[-1], _sourceId=self._descriptor[0], permissions=self.permissions)
+      #return Object(descriptor=id, path=path, sourceId=self._descriptor[0], permissions=self.permissions)
 
     def create(self, data=None, onReify=None, path=[]):
       return Object(data=data, onReify=onReify, path=path, permissions=self.permissions)  
