@@ -481,7 +481,6 @@ def findPresentation(obj):
     
   return PrimitivePresentation()
 
-class S
 def raiseRedirectToShow(path=None, signature=None, status=None):
   #import traceback; traceback.print_stack()
   print "Redirect %s" % (path,)

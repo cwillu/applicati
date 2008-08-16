@@ -432,6 +432,7 @@ class Root(controllers.RootController):
 
       try:
         result = concreteOp(Wrapper(obj, meta), path, **args)
+        print "foo"
         if not result:
           raiseRedirectToShow(path)
         return result        
