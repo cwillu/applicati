@@ -425,19 +425,19 @@ class Root(controllers.RootController):
       except (UnicodeEncodeError, AttributeError), err:
         response.status=404
         flash('''%s not understood by type %s''' % (repr(op), obj.__class__.__name__))
-        raiseRedirectToShow(path)      
+        raiseRedirectToShow(path, self._signPath(path))      
 
       try:
         result = concreteOp(Wrapper(obj, meta), path, **args)
         print "foo"
         if not result:
-          raiseRedirectToShow(path)
+          raiseRedirectToShow(path, self._signPath(path))
         return result        
       except ReturnedObject, obj:
         meta = meta.create()
         meta.data = obj.data
         session['hand'] = meta.descriptor
-        raiseRedirectToShow(path + ('~hand',))
+        raiseRedirectToShow(path + ('~hand',), self._signPath(path + ('~hand',)))
 
     except db.PermissionError, err:
       response.status=404
@@ -487,7 +487,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
 
   source, path = path[0], path[1:]
   assert source in ['public', 'protected', None], source  
-  if signature:    
+  if signature and re.findall(r'^~(.*)\((.*)\)$', path[0]):    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      
   redirect = "%s/?op=show" % '/'.join(('',)+path)

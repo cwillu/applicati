@@ -248,6 +248,10 @@ class ReturnedObject(Exception):
     self.data = data
 
 def loginRoot():
+  print request.headers['Host']
+  print request.headers()
+  print list(request.headers())
+
   session.setdefault('root', (request.headers['Host'], 'guest'))
   return findPage(None, ('gateways', request.headers['Host']))
 
