@@ -495,7 +495,6 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
     
   raise HTTPRedirect(redirect, status=status)
 
-
 class Presentation(object):
   def _path(self, path):
     return ('home', ) + path

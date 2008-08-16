@@ -494,7 +494,10 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   assert '//' not in redirect, (path, redirect)
     
   raise HTTPRedirect(redirect, status=status)
-adssds
+
+class S:
+  pass
+
 class Presentation(object):
   def _path(self, path):
     return ('home', ) + path
