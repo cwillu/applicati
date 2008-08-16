@@ -486,7 +486,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
           
   print "Redirect %s" % (path,)
   if not path:
-    raise HTTPRedirect("%s://%s/?op=show" % (protocol, originalPath), status=status)
+    raise HTTPRedirect("%s://%s/" % (protocol, originalPath), status=status)
 
   
 
@@ -495,7 +495,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   if path and signature and re.findall(r'^~(.*)\((.*)\)$', path[0]):    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      
-  redirect = "%s/?op=show" % '/'.join(('',)+path)
+  redirect = "%s/" % '/'.join(('',)+path)
   assert '//' not in redirect, (path, redirect)
     
   raise HTTPRedirect('%s://%s' % (protocol, request.headers['host']) +redirect, status=status)

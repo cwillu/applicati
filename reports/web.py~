@@ -495,10 +495,10 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   if path and signature and re.findall(r'^~(.*)\((.*)\)$', path[0]):    
     name, salt = re.findall(r'^~(.*)\((.*)\)$', path[0]).pop()
     path = ("~%s(%s-%s)" % (name, salt, signature),) + path[1:]      
-  redirect = "%s:/%s/?op=show" % (protocol, '/'.join(('',)+path))
+  redirect = "%s/?op=show" % '/'.join(('',)+path)
   assert '//' not in redirect, (path, redirect)
     
-  raise HTTPRedirect(redirect, status=status)
+  raise HTTPRedirect('%s://%s' % (protocol, request.headers['host']) +redirect, status=status)
 
 class Presentation(object):
   def _path(self, path):
