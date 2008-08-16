@@ -458,6 +458,8 @@ class Root(controllers.RootController):
     return meta
       
   def updateCrumbTrail(self, path): 
+  
+  
     trail = session.get('path', ())
     if not trail or not '/'.join(trail).startswith('/'.join((path))):
       logging.getLogger('root.controller.http').debug("Updating crumb trail: %s %s", trail, path)
@@ -479,11 +481,12 @@ def findPresentation(obj):
     
   return PrimitivePresentation()
 
+class S
 def raiseRedirectToShow(path=None, signature=None, status=None):
   #import traceback; traceback.print_stack()
   print "Redirect %s" % (path,)
   if not path:
-    raise HTTPRedirect("?", status=status)
+    raise HTTPRedirect("?op=show", status=status)
 
   source, path = path[0], path[1:]
   assert source in ['public', 'protected', None], source  
@@ -526,11 +529,11 @@ class Presentation(object):
       data = findPage(loginRoot(), ('~hand',)).getData()
 
     obj.write(data)
-    raiseRedirectToShow(path)
+    #raiseRedirectToShow(path)
 
   def copy(self, obj, path):
     session['hand'] = obj.descriptor
-    raiseRedirectToShow(path)
+    #raiseRedirectToShow(path)
 
   @html.FixIE
   @expose(template="reports.templates.search")
@@ -583,7 +586,7 @@ class Presentation(object):
     value = values[value.lower()]
 
     obj.changePermission(link, permission, value)
-    raiseRedirectToShow()    
+    #raiseRedirectToShow()    
 
   def waitForChange(self, obj, path, hash=None):
     queue = Queue()
@@ -648,7 +651,7 @@ class WikiPresentation(Presentation):
     obj.save(data, links)      
 
     flash("Changes saved!")
-    raiseRedirectToShow(path)
+    #raiseRedirectToShow()
 
   @expose()
   def append(self, obj, path, data='', submit=None):
