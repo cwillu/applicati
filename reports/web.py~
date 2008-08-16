@@ -482,7 +482,7 @@ def findPresentation(obj):
 def raiseRedirectToShow(path=None, signature=None, status=None):
   #import traceback; traceback.print_stack()
   import cherrypy
-  print cherrypy.url()  
+  print cherrypy.request_path  
   print "Redirect %s" % (path,)
   if not path:
     raise HTTPRedirect("?op=show", status=status)
