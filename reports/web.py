@@ -219,8 +219,6 @@ class Wrapper(object):
       self.links = []
       return
     self.write = page.write
-    self.watch = page.watch
-    self.removeWatch = page.removeWatch
     self.changePermission = page.changePermission
     self.permissions = page.permissions
         
@@ -586,26 +584,26 @@ class Presentation(object):
     #return ''
     #raiseRedirectToShow()    
 
-  def waitForChange(self, obj, path, hash=None):
-    queue = Queue()
-    action = lambda: queue.put(True)
-    obj.watch(action)
-    try:
-#      yield '<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">\n'
-      for interval in range(60 * 60):
-        try:
-          queue.get(timeout=5)
-      #        response.status=204 #no content
-#          yield  '''
-#            <body onLoad="window.parent.location.reload()"></body></html>          
-#          '''
-          return
-        except Empty:
-          yield ' '  # requires patch to cherrypy
-    finally:
-      obj.removeWatch(action)
-#      response.status=200 #reset content
-  waitForChange._cp_config = {'response.stream': True}
+#  def waitForChange(self, obj, path, hash=None):
+#    queue = Queue()
+#    action = lambda: queue.put(True)
+#    obj.watch(action)
+#    try:
+##      yield '<!DOCTYPE html>\n<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">\n'
+#      for interval in range(60 * 60):
+#        try:
+#          queue.get(timeout=5)
+#      #        response.status=204 #no content
+##          yield  '''
+##            <body onLoad="window.parent.location.reload()"></body></html>          
+##          '''
+#          return
+#        except Empty:
+#          yield ' '  # requires patch to cherrypy
+#    finally:
+#      obj.removeWatch(action)
+##      response.status=200 #reset content
+#  waitForChange._cp_config = {'response.stream': True}
  
 class blank(object):
   @html.FixIE
