@@ -246,12 +246,13 @@ class ReturnedObject(Exception):
   def __init__(self, data):
     self.data = data
 
-def loginRoot():
+def gateway():
   protocol = request.headers.get('X-Protocol', 'http')
-  gateway = "%s://%s" % (protocol, request.headers['Host'])
-  print gateway  
-  session.setdefault('root', (gateway, 'guest'))
-  return findPage(None, ('gateways', gateway))
+  return "%s://%s" % (protocol, request.headers['Host'])
+  
+def loginRoot():
+  session.setdefault('root', (gateway(), 'guest'))
+  return findPage(None, ('gateways', gateway()))
 
 class Root(controllers.RootController):  
   componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")
@@ -269,10 +270,10 @@ class Root(controllers.RootController):
   @expose()
   def default(self, *path, **args):
     print "\033[1;34m" + "*" * 80 + "\033[0m"
-    print "\033[1;35m" + str(path) + str(args) + "\033[0m"
+    print "\033[1;35m" + gateway() + str(path) + str(args) + "\033[0m"
     print "\033[1;35m" + str(request.query_string) + "\033[0m"
     print "\033[1;35m" + str(request.browser_url) + "\033[0m"
-    print
+    print 
     print request.headers
     try:
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            
