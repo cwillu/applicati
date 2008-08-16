@@ -112,7 +112,7 @@ def BaseComponent(rootFolder, componentPath=()):
       if source:
         perms = self._getPerms()        
         print "\033[1;31m" + str(perms) + "\033[0m"
-        print "\033[1;31m" + str(sourceId) + "\033[0m"
+        print "\033[1;31m" + str(source) + "\033[0m"
         
         if source not in perms:
           if _sourceId and _sourceId in perms:
