@@ -1,2 +1,6 @@
-06:35:45.29  Logging started, 08/16/08                  %%%%%%%%%%%%%%%%%%%%
-06:35:45.32  unsupported free or cell vars in expose                     % %
+16:16:20.86  Logging started, 08/16/08                  %%%%%%%%%%%%%%%%%%%%
+16:16:20.88  unsupported free or cell vars in expose                     % %
+16:16:20.94   ______
+        #1   |100.0 %|  <module>                    ./start-reports.py:2
+16:16:20.94  memory usage: 12+ kb                                          %
+16:16:20.94  program exit, 08/16/08                     %%%%%%%%%%%%%%%%%%%%

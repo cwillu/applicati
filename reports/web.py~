@@ -27,23 +27,6 @@ import logging
 logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
-gitPid = True
-gitPid = os.fork()
-if not gitPid:
-  exit = os.system('git add .')
-  if exit: sys.exit(1)
-  exit = os.system('git commit -a -m "$(date)"')
-  if exit: sys.exit(2)
-  sys.exit(0)
-
-def checkGitStatus(pid):
-  import os #???
-  exit = os.waitpid(pid, 0)
-  if exit[1]:
-    print "\nCommit failed (%s)\n" % (exit,)
-    thread.interrupt_main()
-    
-thread.start_new_thread(checkGitStatus, (gitPid,))
 
 def bitString(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
@@ -246,12 +229,13 @@ class ReturnedObject(Exception):
   def __init__(self, data):
     self.data = data
 
-def loginRoot():
+def gateway():
   protocol = request.headers.get('X-Protocol', 'http')
-  gateway = "%s://%s" % (protocol, request.headers['Host'])
-  print gateway  
-  session.setdefault('root', (gateway, 'guest'))
-  return findPage(None, ('gateways', gateway))
+  return "%s://%s" % (protocol, request.headers['Host'])
+  
+def loginRoot():
+  session.setdefault('root', (gateway(), 'guest'))
+  return findPage(None, ('gateways', gateway()))
 
 class Root(controllers.RootController):  
   componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")
@@ -269,10 +253,10 @@ class Root(controllers.RootController):
   @expose()
   def default(self, *path, **args):
     print "\033[1;34m" + "*" * 80 + "\033[0m"
-    print "\033[1;35m" + str(path) + str(args) + "\033[0m"
+    print "\033[1;35m" + gateway() + str(path) + str(args) + "\033[0m"
     print "\033[1;35m" + str(request.query_string) + "\033[0m"
     print "\033[1;35m" + str(request.browser_url) + "\033[0m"
-    print
+    print 
     print request.headers
     try:
       logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            

@@ -27,23 +27,6 @@ import logging
 logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
-gitPid = True
-gitPid = os.fork()
-if not gitPid:
-  exit = os.system('git add .')
-  if exit: sys.exit(1)
-  exit = os.system('git commit -a -m "$(date)"')
-  if exit: sys.exit(2)
-  sys.exit(0)
-
-def checkGitStatus(pid):
-  import os #???
-  exit = os.waitpid(pid, 0)
-  if exit[1]:
-    print "\nCommit failed (%s)\n" % (exit,)
-    thread.interrupt_main()
-    
-thread.start_new_thread(checkGitStatus, (gitPid,))
 
 def bitString(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
