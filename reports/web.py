@@ -430,7 +430,6 @@ class Root(controllers.RootController):
 
       try:
         result = concreteOp(Wrapper(obj, meta), path, **args)
-        print "foo"
         if not result:
           raiseRedirectToShow(path, self._signPath(path))
         return result        
@@ -619,9 +618,6 @@ class WikiPresentation(Presentation):
     index = len(path)-1
     path += session.setdefault('path', ())[len(path):]
     path = (index, [('/'.join(('',) + path[1:index+1] + ('',)), segment) for index, segment in enumerate(path)])
-    
-    print "\033[1;31m" + str(path) + "\033[0m"
-    print "\033[1;31m" + str(session['path']) + "\033[0m"
     
     return path
   

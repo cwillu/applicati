@@ -115,6 +115,8 @@ def BaseComponent(rootFolder, componentPath=()):
         if sourceId not in perms:
           perms[sourceId] = path, 0
           self._setPerms(perms)
+          print "\033[1;31m" + str(perms) + "\033[0m"
+          print "\033[1;31m" + str(sourceId) + "\033[0m"
         
         logging.getLogger('root.model').debug("Caps: %s", perms)
           
@@ -153,25 +155,6 @@ def BaseComponent(rootFolder, componentPath=()):
     def _check(self, op):      
       if not self._query(op):
         raise PermissionError(op, self.permissions)
-
-    def watch(self, func):      
-      possible = set()
-      actionList = actions.setdefault(self._descriptor, possible)
-      actionList.add(func)
-      logging.getLogger('root.model.watches').debug("Outstanding watches: %s", len(actionList))
-
-    def removeWatch(self, func):
-      actionList = actions.get(self._descriptor, set())
-      actionList.discard(func)
-      if not actionList:
-        del actions[self._descriptor]
-      
-    def _fireWatchEvent(self):
-      logging.getLogger('root.model.watches').debug("Firing watch event (%s outstanding)", len(actions))
-      actionList = actions.get(self._descriptor, set())      
-      for action in actionList:
-        logging.getLogger('root.model.watches').debug("Firing %s", action)
-        action()
         
     @property
     def name(self):
@@ -231,7 +214,6 @@ def BaseComponent(rootFolder, componentPath=()):
         os.makedirs(folder)
       result = pickle.dump(obj, file( self._filename(), 'w'))  
     
-      thread.start_new_thread(self._fireWatchEvent, tuple())
       return result
      
     data = property(getData, _selfSetData)   
