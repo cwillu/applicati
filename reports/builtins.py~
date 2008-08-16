@@ -9,20 +9,14 @@ from turbogears import flash
 from cherrypy import session
 from docutils.core import publish_parts
 
-#from . import model as db
-
 import logging
 
 def _assertId(id):  #XXX change to assert
   '''from model'''
   
   logging.getLogger('root.model.descriptors').debug("ASSERTING %s", id)
-#  if not isinstance(id, tuple) or id == (1, ): 
-#  if id == (1, ):
-#    id = (id, )
   if not isinstance(id, tuple): 
     assert len(str(id)) > 10 or id == '1' or id == (1, ), (id, type(id)) #XXX fix root id
-#    assert False, "WARNING: old-style descriptor in use: %s (%s)" % (id, type(id))
     logging.getLogger('root.model.descriptors').warn("old-style descriptor in use: %s (%s)", id, type(id))
     return (id, )
   return id
@@ -48,17 +42,10 @@ class Wiki(object):
     self.data = data
     self.links = {}
 
-  #This is becoming a problem
-#  wikiWords = r'(?P<type>\[\(?)(?P<name>[^\ \[\]][^\[\]]*?\)?)\]'
-#  inlineWords = r'(?P<type>\{)(?P<name>\(?[^\ \[\}][^\[\}]*?\)?)\}'
-
   linkWords = re.compile(r'(?P<type>[\[\(\{]+)(?P<name>[^\ \[\]\(\)\{\}][^\[\]]*?)[\]\)\}]+')
-#  wikiWords = re.compile(wikiWords)
-#  inlineWords = re.compile(inlineWords)   
   indentWords = re.compile(r'\s*\*')   
   
   def _wikiFormat(self, meta, content, prefix=None):
-    #  name = html.escape(name)
     if not prefix:
       prefix = tuple()
 
@@ -72,7 +59,6 @@ class Wiki(object):
       name = match.group('name')
       extension = tuple(name.split('/'))
       
-      #meta = findPage(meta, extension)
       assert len(extension) == 1, len(extension)
       linkMeta = meta.get(meta.resolve(extension[0]), extension[0])
       
@@ -81,14 +67,7 @@ class Wiki(object):
         return None
              
       content = inlineObject.show(linkMeta, prefix=prefix + extension, formatted=True) #XXX tuples, not list            
-#      print content
       return content
-#      return dom.parseString(content).getElementsByTagName('body')[0].toxml()
-        
-#      return findPage(meta, name.split('/')).show(formatted=True, prefix=prefix+[name])
-#      return '<a href="http:%s/">%s</a>' % name
-  
-#    content = commentblock.split(content)
     
     linkTypes = { "(": lambda match: match.group(0), "[(": lambda match: None, "[": wikiLink, "{": inlineLink }
     
@@ -96,30 +75,15 @@ class Wiki(object):
       name = match.group('name')
       return linkTypes[match.group('type')](match)
     
-#    lastIndent = None
-#    newContent = []
-#    for line in content.splitlines():
-#      matches = resolveWiki.indentWords.findall(line)
-#      if matches and len(matches[0]) != lastIndent:
-#        if lastIndent: 
-#          newContent.append('\n')
-#        lastIndent = len(matches[0])
-#      if not matches:
-#        lastIndent = None
-#      newContent.append(line)
-#    content = '\n'.join(newContent)        
     settings = { 'halt_level': 10, 'report_level': 10 }
     content = publish_parts(content, writer_name="html", settings_overrides=settings)['html_body']
 
     content = Wiki.linkWords.sub(replaceLink, ''.join(content))
-#    content = Wiki.inlineWords.sub(inlineLink, ''.join(content))
-#    content = Wiki.wikiWords.sub(wikiLink, ''.join(content))
     return content
     
   def show(self, meta, formatted=False, prefix=None):
     if formatted:
       formatted = self._wikiFormat(meta, self.data, prefix)
-#      print formatted
       return formatted
     return self.data
           
@@ -139,7 +103,6 @@ class Wiki(object):
     if name in self.links:
       return self.links[name]
     
-    #elif name.lower() in '\n'.join(list(self.links)).lower():
     name = name.lower()
     for key in self.links:
       if hasattr(key, 'lower') and name == key.lower():
@@ -158,7 +121,6 @@ class CapRoot(Wiki):
     if name == '~hand':  # I don't like this
       return session.get('hand', None)
     return super(CapRoot, self).resolve(meta, name)
-#    return self.links.get(name, None)
 
 class User(Wiki):
   def setPassword(self, meta, password=None):
@@ -197,6 +159,8 @@ class User(Wiki):
     return super(User, self).resolve(meta, name)
 
 class AutoLogin(Wiki):
+  '''Broken, relied on privileged access to findpage'''
+  
   def show(self, obj, *args, **kargs):
     def login():
       if 'guest' not in session['root']:
@@ -212,7 +176,6 @@ class AutoLogin(Wiki):
 
     return login() or Wiki.show(self, obj, *args, **kargs)
 
-#  @expose()
   def logout(self, obj,  path):
     del session['root']
     flash('Logged out')
@@ -276,8 +239,6 @@ class Clone(object):
             
   def show(self, meta):
     if not self.data:
-      import urllib
-      #urllib
       meta.data = self
     
     return self.data
