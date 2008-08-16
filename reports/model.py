@@ -111,13 +111,14 @@ def BaseComponent(rootFolder, componentPath=()):
       
       if sourceId:
         perms = self._getPerms()        
-
+        print "\033[1;31m" + str(perms) + "\033[0m"
+        print "\033[1;31m" + str(sourceId) + "\033[0m"
+        
         if sourceId not in perms:
+          print "\033[1;31m" + 'new' + "\033[0m"
           perms[sourceId] = path, 0
           self._setPerms(perms)
-          print "\033[1;31m" + str(perms) + "\033[0m"
-          print "\033[1;31m" + str(sourceId) + "\033[0m"
-        
+          
         logging.getLogger('root.model').debug("Caps: %s", perms)
           
         capPermissions = perms[sourceId][1:]                 
