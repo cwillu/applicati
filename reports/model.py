@@ -392,7 +392,11 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
   def construct(spec, node):
     nodeType = spec.tagName
     if nodeType == 'Link':
-      return walk(spec.getAttribute('path')).descriptor
+      print 
+      print spec.getAttribute('path')
+      descriptor = walk(spec.getAttribute('path')).descriptor
+      print descriptor
+      return descriptor
     elif nodeType == 'Component':
       path = spec.getAttribute('file')
       node.data = Component(path)

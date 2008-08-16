@@ -21,7 +21,7 @@
     <Link path="/users" name="users" />
     <Link path="/public" name="public" /> 
     <Wiki name="protected" >
-      <Link path="/test" name="~test(abcdef)" />
+      <Link path="/public/test" name="~test(abcdef)" />
     </Wiki>  
   </Wiki>
 
