@@ -4,7 +4,6 @@ import os, sys
 import bisect
 import uuid
 import math
-import thread
 from Crypto.Cipher import Blowfish as blowfish
 from Crypto.Hash import SHA
 #from os import urandom as random
