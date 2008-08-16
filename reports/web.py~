@@ -249,7 +249,7 @@ class ReturnedObject(Exception):
 
 def loginRoot():
   print request.headers['Host']
-  print request.headers()
+  print request.headers
   print list(request.headers())
 
   session.setdefault('root', (request.headers['Host'], 'guest'))
