@@ -24,7 +24,7 @@ from . import builtins
 from . import html
 
 try:  
-  import psyco__
+  import psyco
   psyco.log()
   compile = psyco.proxy
   

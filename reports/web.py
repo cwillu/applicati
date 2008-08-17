@@ -11,6 +11,7 @@ from Crypto.Hash import SHA
 from random import SystemRandom as sysrandom; random = sysrandom()
 import xml.dom.minidom as dom
 import re
+import time
 from Queue import Queue, Empty
 
 from turbogears import controllers, url, expose, flash, redirect
@@ -725,8 +726,7 @@ class XmlPresentation(WikiPresentation):
 metaTypes = builtins.metaTypes
 
 def test():
-  server.wait()
-  import time
+  server.wait()  
   start = time.time()
   from urllib2 import urlopen, HTTPError
   assert "OK" == urlopen('http://127.0.0.1:8080').msg 
