@@ -157,7 +157,7 @@ def findPage(find, root, path):
       if not page:
         return self.bestFound
       #page, descriptor = getPageName(page, find)
-      page, descriptor = visit(page, find, lambda page: page)
+      page, descriptor = visit(page, find, lambda page: (page, page.descriptor))
       if page:
         self.bestFound = (page, descriptor)
       return self.bestFound
