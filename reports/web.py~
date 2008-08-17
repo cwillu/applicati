@@ -595,7 +595,8 @@ class Presentation(object):
       if contentMatches:
         hits[page.id][1] -= 1                    
             
-    walk(root, doSearch)
+    walk(obj, doSearch)
+    #walk(root, doSearch)
     
     results = []
     for hit in hits.values():

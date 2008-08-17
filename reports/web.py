@@ -96,52 +96,6 @@ def visit(root, path, op):
     result = op(target)
   return result
 
-@psyco.proxy
-def getPageName(target, path, find=tuple()):
-  """
-  Ugly mess
-  
-  Check the chain represented by path from the graph root object, returning the
-  descriptor of the final link, None if the final link doesn't exist, or False
-  if there's a problem at an earlier point.
-  
-  If the path contains ~hand, then we skip to that point before we start.  This 
-  allows navigating to that object without breaking the crumbtrail, but I'm not
-  a big fan of the approach to providing it.
-  
-  If the optional parameter 'find' is specified, then at each segment in path,
-  the find path is tested; the _last_ success is then returned.  (The more 
-  straightforward approach of checking the last path first and working backwards
-  isn't used because I'm a masochist; XXX)  
-  """
-
-  logging.getLogger('root.controller.find').debug(path)
-  
-  if '~hand' in path:
-    path = path[list(path).index('~hand'):]
-  
-  if find:
-    bestFound = None
-    class _(object):
-      def __init__(self):
-        self.bestFound = (None, None)
-      def __call__(self, page):
-        if not page:
-          return self.bestFound
-        page, descriptor = getPageName(page, find)        
-        if page:
-          self.bestFound = (page, descriptor)
-        return self.bestFound
-    return visit(target, path, _())
-  else:    
-    page = target
-    page = visit(page, path[:-1], op=lambda page: page)
-    if not page:
-      return False, None
-
-    page = visit(page, path[-1:], op=lambda page: page)      
-    return page, page.descriptor if page else None
-      
 @psyco.proxy  
 def findPage(find, root, path):
   logging.getLogger('root.controller.find').debug(path)
@@ -595,8 +549,7 @@ class Presentation(object):
       if contentMatches:
         hits[page.id][1] -= 1                    
             
-    walk(obj, doSearch)
-    #walk(root, doSearch)
+    walk(root, doSearch)
     
     results = []
     for hit in hits.values():
