@@ -9,7 +9,7 @@ from turbogears import flash
 from cherrypy import session
 from docutils.core import publish_parts
 
-import urllib
+#import urllib
 
 import logging
 
@@ -55,8 +55,7 @@ class Wiki(object):
       name = match.group('name')
       link = name[:-1] if name.endswith('*') else name
       link = '/'.join(prefix+(link,))
-      print link
-      return '<a href="%s/">%s</a>' % (urllib.quote(link), name)
+      return '<a href="%s/">%s</a>' % (link, name)
       
     def inlineLink(match):
       name = match.group('name')
