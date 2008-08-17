@@ -85,7 +85,6 @@ def visit(root, path, op):
     descriptor = source.resolve(segment)
       
     if not descriptor:
-      logging.getLogger('root.controller.find').warn("Access to non-existant path attempted: %s %s", path, segment)
       return op(result, None)
                 
     target = source.get(descriptor, segment)
