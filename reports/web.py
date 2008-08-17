@@ -726,6 +726,8 @@ metaTypes = builtins.metaTypes
 
 def test():
   server.wait()
+  import time
+  start = time.time()
   from urllib2 import urlopen, HTTPError
   assert "OK" == urlopen('http://127.0.0.1:8080').msg 
   assert "OK" == urlopen('http://127.0.0.1:8080/').msg 
@@ -753,7 +755,9 @@ def test():
   assert "OK" == urlopen('http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678').msg
   assert "qwerty12345678" in urlopen('http://127.0.0.1:8080/').read()
   
-  print "\033[1;34m" + "Tests OK" + "\033[0m"
+  stop = time.time()
+  print "\033[1;34m" + "Tests OK (%s)" % (stop - start) + "\033[0m"
+  print >>open('testTimings', 'a'), stop - start
   
 
 thread.start_new_thread(test, ())

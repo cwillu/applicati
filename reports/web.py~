@@ -756,4 +756,4 @@ def test():
   print "\033[1;34m" + "Tests OK" + "\033[0m"
   
 
-thread.start_new_thread(test, [])
+thread.start_new_thread(test, ())
