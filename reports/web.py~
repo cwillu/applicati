@@ -23,15 +23,27 @@ from . import model as db
 from . import builtins
 from . import html
 
+try:
+  import psyco
+  psyco.log()
+  compile = psyco.proxy
+  
+  expose = psyco.proxy(expose)
+except ImportError:
+  print 'Psyco not installed, the program will just run slower'  
+  compile = lambda func: func
+
 import logging
 logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 
+@compile
 def bitString(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
   return ''.join(random.choice(dictionary) for x in range(requiredLength))
 
+@compile
 def hexToBase(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   base = len(dictionary)
   bits = long(bits, 16)
@@ -41,6 +53,7 @@ def hexToBase(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKL
     bits /= base
   return ''.join(output)
 
+@compile
 def baseToHex(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   base = len(dictionary)
   output = 0l
@@ -55,15 +68,7 @@ assert "71681123891927401278340" == baseToHex(hexToBase("71681123891927401278340
     
 corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
-try:
-  import psyco
-  psyco.log()
-  compile = psyco.proxy
-  
-  expose = psyco.proxy(expose)
-except ImportError:
-  print 'Psyco not installed, the program will just run slower'  
-  compile = lambda func: func
+
 
 baseMeta = db.BaseComponent('test.pickles')/'web'
 
@@ -302,6 +307,7 @@ class Root(controllers.RootController):
     
     return name, self._signPath(protectedPath)
 
+  @compile
   def _checkSignaturePath(self, path, signature, maxDepth=128):
     if len(path) > maxDepth:
       return self._checkSignature(path, signature)       
@@ -317,7 +323,8 @@ class Root(controllers.RootController):
 
   def _checkSignature(self, path, signature):
     return signature == self._signPath(path)
-    
+  
+  @compile  
   def _signPath(self, path):
     path = list(path)
     signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
@@ -442,8 +449,6 @@ class Root(controllers.RootController):
     return meta
       
   def updateCrumbTrail(self, path): 
-  
-  
     trail = session.get('path', ())
     if not trail or not '/'.join(trail).startswith('/'.join((path))):
       logging.getLogger('root.controller.http').debug("Updating crumb trail: %s %s", trail, path)

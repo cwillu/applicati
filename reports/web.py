@@ -97,7 +97,7 @@ def visit(root, path, op):
   return result
 
 @psyco.proxy
-def findPageName(target, path, find=tuple()):
+def getPageName(target, path, find=tuple()):
   """
   Ugly mess
   
@@ -128,7 +128,7 @@ def findPageName(target, path, find=tuple()):
       def __call__(self, page):
         if not page:
           return self.bestFound
-        page, descriptor = findPageName(page, find)        
+        page, descriptor = getPageName(page, find)        
         if page:
           self.bestFound = (page, descriptor)
         return self.bestFound
@@ -143,8 +143,8 @@ def findPageName(target, path, find=tuple()):
     return page, page.descriptor if page else None
       
 @psyco.proxy  
-def findPage(root, path, find=tuple(), onNew=None):
-  reachable, descriptor = findPageName(root, path, find=find)
+def getPage(root, path, find=tuple(), onNew=None):
+  reachable, descriptor = getPageName(root, path, find=find)
       
   if reachable:
     logging.getLogger('root.controller.find').debug("reachable")
@@ -152,7 +152,7 @@ def findPage(root, path, find=tuple(), onNew=None):
 
   if reachable is None and not find:
     if onNew: onNew()
-    source = findPage(root, path[:-1])     
+    source = getPage(root, path[:-1])     
 
     def createLink(reifiedPage):  
       source.data.link(source, path[-1], reifiedPage.descriptor)
@@ -174,7 +174,7 @@ def walk(root, action, maxDepth=5):
   while stack:
     current, links, depth = stack.pop(0)  #breadth first    
     for link in links:
-      childNode = findPage(current, (link,))      
+      childNode = getPage(current, (link,))      
       if not childNode:  
         continue
       try:
@@ -240,7 +240,7 @@ def gateway():
   
 def loginRoot():
   session.setdefault('root', (gateway(), 'guest'))
-  return findPage(None, ('gateways', gateway()))
+  return getPage(None, ('gateways', gateway()))
 
 class Root(controllers.RootController):  
   componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")
@@ -290,7 +290,7 @@ class Root(controllers.RootController):
       logging.getLogger('root.controller.http').debug("Request complete")
 
   def addProtected(self, path):
-    protectedRoot = findPage(loginRoot(), ('protected',))
+    protectedRoot = getPage(loginRoot(), ('protected',))
     links = protectedRoot.data.links
     name = path[-1]
 
@@ -302,7 +302,7 @@ class Root(controllers.RootController):
    
     name = "~%s(%s)" % (name, salt)
     
-    protectedRoot.data.link(protectedRoot, name, findPage(loginRoot(), path).descriptor)
+    protectedRoot.data.link(protectedRoot, name, getPage(loginRoot(), path).descriptor)
     protectedPath = ['protected', name]
     
     return name, self._signPath(protectedPath)
@@ -331,7 +331,7 @@ class Root(controllers.RootController):
     return signature
     
   def removeProtected(self, name):
-    protectedRoot = findPage(loginRoot(), ('protected',))
+    protectedRoot = getPage(loginRoot(), ('protected',))
     links = protectedRoot.data.links
     del links[name]
     protectedRoot.data.save(protectedRoot)
@@ -346,7 +346,7 @@ class Root(controllers.RootController):
         
       userName = user
       userPath = ['users', userName]
-      userMeta = findPage(loginRoot(), userPath)
+      userMeta = getPage(loginRoot(), userPath)
       if not userMeta or not userMeta.data:
         print "login fail at 1", userMeta, userMeta.data
         break        
@@ -397,7 +397,7 @@ class Root(controllers.RootController):
       if not meta._query('read'):
         obj = blank()        
       elif not meta.data:
-        constructor = findPage(loginRoot(), path, find=('Palette', prototype))
+        constructor = getPage(loginRoot(), path, find=('Palette', prototype))
         if not constructor:
           logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
           raise db.PermissionError(flash='''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
@@ -445,7 +445,7 @@ class Root(controllers.RootController):
   def find(self, path, args):
     prototype = str(args.pop('prototype', 'Default'))
 
-    meta = findPage(loginRoot(), path)
+    meta = getPage(loginRoot(), path)
     return meta
       
   def updateCrumbTrail(self, path): 
@@ -519,7 +519,7 @@ class Presentation(object):
     
   def write(self, obj, path, data=None):
     if not data:
-      data = findPage(loginRoot(), ('~hand',)).getData()
+      data = getPage(loginRoot(), ('~hand',)).getData()
 
     obj.write(data)
     #raiseRedirectToShow(path)
@@ -722,7 +722,7 @@ class WikiPresentation(Presentation):
       else:
         path = objectPath + tuple(path)
 
-      meta = findPage(loginRoot(), path) 
+      meta = getPage(loginRoot(), path) 
       
       if not path:
         name = 'home'        
