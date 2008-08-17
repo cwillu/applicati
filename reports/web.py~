@@ -157,11 +157,11 @@ def findPage(find, root, path):
       if not page:
         return self.bestFound
       #page, descriptor = getPageName(page, find)
-      page, descriptor = visit(page, find, lambda page: (page, page.descriptor))
+      page = visit(page, find, lambda page: page)
       if page:
-        self.bestFound = (page, descriptor)
+        self.bestFound = page
       return self.bestFound
-  reachable, descriptor = visit(root, path, _())
+  reachable = visit(root, path, _())
  
   if reachable:
     logging.getLogger('root.controller.find').debug("reachable")
