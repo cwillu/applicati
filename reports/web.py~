@@ -234,31 +234,27 @@ class Root(controllers.RootController):
     print "\033[1;35m" + gateway() + str(path) + str(args) + "\033[0m"
     print "\033[1;35m" + str(request.browser_url) + "\033[0m"
     print request.headers
-    print 
-    try:
-      if not request.path.endswith('/'):
-        raiseRedirectToShow((None,) + path)
-         
-      slug = re.findall(r'^~(.*)\((.*)-(.*)\)$', path[0]) if path else None
-      if slug:
-        name, salt, signature = slug.pop()
-        path = ('protected', "~%s(%s)" % (name, salt)) + path[1:]
+    if not request.path.endswith('/'):
+      raiseRedirectToShow((None,) + path)
+       
+    slug = re.findall(r'^~(.*)\((.*)-(.*)\)$', path[0]) if path else None
+    if slug:
+      name, salt, signature = slug.pop()
+      path = ('protected', "~%s(%s)" % (name, salt)) + path[1:]
 
-        if not self._checkSignature(path, signature):
-          if self._checkSignaturePath(path, signature):  
-            raiseRedirectToShow(path, self._signPath(path))
-            
-          response.status=403          
-          flash('''bad signature (%s) ''' % (request.path, ))
-          aBlank = blank()
-          return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)               
-      else:
-        path = ('public',) + path
-        pass
-        
-      return self.dispatch(path, args)
-    finally:
-      logging.getLogger('root.controller.http').debug("Request complete")
+      if not self._checkSignature(path, signature):
+        if self._checkSignaturePath(path, signature):  
+          raiseRedirectToShow(path, self._signPath(path))
+          
+        response.status=403          
+        flash('''bad signature (%s) ''' % (request.path, ))
+        aBlank = blank()
+        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)               
+    else:
+      path = ('public',) + path
+      pass
+      
+    return self.dispatch(path, args)
 
   def addProtected(self, path):
     protectedRoot = getPage(loginRoot(), ('protected',))

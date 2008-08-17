@@ -234,7 +234,7 @@ class Root(controllers.RootController):
     print "\033[1;35m" + gateway() + str(path) + str(args) + "\033[0m"
     print "\033[1;35m" + str(request.browser_url) + "\033[0m"
     print request.headers
-    print 
+
     if not request.path.endswith('/'):
       raiseRedirectToShow((None,) + path)
        
