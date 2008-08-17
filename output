@@ -1,0 +1,80 @@
+from reports impotr model
+from reports imporr model
+from reports import model
+model.test()
+model.BaseComponent('new')
+a=model.BaseComponent('new')
+a
+dir(a)
+from reports import builtins
+dir(builtins)
+builtins.metaTypes
+builtins.metaTypes['CapRoot']
+builtins.metaTypes['CapRoot']()
+root=builtins.metaTypes['CapRoot']()
+a.data=root
+a
+model.BaseComponent('new').data
+dir(a)
+dir(1)
+reload(model)
+a=model.BaseComponent('new')
+a.data
+a=model.BaseComponent('pickles')
+a/'gateways'
+dir(a/'gateways')
+a/'cwillu'
+a=model.BaseComponent('new')
+a/'test'
+next=builtins.metaTypes['Wiki']()
+dir(a)
+a.data
+a.data.save(a, '[test]')
+z=a.create()
+z
+a.data.link(a, 'test', z.descriptor)
+a/'test'
+a.data.link(a, 'test', z.id)
+a/'test'
+z
+z.descriptor
+z.descriptor()
+z.data=next
+z.descriptor
+a.data.link(a, 'test', z.id)
+a.data.link(a, 'test', z.descriptor)
+a/'test'
+import readline
+help(readline.write_history_file)
+help(readline.set_pre_input_hook)
+help(readline.write_history_file)
+readline.write_history_file('output')
+dir([])
+help([].get)
+help([].index)
+help([].pop)
+dir(tuple())
+help([].__getitem__)
+help([].__get__)
+help(tuple().__get__)
+list()
+help([].index)
+help([].pop)
+[].pop()
+import sys
+from xml.dom.ext.reader import Sax2
+import 4DOM
+import xml
+help(xml.dom.minidom.parse)
+xml.dom.minidom.parse('reports/webTemplate.xml')
+dir(xml.dom.minidom.parse('reports/webTemplate.xml'))
+x=xml.dom.minidom.parse('reports/webTemplate.xml')
+x.toprettyxml(0
+x.toprettyxml()
+printx.toprettyxml()
+print x.toprettyxml()
+x=xml.dom.minidom.parse('reports/webTemplate.xml')
+print x.toprettyxml()
+x.
+dir(xml.dom.minidom.parse('reports/webTemplate.xml'))
+readline.write_history_file('output')

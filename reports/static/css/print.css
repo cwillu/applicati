@@ -1,0 +1,120 @@
+html, body {
+  color: black;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  
+  height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+div .section {
+  page-break-after:  always;
+}
+
+.shadow {
+  border: 0;
+}
+#shadow1 { border-color: #ddd; }
+#shadow2 { border-color: #ccc; }
+#shadow3 { border-color: #bbb; }
+#shadow4 { border-color: #999; }
+#shadow5 { border-color: #777; }
+
+td, th {padding:3px;border:none;}
+tr th {text-align:left;background-color:#f0f0f0;color:#333;}
+tr.odd td {background-color:#edf3fe;}
+tr.even td {background-color:#fff;}
+
+.toolbar {
+  display: none;
+}
+
+.middle {
+  position: relative;
+  color: black;
+  background-color: white;
+  border: 0;
+  padding: 0px 0px;
+  margin: 0 0 -100px 0;
+  min-height: 100%;
+  height: auto;
+}
+
+.left {
+  float: left;
+  margin-left: 0.5em;
+}
+
+.right {
+  text-align: right;
+  float: right;
+  margin-right: 0.5em;
+}
+
+.code {
+  font-family: monospace;
+}
+
+span.code {
+  font-weight: bold;
+  background: #eee;
+}
+
+.perm {  
+  margin: 2px 20px 0px 0px;    
+  width: 16px;
+  height: 16px;
+  display: block;
+  cursor: pointer;
+  border: 1px solid #fff;
+}
+.perm:hover {
+  border: 1px solid #aaf;
+  background-color: #ccf;  
+}
+.perm td {
+  text-align: center;
+}
+
+.perm.set.on {
+  background-repeat: no-repeat ;
+  background: url(/static/images/set.png); 
+}
+.perm.unset.on {
+  background-repeat: no-repeat ;
+  background: url(/static/images/unset.png); 
+}
+.perm.set.off {
+  background-repeat: no-repeat ;
+  background: url(/static/images/set-off.png); 
+}
+.perm.unset.off {
+  background-repeat: no-repeat ;
+  background: url(/static/images/unset-off.png); 
+}
+
+
+
+.flash {
+  display: none;
+}
+
+.notice {
+  display: none;
+}
+
+.fielderror {
+  display: none;
+}
+
+.fixed {white-space:pre; font-face:Courier; font-family:monospace; } 
+.size10 { white-space:pre; font-face:Courier; font-family:monospace; font-size:10pt; } 
+.size12 { white-space:pre; font-face:Courier; font-family:monospace; font-size:8pt; } 
+.size167 { white-space:pre; font-face:Courier; font-family:monospace; font-size:6pt; line-height:150% } 
+
+.double { white-space:pre; font-face:Courier; font-family:monospace; font-family:auto; font-weight:bold; font-size:200%; line-height:50%}
