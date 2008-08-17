@@ -152,7 +152,7 @@ def findPage(find, root, path):
   bestFound = None
   class _(object):
     def __init__(self):
-      self.bestFound = (None, None)
+      self.bestFound = None
     def __call__(self, page):
       if not page:
         return self.bestFound
