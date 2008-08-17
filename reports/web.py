@@ -123,14 +123,11 @@ def getPage(root, path, onNew=None):
     
   page = root
   page = visit(page, path[:-1], cdr)
-
-  if not page:
-    return False
-
-  page = visit(page, path[-1:], cdr)      
+  page = visit(page, path[-1:], cdr) if page else False      
 
   if page is None:
-    if onNew: onNew()
+    if onNew: 
+      onNew()
     source = getPage(root, path[:-1])     
 
     def createLink(reifiedPage):  

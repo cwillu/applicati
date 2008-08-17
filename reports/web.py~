@@ -108,25 +108,11 @@ def findPage(find, root, path):
   if '~hand' in path:
     path = path[list(path).index('~hand'):]
   
-  bestFound = None
-  class _(object):
-    def __init__(self):
-      self.bestFound = None
-    def __call__(self, page):
-      if not page:
-        return self.bestFound
-      #page, descriptor = getPageName(page, find)
-      page = visit(page, find, cdr)
-      if page:
-        self.bestFound = page
-      return self.bestFound
-      
-  found = []
-  reachable = visit(root, path, lambda r, page: visit(page, find, cdr) or r)
+  page = visit(root, path, lambda bestSoFar, page: visit(page, find, cdr) or bestSoFar)
  
-  if reachable:
+  if page:
     logging.getLogger('root.controller.find').debug("reachable")
-  return reachable
+  return page
   
 @psyco.proxy  
 def getPage(root, path, onNew=None):
