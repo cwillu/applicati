@@ -17,6 +17,14 @@
     </Wiki>
   </Wiki>
 
+  <Wiki name="internal gateway">
+    <Link path="/users" name="users" />
+    <Link path="/public" name="public" /> 
+    <Wiki name="protected" >
+      <Link path="/public/test" name="~test(abcdef)" />
+    </Wiki>  
+  </Wiki>
+
   <Wiki name="main gateway">
     <Link path="/users" name="users" />
     <Link path="/public" name="public" /> 
@@ -25,13 +33,17 @@
     </Wiki>  
   </Wiki>
 
+  <Wiki name="restricted gateway">
+    <Link path="/users" name="users" />
+    <Link path="/public" name="public" /> 
+  </Wiki>
   
   <Wiki name="web">
     <Wiki name="gateways">
-      <Link path="/main gateway" name="http://127.0.0.1:8080" />
+      <Link path="/internal gateway" name="http://127.0.0.1:8080" />
       <Link path="/main gateway" name="http://127.0.0.1" />      
-      <Link path="/main gateway" name="http://home.cwillu.com" />
-      <Link path="/main gateway" name="https://127.0.0.1:8080" />
+      <Link path="/restricted gateway" name="http://home.cwillu.com" />
+      <Link path="/internal gateway" name="https://127.0.0.1:8080" />
       <Link path="/main gateway" name="https://127.0.0.1" />      
       <Link path="/main gateway" name="https://home.cwillu.com" />
     </Wiki>

@@ -28,9 +28,12 @@
   
   <Wiki name="web">
     <Wiki name="gateways">
-      <Link path="/main gateway" name="127.0.0.1:8080" />
-      <Link path="/main gateway" name="127.0.0.1" />      
-      <Link path="/main gateway" name="home.cwillu.com" />
+      <Link path="/main gateway" name="http://127.0.0.1:8080" />
+      <Link path="/main gateway" name="http://127.0.0.1" />      
+      <Link path="/main gateway" name="http://home.cwillu.com" />
+      <Link path="/main gateway" name="https://127.0.0.1:8080" />
+      <Link path="/main gateway" name="https://127.0.0.1" />      
+      <Link path="/main gateway" name="https://home.cwillu.com" />
     </Wiki>
   </Wiki>
     
