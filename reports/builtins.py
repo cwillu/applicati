@@ -245,8 +245,5 @@ class Clone(object):
     
     return self.data
     
-    
-        
-        
 metaTypes = dict((name, eval(name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin', 'Clone'))
 
