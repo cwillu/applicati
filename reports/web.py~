@@ -98,39 +98,29 @@ def visit(root, path, op):
 
 @psyco.proxy  
 def findPage(find, root, path):
-  logging.getLogger('root.controller.find').debug(path)
-  
   if '~hand' in path:
     path = path[list(path).index('~hand'):]
   
-  page = visit(root, path, lambda bestSoFar, page: visit(page, find, cdr) or bestSoFar)
- 
-  if page:
-    logging.getLogger('root.controller.find').debug("reachable")
-  return page
+  return visit(root, path, lambda bestSoFar, page: visit(page, find, cdr) or bestSoFar)
   
 @psyco.proxy  
 def getPage(root, path, onNew=None):
-  logging.getLogger('root.controller.find').debug(path)
-  
   if '~hand' in path:
     path = path[list(path).index('~hand'):]
     
-  page = root
-  page = visit(page, path[:-1], cdr)
+  page = visit(root, path[:-1], cdr)
   page = visit(page, path[-1:], cdr) if page else False      
 
   if page is None:
     if onNew: 
       onNew()
+    
     source = getPage(root, path[:-1])     
-
     def createLink(reifiedPage):  
       source.data.link(source, path[-1], reifiedPage.descriptor)
-
+      
     return source.create(onReify=createLink, path=path)
 
-  logging.getLogger('root.controller.find').debug("reachable")
   return page
 
 @psyco.proxy
