@@ -437,8 +437,6 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   if not path:
     raise HTTPRedirect("%s://%s/" % (protocol, originalPath), status=status)
 
-  
-
   source, path = path[0], path[1:]
   assert source in ['public', 'protected', None], source  
   if path and signature and re.findall(r'^~(.*)\((.*)\)$', path[0]):    
