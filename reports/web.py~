@@ -82,7 +82,7 @@ def visit(root, path, op):
   if path is None:
     path = []
   
-  result = op(target)
+  result = op(None, target)
   for segment in path:
     assert type(segment) in [str, unicode], (path, segment, type(segment))
     source = target
@@ -90,58 +90,17 @@ def visit(root, path, op):
       
     if not descriptor:
       logging.getLogger('root.controller.find').warn("Access to non-existant path attempted: %s %s", path, segment)
-      return op(None)
+      return op(result, None)
                 
     target = source.get(descriptor, segment)
-    result = op(target)
+    result = op(result, target)
   return result
 
-@psyco.proxy
-def getPageName(target, path, find=tuple()):
-  """
-  Ugly mess
-  
-  Check the chain represented by path from the graph root object, returning the
-  descriptor of the final link, None if the final link doesn't exist, or False
-  if there's a problem at an earlier point.
-  
-  If the path contains ~hand, then we skip to that point before we start.  This 
-  allows navigating to that object without breaking the crumbtrail, but I'm not
-  a big fan of the approach to providing it.
-  
-  If the optional parameter 'find' is specified, then at each segment in path,
-  the find path is tested; the _last_ success is then returned.  (The more 
-  straightforward approach of checking the last path first and working backwards
-  isn't used because I'm a masochist; XXX)  
-  """
+def car(a, b):
+  return a
+def cdr(a, b):
+  return b
 
-  logging.getLogger('root.controller.find').debug(path)
-  
-  if '~hand' in path:
-    path = path[list(path).index('~hand'):]
-  
-  if find:
-    bestFound = None
-    class _(object):
-      def __init__(self):
-        self.bestFound = (None, None)
-      def __call__(self, page):
-        if not page:
-          return self.bestFound
-        page, descriptor = getPageName(page, find)        
-        if page:
-          self.bestFound = (page, descriptor)
-        return self.bestFound
-    return visit(target, path, _())
-  else:    
-    page = target
-    page = visit(page, path[:-1], op=lambda page: page)
-    if not page:
-      return False, None
-
-    page = visit(page, path[-1:], op=lambda page: page)      
-    return page, page.descriptor if page else None
-      
 @psyco.proxy  
 def findPage(find, root, path):
   logging.getLogger('root.controller.find').debug(path)
@@ -157,11 +116,13 @@ def findPage(find, root, path):
       if not page:
         return self.bestFound
       #page, descriptor = getPageName(page, find)
-      page = visit(page, find, lambda page: page)
+      page = visit(page, find, cdr)
       if page:
         self.bestFound = page
       return self.bestFound
-  reachable = visit(root, path, _())
+      
+  found = []
+  reachable = visit(root, path, lamda r, page: visit(page, find, cdr) or r)
  
   if reachable:
     logging.getLogger('root.controller.find').debug("reachable")
@@ -175,12 +136,12 @@ def getPage(root, path, onNew=None):
     path = path[list(path).index('~hand'):]
     
   page = root
-  page = visit(page, path[:-1], op=lambda page: page)
+  page = visit(page, path[:-1], cdr)
 
   if not page:
     return False
 
-  page = visit(page, path[-1:], op=lambda page: page)      
+  page = visit(page, path[-1:], cdr)      
 
   if page is None:
     if onNew: onNew()
@@ -595,8 +556,7 @@ class Presentation(object):
       if contentMatches:
         hits[page.id][1] -= 1                    
             
-    walk(obj, doSearch)
-    #walk(root, doSearch)
+    walk(root, doSearch)
     
     results = []
     for hit in hits.values():

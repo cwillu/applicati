@@ -82,7 +82,7 @@ def visit(root, path, op):
   if path is None:
     path = []
   
-  result = op(target)
+  result = op(None, target)
   for segment in path:
     assert type(segment) in [str, unicode], (path, segment, type(segment))
     source = target
@@ -90,11 +90,16 @@ def visit(root, path, op):
       
     if not descriptor:
       logging.getLogger('root.controller.find').warn("Access to non-existant path attempted: %s %s", path, segment)
-      return op(None)
+      return op(result, None)
                 
     target = source.get(descriptor, segment)
-    result = op(target)
+    result = op(result, target)
   return result
+
+def car(a, b):
+  return a
+def cdr(a, b):
+  return b
 
 @psyco.proxy  
 def findPage(find, root, path):
@@ -111,11 +116,13 @@ def findPage(find, root, path):
       if not page:
         return self.bestFound
       #page, descriptor = getPageName(page, find)
-      page = visit(page, find, lambda page: page)
+      page = visit(page, find, cdr)
       if page:
         self.bestFound = page
       return self.bestFound
-  reachable = visit(root, path, _())
+      
+  found = []
+  reachable = visit(root, path, lambda r, page: visit(page, find, cdr) or r)
  
   if reachable:
     logging.getLogger('root.controller.find').debug("reachable")
@@ -129,12 +136,12 @@ def getPage(root, path, onNew=None):
     path = path[list(path).index('~hand'):]
     
   page = root
-  page = visit(page, path[:-1], op=lambda page: page)
+  page = visit(page, path[:-1], cdr)
 
   if not page:
     return False
 
-  page = visit(page, path[-1:], op=lambda page: page)      
+  page = visit(page, path[-1:], cdr)      
 
   if page is None:
     if onNew: onNew()
