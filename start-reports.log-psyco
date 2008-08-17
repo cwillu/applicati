@@ -1,16 +1,2 @@
-03:46:09.72  Logging started, 08/17/08                  %%%%%%%%%%%%%%%%%%%%
-03:46:09.78  unsupported free or cell vars in expose                     % %
-03:46:10.92  memory usage: 17+ kb                                          %
-03:46:10.92  program exit, 08/17/08                     %%%%%%%%%%%%%%%%%%%%
-03:46:11 AM.37  unsupported free or cell vars in getPage                    % %
-03:46:11 AM.37  unsupported ** argument in call to debug                    % %
-03:46:11 AM.39  unsupported ** argument in call to debug                    % %
-03:46:12 AM.05  unsupported ** argument in call to debug                    % %
-03:46:12 AM.25  unsupported ** argument in call to debug                    % %
-03:46:13 AM.11  unsupported free or cell vars in findPage                   % %
-03:46:26 AM.96   ______
-        #1   |97.8 %|  __init__                  ...ts/reports/web.py:210
-        #2   | 1.0 %|  emit                      ...gging/__init__.py:733
-        #3   | 0.4 %|  wait_for_http_ready       ...rypy/_cpserver.py:136
-03:46:26 AM.96  memory usage: 158+ kb                                         %
-03:46:26 AM.96  program exit, 17/08/08                     %%%%%%%%%%%%%%%%%%%%
+03:46:48.42  Logging started, 08/17/08                  %%%%%%%%%%%%%%%%%%%%
+03:46:48.45  unsupported free or cell vars in expose                     % %
