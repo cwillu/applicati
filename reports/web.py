@@ -74,11 +74,7 @@ baseMeta = db.BaseComponent('test.pickles')/'web'
 
 @psyco.proxy
 def visit(root, path, op):
-  print path
-  target = root
-  if target is None:
-    #target = db.BaseComponent('pickles')
-    target = baseMeta
+  target = root if root else baseMeta
   if path is None:
     path = []
   

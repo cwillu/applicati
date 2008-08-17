@@ -110,13 +110,13 @@ def BaseComponent(rootFolder, componentPath=()):
       self._data = data
       
       if source:
-        perms = self._getPerms()        
-        print "\033[1;31m" + str(perms) + "\033[0m"
-        print "\033[1;31m" + str(source) + "\033[0m"
-        
+        perms = self._getPerms()               
         if source not in perms:
           if _sourceId and _sourceId in perms:
             print "\033[1;31m" + 'Updating obsolete permissions' + "\033[0m"
+            print "\033[1;31m" + str(perms) + "\033[0m"
+            print "\033[1;31m" + str(source) + "\033[0m"
+
             perms[source] = perms[_sourceId]
           else:
             print "\033[1;31m" + 'new' + "\033[0m"
