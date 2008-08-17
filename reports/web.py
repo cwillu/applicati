@@ -12,6 +12,7 @@ from random import SystemRandom as sysrandom; random = sysrandom()
 import xml.dom.minidom as dom
 import re
 import time
+
 from Queue import Queue, Empty
 
 from turbogears import controllers, url, expose, flash, redirect
@@ -226,27 +227,35 @@ class Root(controllers.RootController):
     print "\033[1;35m" + str(request.browser_url) + "\033[0m"
     print request.headers
 
-    if not request.path.endswith('/'):
-      raiseRedirectToShow((None,) + path)
-       
-    slug = re.findall(r'^~(.*)\((.*)-(.*)\)$', path[0]) if path else None
-    if slug:
-      name, salt, signature = slug.pop()
-      path = ('protected', "~%s(%s)" % (name, salt)) + path[1:]
+    start = time.time()
 
-      if not self._checkSignature(path, signature):
-        if self._checkSignaturePath(path, signature):  
-          raiseRedirectToShow(path, self._signPath(path))
-          
-        response.status=403          
-        flash('''bad signature (%s) ''' % (request.path, ))
-        aBlank = blank()
-        return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)               
-    else:
-      path = ('public',) + path
-      pass
-      
-    return self.dispatch(path, args)
+    try:
+      if not request.path.endswith('/'):
+        raiseRedirectToShow((None,) + path)
+         
+      slug = re.findall(r'^~(.*)\((.*)-(.*)\)$', path[0]) if path else None
+      if slug:
+        name, salt, signature = slug.pop()
+        path = ('protected', "~%s(%s)" % (name, salt)) + path[1:]
+
+        if not self._checkSignature(path, signature):
+          if self._checkSignaturePath(path, signature):  
+            raiseRedirectToShow(path, self._signPath(path))
+            
+          response.status=403          
+          flash('''bad signature (%s) ''' % (request.path, ))
+          aBlank = blank()
+          return self.findPresentation(aBlank).show(Wrapper(aBlank, None), path)               
+      else:
+        path = ('public',) + path
+        pass
+        
+      return self.dispatch(path, args)
+    finally:
+      stop = time.time()
+      print "\033[1;35m" + "Request finished: %s" % (stop - start) + "\033[0m"
+      print >>open('requestTimings', 'a'), stop - start
+  
 
   def addProtected(self, path):
     protectedRoot = getPage(loginRoot(), ('protected',))
