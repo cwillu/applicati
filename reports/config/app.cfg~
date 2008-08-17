@@ -9,7 +9,7 @@
 session_filter.on = True
 session_filter.storage_type = "File"
 session_filter.storage_path = "./session"
-session_filter.timeout = 0
+session_filter.timeout = 9000
 #identity.on = True
 #identity.failure_url = "/"
 #identity.source = "form"
