@@ -236,7 +236,6 @@ class Root(controllers.RootController):
     print request.headers
     print 
     try:
-      logging.getLogger('root.controller.http').info("Request: %s (%s)", path, args)            
       if not request.path.endswith('/'):
         raiseRedirectToShow((None,) + path)
          
