@@ -38,6 +38,12 @@ logging.getLogger('root').setLevel(19)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 
+
+def car(a, b):
+  return a
+def cdr(a, b):
+  return b
+
 @compile
 def bitString(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
@@ -69,7 +75,6 @@ assert "71681123891927401278340" == baseToHex(hexToBase("71681123891927401278340
 corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
 
-
 baseMeta = db.BaseComponent('test.pickles')/'web'
 
 @psyco.proxy
@@ -90,11 +95,6 @@ def visit(root, path, op):
     target = source.get(descriptor, segment)
     result = op(result, target)
   return result
-
-def car(a, b):
-  return a
-def cdr(a, b):
-  return b
 
 @psyco.proxy  
 def findPage(find, root, path):
