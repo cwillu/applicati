@@ -15,7 +15,6 @@ session_filter.timeout = 9000
 #identity.source = "form"
 visit.on = True
 
-
 # VIEW
 
 # which view (template engine) to use if one is not specified in the
