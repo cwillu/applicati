@@ -23,8 +23,8 @@ from . import model as db
 from . import builtins
 from . import html
 
-try:
-  import psyco
+try:  
+  import psyco__
   psyco.log()
   compile = psyco.proxy
   

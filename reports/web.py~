@@ -77,7 +77,7 @@ corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
 baseMeta = db.BaseComponent('test.pickles')/'web'
 
-@psyco.proxy
+@compile
 def visit(root, path, op):
   target = root if root else baseMeta
   if path is None:
@@ -96,14 +96,14 @@ def visit(root, path, op):
     result = op(result, target)
   return result
 
-@psyco.proxy  
+@compile
 def findPage(find, root, path):
   if '~hand' in path:
     path = path[list(path).index('~hand'):]
   
   return visit(root, path, lambda bestSoFar, page: visit(page, find, cdr) or bestSoFar)
   
-@psyco.proxy  
+@compile  
 def getPage(root, path, onNew=None):
   if '~hand' in path:
     path = path[list(path).index('~hand'):]
@@ -123,7 +123,7 @@ def getPage(root, path, onNew=None):
 
   return page
 
-@psyco.proxy
+@compile
 def walk(root, action, maxDepth=5):
   stack = []
   seen = set()
