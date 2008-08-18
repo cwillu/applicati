@@ -397,3 +397,19 @@ http://127.0.0.1:8080/test/invalid/ 0.0880961418152
 http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678 0.0787799358368
 http://127.0.0.1:8080/ 0.0973207950592
 http://127.0.0.1:8080/ 0.103514909744
+         0 http://127.0.0.1:8080/
+         0 http://127.0.0.1:8080/
+         0 http://127.0.0.1:8080/root/users/cwillu/Bugs
+         0 http://127.0.0.1:8080/root/users/cwillu/Bugs/
+         0 http://127.0.0.1:8080/root/users/cwillu/Bugs/
+         0 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/
+         0 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root
+         0 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root/
+         0 http://127.0.0.1:8080/~test(abcdef-5wdmdG1bnMcH8z)/root/
+         0 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root/
+         0 http://127.0.0.1:8080/~test(abcdef-5wdmdG1bnMcH8z)/root/
+         0 http://127.0.0.1:8080/test/nonexisting/
+         0 http://127.0.0.1:8080/test/invalid/
+         0 http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678
+         0 http://127.0.0.1:8080/
+         0 http://127.0.0.1:8080/
