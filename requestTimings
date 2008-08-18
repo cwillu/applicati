@@ -429,3 +429,40 @@ http://127.0.0.1:8080/ 0.103514909744
          0 http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678
          0 http://127.0.0.1:8080/
          0 http://127.0.0.1:8080/
+  0.325686 http://127.0.0.1:8080/
+  0.096571 http://127.0.0.1:8080/
+  0.000336 http://127.0.0.1:8080/root/users/cwillu/Bugs
+  0.344637 http://127.0.0.1:8080/root/users/cwillu/Bugs/
+  0.175303 http://127.0.0.1:8080/root/users/cwillu/Bugs/
+  0.152053 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/
+  0.000233 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root
+  0.001848 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root/
+  0.234555 http://127.0.0.1:8080/~test(abcdef-5wdmdG1bnMcH8z)/root/
+  0.000565 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root/
+  0.129106 http://127.0.0.1:8080/~test(abcdef-5wdmdG1bnMcH8z)/root/
+  0.182904 http://127.0.0.1:8080/test/nonexisting/
+  0.095665 http://127.0.0.1:8080/test/invalid/
+  0.077830 http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678
+  0.095685 http://127.0.0.1:8080/
+  0.105019 http://127.0.0.1:8080/
+  0.139344 http://home.cwillu.com/~cwillu(whZqYz-8BEYeSmmPs1oW)/To do/Home Base/?op=save;prototype=Wiki
+  0.722218 http://home.cwillu.com/~cwillu(lzvchn-5RqCFaJVvc2Ndm)/
+  0.000625 http://home.cwillu.com/~cwillu(lzvchn-5RqCFaJVvc2Ndm)/To do/
+  0.192443 http://home.cwillu.com/~cwillu(lzvchn-ZyrKlscRLb4xp)/To do/
+  0.000750 http://home.cwillu.com/~cwillu(lzvchn-ZyrKlscRLb4xp)/To do/Home Base/
+  0.329548 http://home.cwillu.com/~cwillu(lzvchn-yzn9zj7xmCAGf)/To do/Home Base/
+  0.000830 http://home.cwillu.com/robots.txt
+  0.094286 http://home.cwillu.com/robots.txt/
+  0.000472 http://home.cwillu.com/robots.txt
+  0.024611 http://home.cwillu.com/robots.txt/
+  1.550315 http://home.cwillu.com/Site Tutorial/Test Page One/Self/moo/testiong/Blog/
+  1.220376 http://home.cwillu.com/Site Tutorial/Test Page One/Self/moo/testiong/Blog/
+  1.166267 http://home.cwillu.com/Site Tutorial/Test Page One/Self/moo/testiong/
+  0.170222 http://home.cwillu.com/Site Tutorial/Test Page One/Self/moo/
+  1.033667 http://home.cwillu.com/
+  0.000207 http://home.cwillu.com/robots.txt
+  0.020287 http://home.cwillu.com/robots.txt/
+  0.124461 http://home.cwillu.com/robots.txt/?op=edit
+  0.215199 http://home.cwillu.com/Site Tutorial/Test Page One/Self/moo/testiong/Blog/Design Notes/File Mapping Component//
+  0.030222 http://home.cwillu.com/robots.txt/?op=save;prototype=Raw
+  0.055427 http://home.cwillu.com/robots.txt/?op=save

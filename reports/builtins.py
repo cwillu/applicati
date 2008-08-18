@@ -191,7 +191,7 @@ class Raw(object):
   def show(self, meta, prefix=None, formatted=False):
     return self.data
     
-  def save(self, meta, data=''):
+  def save(self, meta, data='', links=None):
     self.data = data
     meta.data = self
     
@@ -216,7 +216,7 @@ class XML(object):
 
     return dom.parseString(self.data).getElementsByTagName('body')[0].toxml()
     
-  def save(self, meta, data=''):
+  def save(self, meta, data='', links=None):
     self.data = data
     meta.data = self
                                 
