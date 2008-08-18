@@ -313,7 +313,7 @@ class Root(controllers.RootController):
       protectedRoot = getPage(loginRoot(), ('protected',))
       if not protectedRoot.descriptor:        
         originalPath = request.browser_url.split('?', 1)[0]
-        raise HTTPRedirect("https://%s/" % originalPath, status=status)
+        raise HTTPRedirect("https://%s/" % originalPath)
       assert False, protectedRoot
 
 
