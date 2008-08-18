@@ -381,3 +381,19 @@
 0.0671100616455
 0.106420993805
 0.0886881351471
+http://127.0.0.1:8080/ 0.461006879807
+http://127.0.0.1:8080/ 0.0935001373291
+http://127.0.0.1:8080/root/users/cwillu/Bugs 0.000342130661011
+http://127.0.0.1:8080/root/users/cwillu/Bugs/ 0.314589977264
+http://127.0.0.1:8080/root/users/cwillu/Bugs/ 0.181452035904
+http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/ 0.140471935272
+http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root 0.000259876251221
+http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root/ 0.00290989875793
+http://127.0.0.1:8080/~test(abcdef-5wdmdG1bnMcH8z)/root/ 0.235877037048
+http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root/ 0.000591993331909
+http://127.0.0.1:8080/~test(abcdef-5wdmdG1bnMcH8z)/root/ 0.185743093491
+http://127.0.0.1:8080/test/nonexisting/ 0.150530099869
+http://127.0.0.1:8080/test/invalid/ 0.0880961418152
+http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678 0.0787799358368
+http://127.0.0.1:8080/ 0.0973207950592
+http://127.0.0.1:8080/ 0.103514909744

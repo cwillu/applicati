@@ -254,7 +254,7 @@ class Root(controllers.RootController):
     finally:
       stop = time.time()
       print "\033[1;35m" + "Request finished: %s" % (stop - start) + "\033[0m"
-      print >>open('requestTimings', 'a'), request.browser_url, stop - start
+      print >>open('requestTimings', 'a'), "%10d" % (stop - start), request.browser_url 
   
 
   def addProtected(self, path):
