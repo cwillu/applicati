@@ -253,7 +253,7 @@ class Root(controllers.RootController):
       return self.dispatch(path, args)
     finally:
       stop = time.time()
-      print "\033[1;35m" + "Request finished: %s" % (stop - start) + "\033[0m"
+      print "\033[1;35m" + "Request finished: %10d" % (stop - start) + "\033[0m"
       print >>open('requestTimings', 'a'), "%10d" % (stop - start), request.browser_url 
   
 
