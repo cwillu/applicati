@@ -259,6 +259,8 @@ class Root(controllers.RootController):
 
   def addProtected(self, path):
     protectedRoot = getPage(loginRoot(), ('protected',))
+    if not protectedRoot:
+      return None, None
     links = protectedRoot.data.links
     name = path[-1]
 
