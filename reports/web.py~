@@ -310,6 +310,11 @@ class Root(controllers.RootController):
   @expose(template="reports.templates.login")
   def login(self, user=None, password=None, login=None):
     while True:
+      protectedRoot = getPage(loginRoot(), ('protected',))
+      if not protectedRoot:        
+        originalPath = request.browser_url.split('?', 1)[0]
+        raise HTTPRedirect("https://%s/" % (protocol, originalPath), status=status)
+
       if not user and not password:
         response.status=403
         return dict(message="Please log in.")
