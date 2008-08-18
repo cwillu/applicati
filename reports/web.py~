@@ -332,7 +332,10 @@ class Root(controllers.RootController):
       session['path'] = () 
       
       name, signature = self.addProtected(userPath)
-      
+      if not signature:
+        print "login fail at 4, logins not being accepted"
+        break
+        
       #flash("Logged in as %s" % session['root'][-1])
       flash("Logged in as %s" % userName)
       raiseRedirectToShow(('protected', name), signature)
