@@ -98,8 +98,6 @@ def visit(root, path, op):
     result = op(result, target)
   return result
 
-
-
 @compile
 def findPage(find, root, path):
   if '~hand' in path:
@@ -256,7 +254,7 @@ class Root(controllers.RootController):
     finally:
       stop = time.time()
       print "\033[1;35m" + "Request finished: %s" % (stop - start) + "\033[0m"
-      print >>open('requestTimings', 'a'), stop - start
+      print >>open('requestTimings', 'a'), request.browser_url, stop - start
   
 
   def addProtected(self, path):

@@ -98,6 +98,8 @@ def visit(root, path, op):
     result = op(result, target)
   return result
 
+
+
 @compile
 def findPage(find, root, path):
   if '~hand' in path:
