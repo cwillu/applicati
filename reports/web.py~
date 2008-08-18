@@ -312,7 +312,7 @@ class Root(controllers.RootController):
     while True:
       protectedRoot = getPage(loginRoot(), ('protected',))
       if not protectedRoot.descriptor:                
-        raise HTTPRedirect(request.browser_url.replace('http://', 'https://', 1)
+        raise HTTPRedirect(request.browser_url.replace('http://', 'https://', 1))
 
       if not user and not password:
         response.status=403
