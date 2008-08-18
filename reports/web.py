@@ -259,7 +259,7 @@ class Root(controllers.RootController):
 
   def addProtected(self, path):
     protectedRoot = getPage(loginRoot(), ('protected',))
-    if not protectedRoot:
+    if not protectedRoot.descriptor:
       return None, None
     links = protectedRoot.data.links
     name = path[-1]
@@ -311,7 +311,7 @@ class Root(controllers.RootController):
   def login(self, user=None, password=None, login=None):
     while True:
       protectedRoot = getPage(loginRoot(), ('protected',))
-      if not protectedRoot:        
+      if not protectedRoot.descriptor:        
         originalPath = request.browser_url.split('?', 1)[0]
         raise HTTPRedirect("https://%s/" % (protocol, originalPath), status=status)
       assert False, protectedRoot

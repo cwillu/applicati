@@ -314,6 +314,8 @@ class Root(controllers.RootController):
       if not protectedRoot:        
         originalPath = request.browser_url.split('?', 1)[0]
         raise HTTPRedirect("https://%s/" % (protocol, originalPath), status=status)
+      assert False, protectedRoot
+
 
       if not user and not password:
         response.status=403
