@@ -16,7 +16,7 @@ import time
 from Queue import Queue, Empty
 
 from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response, HTTPRedirect, server
+from cherrypy import session, request, response, HTTPRedirect, server, config
 from turbogears.toolbox.catwalk import CatWalk
 from docutils.core import publish_parts
 import pydoc
@@ -744,34 +744,40 @@ class XmlPresentation(WikiPresentation):
 metaTypes = builtins.metaTypes
 
 def test():
-  server.wait()  
+  server.wait()
+  
+  host = config.get('server.socket_host')
+  port = config.get('server.socket_port')
+  
+  address = "http://%s:%s" % (host, port)
+    
   start = time.time()
   from urllib2 import urlopen, HTTPError
-  assert "OK" == urlopen('http://127.0.0.1:8080').msg 
-  assert "OK" == urlopen('http://127.0.0.1:8080/').msg 
-  assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs').msg
-  assert "OK" == urlopen('http://127.0.0.1:8080/root/users/cwillu/Bugs/').msg
+  assert "OK" == urlopen(address).msg 
+  assert "OK" == urlopen(address + '/').msg 
+  assert "OK" == urlopen(address + '/root/users/cwillu/Bugs').msg
+  assert "OK" == urlopen(address + '/root/users/cwillu/Bugs/').msg
   
   import cherrypy
   name = '~test(abcdef)'
   signature = cherrypy.root._signPath(('protected', name))
   signed = '~test(abcdef-%s)' % signature 
   print signed
-  assert "OK" == urlopen('http://127.0.0.1:8080/%s/' % signed).msg
-  assert "OK" == urlopen('http://127.0.0.1:8080/%s/root' % signed).msg
-  assert "OK" == urlopen('http://127.0.0.1:8080/%s/root/' % signed).msg
+  assert "OK" == urlopen(address + '/%s/' % signed).msg
+  assert "OK" == urlopen(address + '/%s/root' % signed).msg
+  assert "OK" == urlopen(address + '/%s/root/' % signed).msg
   
   try:
-    assert False, urlopen('http://127.0.0.1:8080/test/nonexisting/').msg
+    assert False, urlopen(address + '/test/nonexisting/').msg
   except HTTPError, err:
     assert err.code == 404, err.code
   try:
-    assert False, urlopen('http://127.0.0.1:8080/test/invalid/').msg
+    assert False, urlopen(address + '/test/invalid/').msg
   except HTTPError, err:
     assert err.code == 404, err.code    
     
-  assert "OK" == urlopen('http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678').msg
-  assert "qwerty12345678" in urlopen('http://127.0.0.1:8080/').read()
+  assert "OK" == urlopen(address + '/?op=save;data=[root]+[test]+qwerty12345678').msg
+  assert "qwerty12345678" in urlopen(address + '/').read()
   
   stop = time.time()
   print "\033[1;34m" + "Tests OK (%s)" % (stop - start) + "\033[0m"
