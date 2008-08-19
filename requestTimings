@@ -738,3 +738,20 @@ http://127.0.0.1:8080/ 0.103514909744
   0.799496 http://home.cwillu.com/~cwillu(pGFzec-3AKd4ZKQISJI9H)/To do/Home Base/
   0.000918 http://home.cwillu.com/robots.txt
   0.027955 http://home.cwillu.com/robots.txt/
+  0.875812 http://127.0.0.1:8080/
+  0.063072 http://127.0.0.1:8080/
+  0.000369 http://127.0.0.1:8080/root/users/cwillu/Bugs
+  0.324429 http://127.0.0.1:8080/root/users/cwillu/Bugs/
+  0.127266 http://127.0.0.1:8080/root/users/cwillu/Bugs/
+  0.081111 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/
+  0.000230 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root
+  0.001834 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root/
+  0.253533 http://127.0.0.1:8080/~test(abcdef-5wdmdG1bnMcH8z)/root/
+  0.000595 http://127.0.0.1:8080/~test(abcdef-1wbncLxC1GHFdQ)/root/
+  0.103866 http://127.0.0.1:8080/~test(abcdef-5wdmdG1bnMcH8z)/root/
+  0.091466 http://127.0.0.1:8080/test/nonexisting/
+  0.065931 http://127.0.0.1:8080/test/invalid/
+  0.053478 http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678
+  0.064931 http://127.0.0.1:8080/
+  0.059184 http://127.0.0.1:8080/
+  0.478604 http://home.cwillu.com/Blog/Design Notes/Descriptors, Tokens and Naming//

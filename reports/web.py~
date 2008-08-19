@@ -750,8 +750,6 @@ def test():
   port = config.get('server.socket_port') or '80'  
   address = "http://%s:%s" % (host, port)
     
-  assert False, address  
-    
   start = time.time()
   from urllib2 import urlopen, HTTPError
   assert "OK" == urlopen(address).msg 
