@@ -16,7 +16,7 @@ import time
 from Queue import Queue, Empty
 
 from turbogears import controllers, url, expose, flash, redirect
-from cherrypy import session, request, response, HTTPRedirect, server
+from cherrypy import session, request, response, HTTPRedirect, server, config
 from turbogears.toolbox.catwalk import CatWalk
 from docutils.core import publish_parts
 import pydoc
@@ -746,8 +746,8 @@ metaTypes = builtins.metaTypes
 def test():
   server.wait()
   
-  host = cherrypy.config.get('server.socket_host')
-  port = cherrypy.config.get('server.socket_port')
+  host = config.get('server.socket_host')
+  port = config.get('server.socket_port')
   
   address = "http://%s:%s" % (host, port)
     

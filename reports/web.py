@@ -746,9 +746,8 @@ metaTypes = builtins.metaTypes
 def test():
   server.wait()
   
-  host = config.get('server.socket_host')
-  port = config.get('server.socket_port')
-  
+  host = config.get('server.socket_host', '127.0.0.1')
+  port = config.get('server.socket_port', '80')  
   address = "http://%s:%s" % (host, port)
     
   start = time.time()
