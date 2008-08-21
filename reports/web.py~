@@ -228,6 +228,7 @@ class Root(controllers.RootController):
     print request.headers
 
     start = time.time()
+    loginRoot()
 
     try:
       if not request.path.endswith('/'):
@@ -242,7 +243,6 @@ class Root(controllers.RootController):
           if self._checkSignaturePath(path, signature):  
             raiseRedirectToShow(path, self._signPath(path))
             
-          loginRoot()
           response.status=403          
           flash('''bad signature (%s) ''' % (request.path, ))
           aBlank = blank()
@@ -359,8 +359,7 @@ class Root(controllers.RootController):
 
   def dispatch(self, path, args):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
-    
-    loginRoot()
+        
     op = str(args.pop('op', ''))
     prototype = str(args.pop('prototype', 'Default'))
     try:

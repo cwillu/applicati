@@ -221,13 +221,13 @@ class Root(controllers.RootController):
     
   @expose()
   def default(self, *path, **args):
+    start = time.time()
     print
     print "\033[1;34m" + "*" * 80 + "\033[0m"
     print gateway(), path, args
     print request.browser_url
     print request.headers
 
-    start = time.time()
     loginRoot()
 
     try:
