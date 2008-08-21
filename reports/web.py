@@ -242,6 +242,7 @@ class Root(controllers.RootController):
           if self._checkSignaturePath(path, signature):  
             raiseRedirectToShow(path, self._signPath(path))
             
+          session.setdefault('root', None)
           response.status=403          
           flash('''bad signature (%s) ''' % (request.path, ))
           aBlank = blank()
