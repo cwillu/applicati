@@ -17,7 +17,7 @@
    inkscape:export-filename="/home/cwillu/work/dominos/reports/reports/static/images/mantis-angle.png"
    inkscape:export-xdpi="5.8084145"
    inkscape:export-ydpi="5.8084145"
-   sodipodi:docname="mantis-down.svg"
+   sodipodi:docname="mantis-down-wall.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs4">
@@ -97,14 +97,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="251.71575"
-     inkscape:cy="392.29246"
+     inkscape:cx="-5.9335809"
+     inkscape:cy="237.70281"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1250"
+     inkscape:window-width="1043"
      inkscape:window-height="919"
      inkscape:window-x="25"
      inkscape:window-y="76" />
@@ -123,13 +123,6 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="opacity:1;fill:#002359;fill-opacity:0.50196081000000004;stroke:none;stroke-opacity:1"
-       id="rect2497"
-       width="1031.4286"
-       height="200"
-       x="-105.71429"
-       y="681.2193" />
     <path
        style="fill:#00cf00;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.36616197px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 620.6875 583.0625 C 592.10647 582.85068 545.79051 602.17733 475.5625 681.53125 L 598.78125 681.53125 C 651.24146 619.85723 649.33877 596.77466 645.71875 589.4375 C 646.49804 589.88093 647.22938 590.32219 647.9375 590.78125 L 644.5 587.5 C 644.87483 587.95733 645.27954 588.6131 645.6875 589.4375 C 639.62774 585.99418 631.41281 583.14199 620.6875 583.0625 z M 647.9375 590.78125 L 659.46875 601.875 C 659.46875 601.875 655.95095 595.9762 647.9375 590.78125 z M 643.40625 586.4375 L 644.0625 587.03125 C 643.67463 586.63303 643.40625 586.4375 643.40625 586.4375 z M 170.78125 592.375 C 163.05462 592.34954 156.44528 593.4004 150.9375 594.90625 C 151.75039 594.0491 152.50674 593.44488 153.125 593.0625 L 147.8125 595.84375 C 148.79975 595.52088 149.83342 595.20008 150.90625 594.90625 C 145.12305 601.02509 137.92416 621.04148 178.53125 681.53125 L 310.65625 681.53125 C 248.29272 609.33573 201.09941 592.47491 170.78125 592.375 z M 147.8125 595.84375 C 136.74974 599.46174 131.0625 604.59375 131.0625 604.59375 L 147.8125 595.84375 z M 153.125 593.0625 L 154.40625 592.40625 C 154.40625 592.40625 153.88862 592.59022 153.125 593.0625 z "
