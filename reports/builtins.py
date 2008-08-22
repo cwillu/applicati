@@ -13,6 +13,16 @@ from docutils.core import publish_parts
 
 import logging
 
+try:  
+  import psycos
+  psyco.log()
+  compile = psyco.proxy
+  publish_parts = psyco.proxy(publish_parts)
+  from psyco.classes import *
+except ImportError:
+  print 'Psyco not installed, the program will just run slower'  
+  compile = lambda func: func
+
 def _assertId(id):  #XXX change to assert
   '''from model'''
   
@@ -23,6 +33,7 @@ def _assertId(id):  #XXX change to assert
     return (id, )
   return id
 
+_nest=0
 
 class Constructor(object):
   def __init__(self, class_=None):
@@ -40,13 +51,17 @@ class Constructor(object):
     return metaTypes[self.class_]()
 
 class Wiki(object):
+  settings = { 'halt_level': 10, 'report_level': 10 }
   def __init__(self, data=''):
-    self.data = data
+    self.data = data       
+    self.published = publish_parts(data, writer_name="html", settings_overrides=self.settings)['html_body']
+     
     self.links = {}
 
   linkWords = re.compile(r'(?P<type>[\[\(\{]+)(?P<name>[^\ \[\]\(\)\{\}][^\[\]]*?)[\]\)\}]+')
   indentWords = re.compile(r'\s*\*')   
   
+  @compile  
   def _wikiFormat(self, meta, content, prefix=None):
     if not prefix:
       prefix = tuple()
@@ -70,15 +85,17 @@ class Wiki(object):
              
       content = inlineObject.show(linkMeta, prefix=prefix + extension, formatted=True) #XXX tuples, not list            
       return content
-    
+
     linkTypes = { "(": lambda match: match.group(0), "[(": lambda match: None, "[": wikiLink, "{": inlineLink }
     
     def replaceLink(match):
       name = match.group('name')
       return linkTypes[match.group('type')](match)
     
-    settings = { 'halt_level': 10, 'report_level': 10 }
-    content = publish_parts(content, writer_name="html", settings_overrides=settings)['html_body']
+    if hasattr(self, 'published'):
+      content = self.published
+    else: 
+      content = publish_parts(content, writer_name="html", settings_overrides=self.settings)['html_body']
 
     content = Wiki.linkWords.sub(replaceLink, ''.join(content))
     return content
@@ -88,9 +105,11 @@ class Wiki(object):
       formatted = self._wikiFormat(meta, self.data, prefix)
       return formatted
     return self.data
+
           
   def save(self, meta, data='', links=None):    
     self.data = data
+    self.published = publish_parts(data, writer_name="html", settings_overrides=self.settings)['html_body']
     if links is not None:
       self.links = links
     
@@ -165,9 +184,10 @@ class AutoLogin(Wiki):
   
   def show(self, obj, *args, **kargs):
     def login():
-      if 'guest' not in session['root']:
-        return
-      assert False, "findpage!?"
+      return
+      #if 'guest' not in session['root']:
+      #  return
+      #assert False, "findpage!?"
       #user = findPage(obj, [self.links.keys()[0]])
       #if not user or not user.data:
       #  return

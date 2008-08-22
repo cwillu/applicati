@@ -26,11 +26,23 @@ from . import builtins
 from . import html
 
 try:  
-  import psyco
+  import psycos
   psyco.log()
+#  psyco.full()
   compile = psyco.proxy
   
+  def codeFilter(co):
+    if 'enclosing_frame' in co.co_name:
+      return False
+    print co
+    print co.co_name
+    return True
+  
+  psyco.setfilter(codeFilter)
   expose = psyco.proxy(expose)
+  
+  from psyco.classes import *
+
 except ImportError:
   print 'Psyco not installed, the program will just run slower'  
   compile = lambda func: func
@@ -138,10 +150,10 @@ def walk(root, action, maxDepth=5):
   while stack:
     current, links, depth = stack.pop(0)  #breadth first    
     for link in links:
-      childNode = getPage(current, (link,))      
-      if not childNode:  
-        continue
       try:
+        childNode = getPage(current, (link,))      
+        if not childNode:  
+          continue
         action(childNode)
         child = childNode.data      
       except db.PermissionError:
@@ -217,7 +229,7 @@ class Root(controllers.RootController):
           if filter.__class__.__name__ == 'NestedVariablesFilter':            
             self._cp_filters.remove(filter)            
             break  
-    self._cp_filters = [DirtyHacks()]
+    self._cp_filters = [DirtyHacks()]   
     
   @expose()
   def default(self, *path, **args):
@@ -298,7 +310,12 @@ class Root(controllers.RootController):
   @compile  
   def _signPath(self, path):
     path = list(path)
-    signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
+    signature = ''
+    for segment in path + [str(Root.componentSecret)]:
+      signature = SHA.new(signature + segment).hexdigest()
+    
+    signature = hexToBase(signature[:20])
+    #signature = hexToBase(reduce(lambda x, y: SHA.new(x + y).hexdigest(), [''] + path + [str(Root.componentSecret)])[:20])
     return signature
     
   def removeProtected(self, name):
@@ -525,7 +542,10 @@ class Presentation(object):
         return
       
       titleMatches = query.search(page.path[-1].lower())
-      contentMatches = query.search(page.data.show(page).lower())
+      try:
+        contentMatches = query.search(page.data.show(page).lower())
+      except AttributeError:
+        contentMatches = None
 
       if not (titleMatches or contentMatches):
         return

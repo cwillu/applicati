@@ -7,6 +7,7 @@ import uuid
 from Crypto.Hash import SHA256
 import os
 import subprocess
+import time
 
 import re
 import logging
@@ -15,7 +16,16 @@ import inspect
 
 from . import builtins
 
-actions = {}
+try:  
+  import psycos
+  psyco.log()
+  compile = psyco.proxy
+  
+  from psyco.classes import *
+
+except ImportError:
+  print 'Psyco not installed, the program will just run slower'  
+  compile = lambda func: func
 
 def _assertId(id):  #XXX change to assert
   logging.getLogger('root.model.descriptors').debug("ASSERTING %s", id)
@@ -72,6 +82,43 @@ def logger(func):
     print "<", name, result
     return result    
   return log
+
+_nest = 0
+def timer(func):  
+  name = func.__name__
+  
+  def timed(*args, **kargs):
+    global _nest    
+    _nest += 1
+    
+    start = time.time()
+    result = func(*args, **kargs)
+    stop = time.time()
+    
+    _nest -= 1
+    print "%16s" % ("--"*_nest) + "->", "%10f" % (stop - start), name 
+    
+    return result
+  timed.nest = 0    
+  return timed
+def timera(func):  
+  name = func.__name__
+  
+  def timed(*args, **kargs):
+    global _nest    
+    _nest += 1
+    
+    start = time.time()
+    result = func(*args, **kargs)
+    stop = time.time()
+    
+    _nest -= 1
+    print "%16s" % ("--"*_nest) + "->", "%10f" % (stop - start), name, (args, kargs)
+    
+    return result
+  timed.nest = 0    
+  return timed
+  
   
 def with_methods(obj, decorator):
   try:
@@ -108,25 +155,23 @@ def BaseComponent(rootFolder, componentPath=()):
       self.onReify = onReify
       self._descriptor = descriptor
       self._data = data
-      
+      self._db = None
+           
       if source:
-        perms = self._getPerms()               
-        if source not in perms:
-          if _sourceId and _sourceId in perms:
+        capPermissions = self._getPerms(source)
+        if not capPermissions:          
+          if _sourceId and self._getPerms(_sourceId):
+            capPermissions = self._getPerms(_sourceId) 
             print "\033[1;31m" + 'Updating obsolete permissions' + "\033[0m"
-            print "\033[1;31m" + str(perms[_sourceId]) + "\033[0m"
+            print "\033[1;31m" + str(capPermissions) + "\033[0m"
             print "\033[1;31m" + str(source) + "\033[0m"
-
-            perms[source] = perms[_sourceId]
+            self._setPerms(capPermissions, source) #!!
           else:
             print "\033[1;31m" + 'new' + "\033[0m"
-            perms[source] = path, 0
-          self._setPerms(perms)
+            capPermissions = (path, 0)
+            self._setPerms(capPermissions, source)
           
-        logging.getLogger('root.model').debug("Caps: %s", perms)
-          
-        capPermissions = perms[source][1:]                 
-        permissions = _modPermissions(permissions, capPermissions)        
+        permissions = _modPermissions(permissions, capPermissions[1:])        
 
       self.permissions = permissions
       
@@ -135,18 +180,21 @@ def BaseComponent(rootFolder, componentPath=()):
         assert False, self._descriptor
         self._descriptor = (self._descriptor,)
       
-      if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
-        assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
+      #if self._descriptor and not (self._descriptor == (1,) or self._descriptor[0] == (1,)):
+        #assert not set(map(type, self._descriptor)) - set([str]), self._descriptor
         
       if self._descriptor == ((1, ), ):
         raise Exception(self._descriptor, descriptor)
 
       # with_methods(self, logger) #debugging aid
+    
 
     def _connect(self, id=None):
-      db = sqlite3.connect(self._filename('permissions.db', id=id))
-      db.execute('create table if not exists perm(source unique, permissions)')
-      return db
+      if not self._db:
+        self._db = sqlite3.connect(self._filename('permissions.db', id=id))
+        self._db.execute('create table if not exists perm(source unique, permissions)')
+      return self._db
+
 
     def _query(self, op):
       logging.getLogger('root.model').debug("Effective Permissions: %s", self.permissions)
@@ -170,6 +218,7 @@ def BaseComponent(rootFolder, componentPath=()):
     def getData(self):
       self._check('read')
       return self._getData()
+
     def _getData(self):    
       if self._data is not None:
         return self._data
@@ -202,6 +251,7 @@ def BaseComponent(rootFolder, componentPath=()):
     def _selfSetData(self, obj):
       self._check('modify')
       self._setData(obj)      
+
     def _setData(self, obj):
       self._data = None
       if not self._descriptor:
@@ -233,7 +283,7 @@ def BaseComponent(rootFolder, componentPath=()):
       if isinstance(id, tuple):
         return os.path.join(rootFolder, str(id[0]), selector)
 
-      assert not set(map(type, id)) - set([str]), ( id)      
+      #assert not set(map(type, id)) - set([str]), ( id)      
       return os.path.join(rootFolder, *id)
     
     @property
@@ -251,7 +301,7 @@ def BaseComponent(rootFolder, componentPath=()):
 
       return self._getPerms()            
 
-    def _getPerms(self):
+    def _getPerms(self, source=None):
       if not self._descriptor:
         raise PermissionError()
         assert False
@@ -268,20 +318,27 @@ def BaseComponent(rootFolder, componentPath=()):
       except IOError, err:
         pass
       
-      db = self._connect()    
-      perms = dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
-      return perms
+      db = self._connect()
+      if not source:    
+        return dict((k, pickle.loads(str(v))) for k, v in db.execute('select source, permissions from perm'))
+      else:
+        perms = db.execute('select source, permissions from perm where source=?', (source,)).fetchone()
+        return pickle.loads(str(perms[1])) if perms else None
       
     def setPerms(self, links):
       self._check('permissions')  
       self._setPerms(links)
       
-    def _setPerms(self, links):
+    def _setPerms(self, links, source=None):
       if not self._descriptor:
         assert False, "Unimplemented, setting permissions on unreified object"
 
       db = self._connect()
-      db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(links[k])) for k in links))
+      if not source:
+        db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(links[k])) for k in links))
+      else:
+        permissions = links
+        db.execute('replace into perm(source, permissions) values (?, ?)', (source, pickle.dumps(permissions)))
       db.commit()
 
     def changePermission(self, link, permission, value):
@@ -362,6 +419,9 @@ class Component(object):
   
   def get(self, meta, componentPath):
     return BaseComponent(self.path, componentPath)
+  
+  def show(self, meta, *args):
+    pass
 
 def createBase(baseDir, template='reports/webTemplate.xml'):
   import xml
