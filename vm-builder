@@ -1,0 +1,10 @@
+sudo ubuntu-vm-builder kvm hardy \
+  --arch 'i386'  --mem '256'  --rootsize '4096'  --swapsize '1024'  \
+  --kernel-flavour 'virtual'  --hostname 'applicati-1'  --domain 'cwillu.com'  \
+  --mirror 'http://archive.ubuntu.com/ubuntu'  --components 'main,restricted,universe'  \
+  --addpkg 'python-docutils python-turbogears python-crypto' \
+  --addpkg 'git-core openssh-server x11vnc ubuntu-desktop'  \
+  --name 'Carey Underwood'  --user 'cwillu'  \
+  --ssh-key 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAs9rXe3aSP+J59qdQDYGRP+rojdeULQyLONDCv3jzuPPt+HhII8tCMuHwfeprfDKfhc+LHPsR7KeUjfGTgY1XjhU0sWsifYOgT1k/XlbzWR2M942EO9rj8ZpDvRoIJwNEA+a6CNzraabG1iOAaT2KGAuoU5TdP8M9BVbXN7PcaMqv4/AUQayWvPojjEzxIcNFIHnt0CBN9QkUDGCMqqKzGw64WQuGLPRpZHmYryuOUZ+uTznvd1NUOXu6xfaIZt8J3FJcPkPVoMcgP9KIFX1ApqrD7m8rTR9/fuW2EUGmhzxIHVa2p8S35pXCzbvmJs+98bBB6DSmkW2Bb23W2drYiQ== cwillu@dominubuntu' 
+
+sudo ubuntu-vm-builder kvm intrepid --arch 'i386'  --mem '256'  --rootsize '4096'  --swapsize '1024'  --kernel-flavour 'virtual'  --hostname 'applicati-1'  --domain 'cwillu.com'  --mirror 'http://ca.archive.ubuntu.com/ubuntu'  --components 'main,universe'  --addpkg 'ubuntu-desktop python-turbogears python-crypto openssh-server x11vnc'  --name 'Carey Underweood'  --user 'cwillu'  --ssh-key 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAs9rXe3aSP+J59qdQDYGRP+rojdeULQyLONDCv3jzuPPt+HhII8tCMuHwfeprfDKfhc+LHPsR7KeUjfGTgY1XjhU0sWsifYOgT1k/XlbzWR2M942EO9rj8ZpDvRoIJwNEA+a6CNzraabG1iOAaT2KGAuoU5TdP8M9BVbXN7PcaMqv4/AUQayWvPojjEzxIcNFIHnt0CBN9QkUDGCMqqKzGw64WQuGLPRpZHmYryuOUZ+uTznvd1NUOXu6xfaIZt8J3FJcPkPVoMcgP9KIFX1ApqrD7m8rTR9/fuW2EUGmhzxIHVa2p8S35pXCzbvmJs+98bBB6DSmkW2Bb23W2drYiQ== cwillu@dominubuntu'

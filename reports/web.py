@@ -17,7 +17,6 @@ from Queue import Queue, Empty
 
 from turbogears import controllers, url, expose, flash, redirect
 from cherrypy import session, request, response, HTTPRedirect, server, config
-from turbogears.toolbox.catwalk import CatWalk
 from docutils.core import publish_parts
 import pydoc
 
@@ -219,7 +218,11 @@ def loginRoot():
   return getPage(None, ('gateways', gateway()))
 
 class Root(controllers.RootController):  
-  componentSecret = uuid.UUID("ef50cde4-b9ec-4810-9145-0cf950820017")
+  try:
+    componentSecret = eval(open('secret').read())
+  except IOError:
+    componentSecret = uuid.uuid4()
+    print >>open(os.path.join('.', 'secret'), 'w'), "uuid.%s" % `componentSecret`
   
   def __init__(self):
     class DirtyHacks(object):
@@ -763,44 +766,5 @@ class XmlPresentation(WikiPresentation):
 #metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
 metaTypes = builtins.metaTypes
 
-def test():
-  server.wait()
-  
-  host = config.get('server.socket_host') or '127.0.0.1'
-  port = config.get('server.socket_port') or '80'  
-  address = "http://%s:%s" % (host, port)
-    
-  start = time.time()
-  from urllib2 import urlopen, HTTPError
-  assert "OK" == urlopen(address).msg 
-  assert "OK" == urlopen(address + '/').msg 
-  assert "OK" == urlopen(address + '/root/users/cwillu/Bugs').msg
-  assert "OK" == urlopen(address + '/root/users/cwillu/Bugs/').msg
-  
-  import cherrypy
-  name = '~test(abcdef)'
-  signature = cherrypy.root._signPath(('protected', name))
-  signed = '~test(abcdef-%s)' % signature 
-  print signed
-  assert "OK" == urlopen(address + '/%s/' % signed).msg
-  assert "OK" == urlopen(address + '/%s/root' % signed).msg
-  assert "OK" == urlopen(address + '/%s/root/' % signed).msg
-  
-  try:
-    assert False, urlopen(address + '/test/nonexisting/').msg
-  except HTTPError, err:
-    assert err.code == 404, err.code
-  try:
-    assert False, urlopen(address + '/test/invalid/').msg
-  except HTTPError, err:
-    assert err.code == 404, err.code    
-    
-  assert "OK" == urlopen(address + '/?op=save;data=[root]+[test]+qwerty12345678').msg
-  assert "qwerty12345678" in urlopen(address + '/').read()
-  
-  stop = time.time()
-  print "\033[1;34m" + "Tests OK (%s)" % (stop - start) + "\033[0m"
-  print >>open('testTimings', 'a'), stop - start
-  
-
-thread.start_new_thread(test, ())
+import nose
+thread.start_new_thread(nose.run, ())

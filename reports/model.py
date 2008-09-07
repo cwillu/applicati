@@ -68,8 +68,8 @@ def _checkSignature(signedDescriptor, secret):
 
 class PermissionError(Exception): 
   def __init__(self, *args, **kargs):
-    self.flash = kargs.get('flash', None)
-    Exception.__init__(self, *args)
+    self.flash = kargs.pop('flash', None)
+    Exception.__init__(self, *args, **kargs)
 
 def logger(func):
   name = func.__name__
@@ -99,8 +99,9 @@ def timer(func):
     print "%16s" % ("--"*_nest) + "->", "%10f" % (stop - start), name 
     
     return result
-  timed.nest = 0    
+    
   return timed
+  
 def timera(func):  
   name = func.__name__
   
@@ -117,8 +118,7 @@ def timera(func):
     
     return result
   timed.nest = 0    
-  return timed
-  
+  return timed  
   
 def with_methods(obj, decorator):
   try:
@@ -134,6 +134,7 @@ def BaseComponent(rootFolder, componentPath=()):
     componentSecret = eval(open(os.path.join(rootFolder, 'secret')).read())
   except IOError:
     componentSecret = uuid.uuid4()
+    os.makedirs(rootFolder)
     print >>open(os.path.join(rootFolder, 'secret'), 'w'), "uuid.%s" % `componentSecret`
     
   
@@ -156,7 +157,7 @@ def BaseComponent(rootFolder, componentPath=()):
       self._descriptor = descriptor
       self._data = data
       self._db = None
-           
+
       if source:
         capPermissions = self._getPerms(source)
         if not capPermissions:          
@@ -261,8 +262,7 @@ def BaseComponent(rootFolder, componentPath=()):
         
       logging.getLogger('root.model').debug("Saving %s (%s)", self.name, self.id)
 
-      folder, name = self._filename().rsplit('/', 1)
-      folder =  folder
+      folder, name = self._filename().rsplit('/', 1)      
 
       logging.getLogger('root.model').debug("%s %s", folder, name)
       if not os.access(folder, os.F_OK):
