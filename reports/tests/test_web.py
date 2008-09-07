@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+
+import os
 import re
 import time
 from urllib2 import urlopen, HTTPError
@@ -7,7 +10,13 @@ import cherrypy
 
 from nose.tools import *  
 
+from reports import model
+from reports import web
+
+TEST_PICKLES = "test/pickles.test"
+
 host, port, address = None, None, None
+originalBase = None
 
 def catch(exc, func, *args, **kargs):
   result = None
@@ -19,13 +28,20 @@ def catch(exc, func, *args, **kargs):
     
 
 def setup():
-  global host, port, address
+  global host, port, address, originalBase
   server.wait()
+  
+  originalBase = web.baseMeta
+  web.baseMeta = model.createBase(TEST_PICKLES)/'web'
   
   host = config.get('server.socket_host') or '127.0.0.1'
   port = config.get('server.socket_port') or '80'  
 
   address = "http://%s:%s" % (host, port)
+
+def teardown():
+  web.baseMeta = originalBase
+  os.system('rm -rf "%s"' % TEST_PICKLES)
 
 def test_simpleRequests():    
   assert "OK" == urlopen(address).msg 

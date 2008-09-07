@@ -219,10 +219,10 @@ def loginRoot():
 
 class Root(controllers.RootController):  
   try:
-    componentSecret = eval(open('secret').read())
+    componentSecret = eval(open('~/secret').read())
   except IOError:
     componentSecret = uuid.uuid4()
-    print >>open(os.path.join('.', 'secret'), 'w'), "uuid.%s" % `componentSecret`
+    print >>open(os.path.join('.', '~/secret'), 'w'), "uuid.%s" % `componentSecret`
   
   def __init__(self):
     class DirtyHacks(object):

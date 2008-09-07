@@ -412,14 +412,14 @@ def BaseComponent(rootFolder, componentPath=()):
   
   
   return Object(descriptor=(1,), path=[], permissions=0)
-  
+
 class Component(object):
   def __init__(self, path):
     self.path = path
   
   def get(self, meta, componentPath):
     return BaseComponent(self.path, componentPath)
-
+     
 def createBase(baseDir, template='reports/webTemplate.xml'):
   import xml
   spec = xml.dom.minidom.parse(template)
@@ -473,8 +473,3 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
 
   construct(spec.childNodes[0], root)
   return root   
-  
-def test():
-  createBase('test.pickles')  
-  
-test()
