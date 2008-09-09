@@ -1,10 +1,31 @@
-sudo ubuntu-vm-builder kvm hardy \
-  --arch 'i386'  --mem '256'  --rootsize '4096'  --swapsize '1024'  \
-  --kernel-flavour 'virtual'  --hostname 'applicati-1'  --domain 'cwillu.com'  \
-  --mirror 'http://archive.ubuntu.com/ubuntu'  --components 'main,restricted,universe'  \
-  --addpkg 'python-docutils python-turbogears python-crypto' \
-  --addpkg 'git-core openssh-server x11vnc ubuntu-desktop'  \
-  --name 'Carey Underwood'  --user 'cwillu'  \
-  --ssh-key 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAs9rXe3aSP+J59qdQDYGRP+rojdeULQyLONDCv3jzuPPt+HhII8tCMuHwfeprfDKfhc+LHPsR7KeUjfGTgY1XjhU0sWsifYOgT1k/XlbzWR2M942EO9rj8ZpDvRoIJwNEA+a6CNzraabG1iOAaT2KGAuoU5TdP8M9BVbXN7PcaMqv4/AUQayWvPojjEzxIcNFIHnt0CBN9QkUDGCMqqKzGw64WQuGLPRpZHmYryuOUZ+uTznvd1NUOXu6xfaIZt8J3FJcPkPVoMcgP9KIFX1ApqrD7m8rTR9/fuW2EUGmhzxIHVa2p8S35pXCzbvmJs+98bBB6DSmkW2Bb23W2drYiQ== cwillu@dominubuntu' 
+#!/bin/bash
 
-sudo ubuntu-vm-builder kvm intrepid --arch 'i386'  --mem '256'  --rootsize '4096'  --swapsize '1024'  --kernel-flavour 'virtual'  --hostname 'applicati-1'  --domain 'cwillu.com'  --mirror 'http://ca.archive.ubuntu.com/ubuntu'  --components 'main,universe'  --addpkg 'ubuntu-desktop python-turbogears python-crypto openssh-server x11vnc'  --name 'Carey Underweood'  --user 'cwillu'  --ssh-key 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAs9rXe3aSP+J59qdQDYGRP+rojdeULQyLONDCv3jzuPPt+HhII8tCMuHwfeprfDKfhc+LHPsR7KeUjfGTgY1XjhU0sWsifYOgT1k/XlbzWR2M942EO9rj8ZpDvRoIJwNEA+a6CNzraabG1iOAaT2KGAuoU5TdP8M9BVbXN7PcaMqv4/AUQayWvPojjEzxIcNFIHnt0CBN9QkUDGCMqqKzGw64WQuGLPRpZHmYryuOUZ+uTznvd1NUOXu6xfaIZt8J3FJcPkPVoMcgP9KIFX1ApqrD7m8rTR9/fuW2EUGmhzxIHVa2p8S35pXCzbvmJs+98bBB6DSmkW2Bb23W2drYiQ== cwillu@dominubuntu'
+# sudo /usr/bin/time -v bash /home/cwillu/work/dominos/reports/vm-builder
+# sudo qemu -kernel-kqemu -net nic -net tap root.qcow2
+
+mkdir /tmp/shm
+mount -t tmpfs -o size=5G,mode=700 tmpfs /tmp/shm
+
+NAME="dev-4"
+
+rm -rf $NAME
+
+ubuntu-vm-builder kvm hardy -d $NAME \
+  -t /tmp/shm \
+  --arch 'i386'  --mem '256'  --rootsize '4096'  --swapsize '1024'  \
+  --kernel-flavour 'virtual'  --hostname $NAME  --domain 'cwillu.com'  \
+  --mirror 'http://172.16.1.64:3142/ca.archive.ubuntu.com/ubuntu'  --components 'main,restricted,universe'  \
+  --addpkg 'acpi acpid acpi-support anacron apmd avahi-autoipd avahi-daemon bc ca-certificates consolekit dc 
+            gcc hal libnss-mdns make network-manager-gnome powernowd readahead screen unzip xdg-utils xterm zip 
+
+            git-core openssh-server       
+
+            python-docutils python-turbogears python-crypto             
+           ' \
+  --name 'Carey Underwood'  --user 'cwillu'  \
+  --ssh-key ~/.ssh/id_rsa.pub \
+
+umount -f /tmp/shm
+rmdir /tmp/shm
+
+

@@ -88,7 +88,7 @@ assert "71681123891927401278340" == baseToHex(hexToBase("71681123891927401278340
 corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
 
-baseMeta = db.BaseComponent('test.pickles')/'web'
+baseMeta = db.BaseComponent('pickles')/'web'
 
 @compile
 def visit(root, path, op):
@@ -219,10 +219,10 @@ def loginRoot():
 
 class Root(controllers.RootController):  
   try:
-    componentSecret = eval(open('~/secret').read())
+    componentSecret = eval(open(os.path.expanduser('~/secret')).read())
   except IOError:
     componentSecret = uuid.uuid4()
-    print >>open(os.path.join('.', '~/secret'), 'w'), "uuid.%s" % `componentSecret`
+    print >>open(os.path.expanduser('~/secret'), 'w'), "uuid.%s" % `componentSecret`
   
   def __init__(self):
     class DirtyHacks(object):
@@ -381,7 +381,7 @@ class Root(controllers.RootController):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
         
     op = str(args.pop('op', ''))
-    prototype = str(args.pop('prototype', 'Default'))
+    prototype = str(args.pop('prototype', None))
     try:
       meta = self.find(path, args)           
               
@@ -394,14 +394,16 @@ class Root(controllers.RootController):
       if not meta._query('read'):
         obj = blank()        
       elif not meta.data:
-        constructor = findPage(('Palette', prototype), loginRoot(), path, )
+        if not prototype:
+          prototype = findPage(('prototype',), loginRoot(), path).data.show().strip().splitlines()[0]
+        constructor = findPage(('prototype', prototype), loginRoot(), path)
         if not constructor:
           logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
           raise db.PermissionError(flash='''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
         
         obj = constructor.data.construct(constructor)
-        protoTypeName = obj.__class__.__name__
-        flash('New page: %s (%s)' % (path[-1], protoTypeName))
+        prototypeName = obj.__class__.__name__
+        flash('New page: %s (%s)' % (path[-1], prototypeName))
         
         logging.getLogger('root.controller.http').debug("Creating prototype %s: %s", prototype, obj)
       else:

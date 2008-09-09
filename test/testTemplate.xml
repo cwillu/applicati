@@ -1,19 +1,17 @@
 <CapRoot>
-  <Component name="original" file="pickles" />
-  <Reference name="root" component="/original" descriptor="(('1',), '078e9482-0563-4dd0-9ac5-feb5d484138f', '1841522ab4f69f04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />    
-
+  <Component name="self" file="pickles" />
+     
   <Wiki name="prototype">    
   </Wiki>
 
   <Wiki name="users">
-    <Link path="/root/cwillu" name="cwillu" />
+    <Wiki name="guest" />
   </Wiki>
 
   <Wiki name="test public">
     <Link path="/" name="root" />
     <Wiki name="test">
       <Link path="/" name="root" />
-      <Reference name="invalid" component="/original" descriptor="(('1',), 'deadbeaf-0563-4dd0-9ac5-feb5d484138f', '00000deadbeeff04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />
     </Wiki>
   </Wiki>
 
@@ -27,13 +25,13 @@
 
   <Wiki name="main gateway">
     <Link path="/users" name="users" />
-    <Link path="/root/guest" name="public" /> 
+    <Link path="/users/guest" name="public" /> 
     <Wiki name="protected" >
     </Wiki>  
   </Wiki>
 
   <Wiki name="restricted gateway">    
-    <Link path="/root/guest" name="public" /> 
+    <Link path="/users/guest" name="public" /> 
   </Wiki>
   
   <Wiki name="web">

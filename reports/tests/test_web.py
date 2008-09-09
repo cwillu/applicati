@@ -14,6 +14,7 @@ from reports import model
 from reports import web
 
 TEST_PICKLES = "test/pickles.test"
+TEST_TEMPLATE = "test/testTemplate.xml"
 
 host, port, address = None, None, None
 originalBase = None
@@ -32,7 +33,7 @@ def setup():
   server.wait()
   
   originalBase = web.baseMeta
-  web.baseMeta = model.createBase(TEST_PICKLES)/'web'
+  web.baseMeta = model.createBase(TEST_PICKLES, TEST_TEMPLATE)/'web'
   
   host = config.get('server.socket_host') or '127.0.0.1'
   port = config.get('server.socket_port') or '80'  
@@ -46,8 +47,6 @@ def teardown():
 def test_simpleRequests():    
   assert "OK" == urlopen(address).msg 
   assert "OK" == urlopen(address + '/').msg 
-  assert "OK" == urlopen(address + '/root/users/cwillu/Bugs').msg
-  assert "OK" == urlopen(address + '/root/users/cwillu/Bugs/').msg
 
 def test_signedRequests():
   name = '~test(abcdef)'
@@ -59,8 +58,7 @@ def test_signedRequests():
   assert "OK" == urlopen(address + '/%s/root/' % signed).msg
 
 def test_invalid():    
-  assert_equal(404, catch(HTTPError, urlopen, address + '/test/nonexisting/').code)
-  assert_equal(404, catch(HTTPError, urlopen, address + '/test/invalid/').code)
+  assert_equal(404, catch(HTTPError, urlopen, address + '/test/nonexisting/').code)  
     
   assert_equal("OK", urlopen(address + '/?op=save;data=[root]+[test]+qwerty12345678').msg)
   assert "qwerty12345678" in urlopen(address + '/').read()

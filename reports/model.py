@@ -420,7 +420,7 @@ class Component(object):
   def get(self, meta, componentPath):
     return BaseComponent(self.path, componentPath)
      
-def createBase(baseDir, template='reports/webTemplate.xml'):
+def createBase(baseDir, template='baseTemplate.xml'):
   import xml
   spec = xml.dom.minidom.parse(template)
   
@@ -429,8 +429,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
   def walk(path):
     path = path.strip('/').split('/')
     if path == ['']:
-      path = []
-    
+      path = []    
     node = root
     for segment in path:      
       node /= segment         
@@ -456,8 +455,11 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
 
     node.data = builtins.metaTypes[nodeType]()
     content = ''    
+    node.data.save(node, content)
     
     for detail in spec.childNodes:
+      if detail.nodeType is spec.TEXT_NODE:
+        content += detail.data
       if detail.nodeType is not spec.ELEMENT_NODE:
         continue
       
@@ -467,6 +469,7 @@ def createBase(baseDir, template='reports/webTemplate.xml'):
 
       content += '[%s]\n' % name
       node.data.link(node, name, descriptor)      
+      node.data.save(node, content)
     
     node.data.save(node, content)
     return node.descriptor     
