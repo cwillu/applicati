@@ -1,0 +1,214 @@
+<html>
+<head>
+  <script type="text/javascript" src="/static/javascript/jquery-1.2.6.js"></script>
+  <script src="/static/javascript/ui.core.js"></script>
+  <script src="/static/javascript/ui.draggable.js"></script>
+  <script src="/static/javascript/ui.droppable.js"></script>
+  <script type="text/javascript"> 
+    wiab_tool = function(){
+      tool = $('#wiab_tool');
+      if (tool.length > 0)
+        return tool;
+//      $("body").append('<div id="wiab_tool" class="wiab_tool">test<br>test  \
+//      </div>'); 
+      alert("fail");
+      return $('#wiab_tool');
+      
+    };
+      
+    var cancels = [];
+    var timeouts = [];
+    $(document).ready(function(){
+      
+    //mousedown( fn )
+      $("*").mousedown(function(e){
+        e.stopPropagation();
+        var x = e.clientX;
+        var y = e.clientY;
+
+        $(this).addClass("active");
+        var was = $(this)
+        cancels.push(function(){
+          was.removeClass("active moreActive");
+          was.unbind('mousemove', checkMouse)
+          was.unbind('mouseout', checkMouse)          
+        });
+
+        for (i in timeouts)
+          clearTimeout(timeouts.pop());
+                
+        timeouts.push(setTimeout(function(){
+          was.addClass("moreActive");
+          wiab_tool().css({position: 'absolute', left: x, top: y}).fadeIn(100);
+          cancels.push(function(){
+            wiab_tool().fadeOut(100);
+          });
+        }, 200));
+
+        var checkMouse = function(e){
+//          alert(e.clientX + ", " + x + ", " + abs(e.clientX-x) + ", " + abs(e.clientX-x) > 5);
+          if (Math.abs(e.clientX-x) > 5 || Math.abs(e.clientY-y) > 5)
+            for (i in timeouts)
+              clearTimeout(timeouts.pop());            
+        }
+
+        $(this).mousemove(checkMouse).mouseout(checkmouse);
+      }).mouseup(function(e){
+        e.stopPropagation();
+        for (i in timeouts)
+          clearTimeout(timeouts.pop());
+
+        for (i in cancels)
+          cancels.pop()();
+        
+      });
+      
+    });
+
+
+
+      
+      //  $("*").droppable({
+//          accept: '*',
+//          activeClass: 'droppable-active', 
+//        	hoverClass: 'droppable-hover' 
+//        });
+
+
+//        $("*").droppable("destroy");
+
+
+  </script>
+  <style>
+    .block {
+    }
+    .active {
+	    outline: 1px solid black;
+    }
+    .moreActive {
+	    outline: 3px dotted black;
+    }
+    .wiab_tool {
+//      display: none;
+      position: relative;
+      width: 0px;
+      height: 0px;
+      left: 300px;
+      top: 200px;      
+    }
+    :hover .wiab{
+      text-decoration: bold;
+    }
+    .wiab {
+      text-align: center;
+      line-height: 20px;
+    }
+    img {
+      position: absolute; 
+      left: -128px;
+      top: -128px;
+      height: 256px; 
+      width: 256px; 
+//      z-index: -1; 
+      color: white;
+    }
+    .wiab_w {
+//      display: inline;
+      position: absolute;
+      left: -128px;
+      top: -32px;  
+      width: 64px;
+      height: 64px;      
+      background: url("/static/images/button.png");
+    }
+    .wiab_sw {
+//      display: none;
+      position: absolute;
+      left: -96px;  
+      bottom: -80px;
+      width: 64px;
+      height: 64px;
+      background: url("/static/images/button.png");
+    }
+    .wiab_s {
+//      display: inline;
+      position: absolute;
+      left: -32px;
+      bottom: -96px;
+      width: 64px;
+      height: 64px;
+      background: url("/static/images/button.png");
+    }
+    .wiab_se {
+//      display: none;
+      position: absolute;
+      right: -96px;  
+      bottom: -80px;
+      width: 64px;
+      height: 64px;
+      background: url("/static/images/button.png");
+    }
+  </style>
+</head>
+<body>
+<div id="wiab_tool" class="wiab_tool">
+  <img id="wiab_image" src="/static/images/button.png" />
+  <div class="wiab wiab_w"><br>Edit</div>
+  <div class="wiab wiab_sw"><br>Move</div>
+  <div class="wiab wiab_s"><br>Link</div>
+  <div class="wiab wiab_se"><br>Delete</div>
+</div>
+
+  <div class="block"> testing </div>
+  <a class="block" href="">Test</a>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />  
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+
+</body>
+</html>
