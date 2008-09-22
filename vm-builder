@@ -15,15 +15,15 @@ ubuntu-vm-builder kvm hardy -d $NAME \
   --arch 'i386'  --mem '256'  --rootsize '4096'  --swapsize '1024'  \
   --kernel-flavour 'virtual'  --hostname $NAME  --domain 'cwillu.com'  \
   --mirror 'http://172.16.1.64:3142/ca.archive.ubuntu.com/ubuntu'  --components 'main,restricted,universe'  \
-  --addpkg 'acpi acpid acpi-support anacron apmd avahi-autoipd avahi-daemon bc ca-certificates consolekit dc 
-            gcc hal libnss-mdns make network-manager-gnome powernowd readahead screen unzip xdg-utils xterm zip 
+  --addpkg 'acpi acpid acpi-support anacron apmd avahi-autoipd avahi-daemon bc ca-certificates consolekit dbus dc 
+            gcc hal libnss-mdns make network-manager readahead screen unzip xdg-utils xterm zip 
 
             git-core openssh-server       
 
             python-docutils python-turbogears python-crypto             
            ' \
   --name 'Carey Underwood'  --user 'cwillu'  \
-  --ssh-key ~/.ssh/id_rsa.pub \
+  --ssh-key /home/cwillu/.ssh/id_rsa.pub \
 
 umount -f /tmp/shm
 rmdir /tmp/shm

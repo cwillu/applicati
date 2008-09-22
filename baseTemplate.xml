@@ -39,6 +39,7 @@
       <Link path="/trustable" name="https://127.0.0.1" />      
       <Link path="/untrusted" name="http://home.cwillu.com" />
       <Link path="/trustable" name="https://home.cwillu.com" />      
+      <Link path="/trustable" name="http://dominubuntu.local" />      
     </Wiki>
   </Wiki>
     

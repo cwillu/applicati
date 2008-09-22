@@ -15,48 +15,78 @@
       return $('#wiab_tool');
       
     };
-      
+    
+    var mouseX = null;
+    var mouseY = null;
     var cancels = [];
     var timeouts = [];
+    var was = null;
     $(document).ready(function(){
+      $(".wiab").hover(function(){
+        $(this).addClass("wiab_active")
+      }, function(){
+        $(this).removeClass("wiab_active")
+      }).mouseup(function(){
+        href = $(this).filter('a').attr('href')
+        if (href)
+          window.location = href
+      });
+
       
     //mousedown( fn )
       $("*").mousedown(function(e){
+        if (e.button != 0)
+          return;
+        was = $(this)
         e.stopPropagation();
-        var x = e.clientX;
-        var y = e.clientY;
+        if (was.filter("a").length > 0)
+          e.preventDefault();
 
-        $(this).addClass("active");
-        var was = $(this)
-        cancels.push(function(){
-          was.removeClass("active moreActive");
-        });
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        was.addClass("active");
 
         for (i in timeouts)
           clearTimeout(timeouts.pop());
-                
+        
+        var checkMouse = function(e){
+          //alert(e.clientX + ", " + mouseX + ", ");
+          if (Math.abs(e.clientX-mouseX) > 2 || Math.abs(e.clientY-mouseY) > 2) 
+            for (i in timeouts)
+              clearTimeout(timeouts.pop());                           
+        }
+
+        cancels.push(function(){          
+          was.removeClass("active moreActive");
+          was.unbind('mousemove', checkMouse);
+          was.unbind('mouseout', checkMouse);    
+        });
+
         timeouts.push(setTimeout(function(){
           was.addClass("moreActive");
-          wiab_tool().css({position: 'absolute', left: x, top: y}).fadeIn(100);
+          wiab_tool().css({position: 'absolute', left: mouseX, top: mouseY}).fadeIn(100);
+          was.focus();          
           cancels.push(function(){
             wiab_tool().fadeOut(100);
           });
-        }, 200));
+        }, 300));
 
-        $(document).mousemove(function(e){
-//          alert(e.clientX + ", " + x + ", " + abs(e.clientX-x) + ", " + abs(e.clientX-x) > 5);
-          if (Math.abs(e.clientX-x) > 5 || Math.abs(e.clientY-y) > 5)
-            for (i in timeouts)
-              clearTimeout(timeouts.pop());            
-        });        
+        $(this).mousemove(checkMouse).mouseout(checkMouse);
+        //return false;
       }).mouseup(function(e){
         e.stopPropagation();
         for (i in timeouts)
           clearTimeout(timeouts.pop());
 
-        for (i in cancels)
+        while (cancels.length > 0)
           cancels.pop()();
-        
+
+        if (!(Math.abs(e.clientX-mouseX) > 2 || Math.abs(e.clientY-mouseY) > 2)){
+          href = was.filter('a').attr('href')
+          if (href)
+            window.location = href
+        }
       });
       
     });
@@ -79,25 +109,33 @@
     .block {
     }
     .active {
-	    outline: 1px solid black;
+	    //outline: 1px solid black;
     }
     .moreActive {
 	    outline: 3px dotted black;
     }
     .wiab_tool {
-//      display: none;
+      display: none;
       position: relative;
       width: 0px;
       height: 0px;
       left: 300px;
       top: 200px;      
     }
-    :hover .wiab{
-      text-decoration: bold;
-    }
     .wiab {
+      position: absolute;
       text-align: center;
+      text-decoration: none;
+      font-weight: bold;      
       line-height: 20px;
+      color: #333333;
+      width: 64px;
+      height: 64px;      
+      background: url("/static/images/button.png");
+    }
+    .wiab_active {
+      color: #000044;
+      background: url("/static/images/button-active.png");
     }
     img {
       position: absolute; 
@@ -105,58 +143,38 @@
       top: -128px;
       height: 256px; 
       width: 256px; 
-//      z-index: -1; 
       color: white;
     }
     .wiab_w {
-//      display: inline;
-      position: absolute;
       left: -128px;
       top: -32px;  
-      width: 64px;
-      height: 64px;      
-      background: url("/static/images/button.png");
     }
     .wiab_sw {
-//      display: none;
-      position: absolute;
       left: -96px;  
       bottom: -80px;
-      width: 64px;
-      height: 64px;
-      background: url("/static/images/button.png");
     }
     .wiab_s {
-//      display: inline;
-      position: absolute;
       left: -32px;
       bottom: -96px;
-      width: 64px;
-      height: 64px;
-      background: url("/static/images/button.png");
     }
     .wiab_se {
-//      display: none;
-      position: absolute;
       right: -96px;  
       bottom: -80px;
-      width: 64px;
-      height: 64px;
-      background: url("/static/images/button.png");
     }
   </style>
 </head>
 <body>
 <div id="wiab_tool" class="wiab_tool">
-  <img id="wiab_image" src="/static/images/button.png" />
-  <div class="wiab wiab_w"><br>Edit</div>
+  <img id="wiab_image" src="/static/images/1.png" />
+  <a href="test" class="wiab wiab_s"><br>Link</a>
   <div class="wiab wiab_sw"><br>Move</div>
-  <div class="wiab wiab_s"><br>Link</div>
   <div class="wiab wiab_se"><br>Delete</div>
+  <div class="wiab wiab_w"><br>Edit</div>
+
 </div>
 
   <div class="block"> testing </div>
-  <a class="block" href="">Test</a>
+  <a class="block" href="http://reddit.com">Test</a>
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
@@ -178,7 +196,7 @@
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
+  <span> some words that you should select </span>
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
   <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
