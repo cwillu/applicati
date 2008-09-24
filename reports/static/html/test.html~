@@ -27,11 +27,19 @@
       }, function(){
         $(this).removeClass("wiab_active")
       }).mouseup(function(){
+        $(this).click();
+        
+        if ($(this).filter('a').attr('onClick'))
+          return;
+      
         href = $(this).filter('a').attr('href')
         if (href)
           window.location = href
       });
 
+      $("#wiab_move").click(function(){
+        alert('foo');
+      });
       
     //mousedown( fn )
       $("*").mousedown(function(e){
@@ -166,63 +174,23 @@
 <body>
 <div id="wiab_tool" class="wiab_tool">
   <img id="wiab_image" src="/static/images/1.png" />
-  <a href="test" class="wiab wiab_s"><br>Link</a>
-  <div class="wiab wiab_sw"><br>Move</div>
-  <div class="wiab wiab_se"><br>Delete</div>
-  <div class="wiab wiab_w"><br>Edit</div>
+  <a id="wiab_move" class="wiab wiab_s"><br>Move</a>
+  <a href="http://reddit.com" class="wiab wiab_sw"><br>Link</a>
+  <a href="http://reddit.com" class="wiab wiab_se"><br>Delete</a>
+  <a href="http://reddit.com" class="wiab wiab_w"><br>Edit</a>
 
 </div>
 
   <div class="block"> testing </div>
   <a class="block" href="http://reddit.com">Test</a>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />  
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> some words that you should select </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span>
-  <span> testing </span>  <span> testing </span>  <span> testing </span>  <span> testing </span> <br />
+<table>
+<tr><td>test</td><td>test</td><td>test</td><td>test</td><td>test</td></tr>
+<tr><td>test</td><td>test</td><td>test</td><td>test</td><td>test</td></tr>
+<tr><td>test</td><td>test</td><td>test</td><td>test</td><td>test</td></tr>
+<tr><td>test</td><td>test</td><td>test</td><td>test</td><td>test</td></tr>
+<tr><td>test</td><td>test</td><td>test</td><td>test</td><td>test</td></tr>
+
+</table>
 
 </body>
 </html>

@@ -39,6 +39,10 @@
       
     };
 
+    layout = function() {
+      alert($(this));
+    };
+
     var pageX = null;
     var pageY = null;    
     var mouseX = null;
@@ -191,7 +195,11 @@
       right: -96px;  
       bottom: -80px;
     }
-  </style>
+    .wiab_e {
+      right: -128px;  
+      top: -32px;
+    }
+    </style>
     <meta py:replace="item[:]"/>
 </head>
 
@@ -202,6 +210,7 @@
   <a href="?op=links" rel="nofollow" class="wiab wiab_se"><br />Links</a>
   <a href="#paste" onClick="document.paste.submit(); return false;" rel="nofollow" class="wiab wiab_w"><br />Paste</a>
   <a href="#edit" onClick="document.edit.submit(); return false;" rel="nofollow" class="wiab wiab_s"><br />Edit</a>
+  <a href="#foo" onClick="layout();" rel="nofollow" class="wiab wiab_e"><br />Layout</a>
 </div>  <div class="top toolbar"> 
     <div class="left">
       <a href="/"><img style="display: inline; position: absolute; bottom: 0px; left: 6px; margin: -20px 0px;" src="${tg.url([

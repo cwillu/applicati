@@ -305,3 +305,37 @@
   0.109471 http://dominubuntu.local/
   0.101243 http://dominubuntu.local/?op=search
   0.156063 http://dominubuntu.local/?op=search&query=crisis
+  0.258062 http://127.0.0.1:8080/
+  0.060079 http://127.0.0.1:8080/
+  0.054466 http://127.0.0.1:8080/~test(abcdef-1EChc4wVw7yLL9)/
+  0.003189 http://127.0.0.1:8080/~test(abcdef-1EChc4wVw7yLL9)/root
+  0.003945 http://127.0.0.1:8080/~test(abcdef-1EChc4wVw7yLL9)/root/
+  0.064387 http://127.0.0.1:8080/~test(abcdef-4qEuP1Ckh4SYzr)/root/
+  0.003508 http://127.0.0.1:8080/~test(abcdef-1EChc4wVw7yLL9)/root/
+  0.056349 http://127.0.0.1:8080/~test(abcdef-4qEuP1Ckh4SYzr)/root/
+  0.079922 http://127.0.0.1:8080/test/nonexisting/
+  0.040869 http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678
+  0.046636 http://127.0.0.1:8080/
+  0.037129 http://127.0.0.1:8080/
+  0.115337 http://127.0.0.1:8080/
+  0.074198 http://127.0.0.1:8080/
+  0.076406 http://127.0.0.1:8080/~test(abcdef-1EChc4wVw7yLL9)/
+  0.003279 http://127.0.0.1:8080/~test(abcdef-1EChc4wVw7yLL9)/root
+  0.004337 http://127.0.0.1:8080/~test(abcdef-1EChc4wVw7yLL9)/root/
+  0.126226 http://127.0.0.1:8080/~test(abcdef-4qEuP1Ckh4SYzr)/root/
+  0.004892 http://127.0.0.1:8080/~test(abcdef-1EChc4wVw7yLL9)/root/
+  0.069949 http://127.0.0.1:8080/~test(abcdef-4qEuP1Ckh4SYzr)/root/
+  0.109049 http://127.0.0.1:8080/test/nonexisting/
+  0.056056 http://127.0.0.1:8080/?op=save;data=[root]+[test]+qwerty12345678
+  0.070295 http://127.0.0.1:8080/
+  0.039112 http://127.0.0.1:8080/
+  0.177932 http://127.0.0.1:8080/
+  0.090129 http://127.0.0.1:8080/?op=edit
+  0.087168 http://127.0.0.1:8080/
+  0.064819 http://127.0.0.1:8080/?op=edit
+  0.079503 http://127.0.0.1:8080/?op=edit
+  0.087227 http://127.0.0.1:8080/
+  0.161393 http://127.0.0.1:8080/
+  0.194318 http://127.0.0.1:8080/
+  0.158631 http://127.0.0.1:8080/
+  0.143353 http://127.0.0.1:8080/
