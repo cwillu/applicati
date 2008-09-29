@@ -29,11 +29,22 @@
     <script src="/static/javascript/ui.core.js"></script>
     <script src="${tg.url('/static/javascript/shortcut.js')}"></script>
     
+    <script  src="/static/javascript/wiab.js"></script>
     <meta py:replace="item[:]"/>
 </head>
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'" py:attrs="item.items()" >
-  <div class="top toolbar"> 
+<div id="wiab_tool" class="wiab_tool">
+  <img id="wiab_image" src="/static/images/1.png" />
+  <a rel="nofollow" class="wiab wiab_sw"><br />Select</a>
+  <a rel="nofollow" class="wiab wiab_s wiab_arrow_s"><br />Select</a>
+  <a rel="nofollow" class="wiab wiab_se"><br />Select</a>
+  <a rel="nofollow" class="wiab wiab_e wiab_arrow_e"><br />Select</a>
+  <a rel="nofollow" class="wiab wiab_ne"><br />Select</a>
+  <a rel="nofollow" class="wiab wiab_n wiab_arrow_n"><br />Select</a>
+  <a rel="nofollow" class="wiab wiab_nw"><br />Select</a>
+  <a rel="nofollow" class="wiab wiab_w wiab_arrow_w"><br />Select</a>
+</div>  <div class="top toolbar"> 
     <div class="left">
       <a href="/"><img style="display: inline; position: absolute; bottom: 0px; left: 6px; margin: -20px 0px;" src="${tg.url([
         '/static/images/mantis-angle.png', 

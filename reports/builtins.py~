@@ -105,6 +105,7 @@ class Wiki(object):
       formatted = self._wikiFormat(meta, self.data, prefix)
       return formatted
     return self.data
+
           
   def save(self, meta, data='', links=None):    
     self.data = data
