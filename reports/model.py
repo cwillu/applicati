@@ -16,6 +16,8 @@ import inspect
 
 from . import builtins
 
+VERSION_MAGIC = 1956027083
+
 try:  
   import psycos
   psyco.log()
@@ -228,10 +230,20 @@ def BaseComponent(rootFolder, componentPath=()):
         return None
         
       try:
-        return pickle.load(file( self._filename()))
+        obj = pickle.load(file( self._filename()))
+        if isinstance(obj, tuple) and len(obj) == 3 and obj[0] == VERSION_MAGIC:
+          return obj[2]
+        return obj
       except IOError, err:
         if self.id in [1, (1,)] and err.errno == 2:
           logging.getLogger('root.model').error("Recreating root page!!")
+
+          if getattr(self, 'recreate', None):
+            assert False            
+          self.recreate = True
+          createBase('pickles')
+          return self._getData()
+          
           try: 
             os.makedirs(self._filename(''))
           except OSError, err:
@@ -262,14 +274,29 @@ def BaseComponent(rootFolder, componentPath=()):
         
       logging.getLogger('root.model').debug("Saving %s (%s)", self.name, self.id)
 
-      folder, name = self._filename().rsplit('/', 1)      
+
+      path = self._filename()
+      folder, name = path.rsplit('/', 1)      
+      new = str(uuid.uuid4())
 
       logging.getLogger('root.model').debug("%s %s", folder, name)
       if not os.access(folder, os.F_OK):
         os.makedirs(folder)
-      result = pickle.dump(obj, file( self._filename(), 'w'))  
-    
-      return result
+
+      if os.access(path, os.F_OK):
+        try:
+          old = os.readlink(path)
+        except OSError:
+          old = str(uuid.uuid4())
+          os.link(path, old)
+      else:
+        old = None            
+
+      pickle.dump((VERSION_MAGIC, old, obj), file(os.path.join(folder, new), 'w'))      
+      if old:
+        os.unlink(path)
+      print path, old
+      os.symlink(new, path)
      
     data = property(getData, _selfSetData)   
     
@@ -452,8 +479,9 @@ def createBase(baseDir, template='baseTemplate.xml'):
       component = walk(spec.getAttribute('component'))
       return ((component.descriptor,) + descriptor[0],) + descriptor[1:]
       
-
-    node.data = builtins.metaTypes[nodeType]()
+    obj = builtins.metaTypes[nodeType]()
+    assert obj
+    node.data = obj
     content = ''    
     node.data.save(node, content)
     

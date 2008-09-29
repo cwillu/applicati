@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+# 9977553311
+
 import os, sys
 import bisect
 import uuid
@@ -45,6 +47,8 @@ try:
 except ImportError:
   print 'Psyco not installed, the program will just run slower'  
   compile = lambda func: func
+
+compile = lambda func: func
 
 import logging
 logging.getLogger('root').setLevel(19)
@@ -169,7 +173,11 @@ def walk(root, action, maxDepth=5):
       seen.add(childNode.id)        
 
 class Wrapper(object):
-  def __init__(self, data, page):    
+  def __init__(self, data, page):
+    if data is None and page is not None:
+      data = page.data
+    if data is None:
+      raise AttributeError
     self._data = data
     self.page = page
     if not page:
@@ -381,7 +389,7 @@ class Root(controllers.RootController):
     logging.getLogger('root.controller.http').debug("Dispatch: <%s> %s", '/'.join(path), args)
         
     op = str(args.pop('op', ''))
-    prototype = str(args.pop('prototype', None))
+    prototype = args.pop('prototype', None)
     try:
       meta = self.find(path, args)           
               
@@ -394,14 +402,21 @@ class Root(controllers.RootController):
       if not meta._query('read'):
         obj = blank()        
       elif not meta.data:
-        if not prototype:
-          prototype = findPage(('prototype',), loginRoot(), path).data.show().strip().splitlines()[0]
-        constructor = findPage(('prototype', prototype), loginRoot(), path)
-        if not constructor:
+        if not prototype:          
+          prototype = Wrapper(None, findPage(('prototype',), loginRoot(), path))
+#          prototype = Wrapper(None, findPage(('prototype',), loginRoot(), path))
+          prototype.show()
+          if prototype.show:
+            prototype = prototype.show().strip().splitlines()[0].strip().strip('[()]')
+          else:
+            prototype = None
+                   
+        constructor = Wrapper(None, findPage(('prototype', prototype), loginRoot(), path)) if prototype else None
+        if not constructor or not constructor.construct:
           logging.getLogger('root.controller.http').warn("Access denied for path %s, redirecting to %s", path, path[:-1])
           raise db.PermissionError(flash='''%s doesn't exist, and we couldn't find a default constructor to create it.''' % (path[-1]))
         
-        obj = constructor.data.construct(constructor)
+        obj = constructor.construct()
         prototypeName = obj.__class__.__name__
         flash('New page: %s (%s)' % (path[-1], prototypeName))
         
@@ -463,6 +478,9 @@ def findPresentation(obj):
   
   if isinstance(obj, builtins.Raw):
     return RawPresentation()
+  
+  if isinstance(obj, builtins.metaTypes['Editor']):
+    return WiabPresentation()
   
   if isinstance(obj, tuple(builtins.metaTypes.values())):
     return WikiPresentation()
@@ -606,7 +624,7 @@ class Presentation(object):
 class blank(object):
   @html.FixIE
   def show(self, meta, formatted=None, prefix=None):
-    return ''    
+    return ''      
 
 class WikiPresentation(Presentation):
   def _path(self, path):
@@ -742,6 +760,13 @@ class WikiPresentation(Presentation):
       return link
 
     return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
+
+class WiabPresentation(WikiPresentation):
+  @html.FixIE
+  @expose(template="reports.templates.wiab")
+  def show(self, obj,  path, formatted=True, prefix=None):
+    content = obj.show(formatted=formatted, prefix=prefix)
+    return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)    
 
 class PrimitivePresentation(WikiPresentation):
   @html.FixIE

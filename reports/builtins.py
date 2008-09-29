@@ -43,7 +43,7 @@ class Constructor(object):
   def show(self, meta, prefix=None, formatted=False):
     return self.class_
     
-  def save(self, meta, class_):
+  def save(self, meta, class_, links=None):
     self.class_ = class_
     meta.data = self
 
@@ -105,7 +105,6 @@ class Wiki(object):
       formatted = self._wikiFormat(meta, self.data, prefix)
       return formatted
     return self.data
-
           
   def save(self, meta, data='', links=None):    
     self.data = data
@@ -264,6 +263,25 @@ class Clone(object):
       meta.data = self
     
     return self.data
+
+class Editor(Wiki):
+  def __init__(self, data=''):
+    self.data = data
     
-metaTypes = dict((name, eval(name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin', 'Clone'))
+  def resolve(self, meta, name):
+    return None
+    
+  def link(self, meta, name, id):
+    pass
+    
+  def list(self, meta):
+    pass
+  
+  def show(self, meta, formatted=False, prefix=None):
+    return self.data
+          
+#  def save(self, meta, data='', links=None):    
+#    pass
+        
+metaTypes = dict((name, eval(name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin', 'Clone', 'Editor'))
 

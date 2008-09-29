@@ -1,10 +1,11 @@
-<CapRoot>
-  <Wiki name="prototype" />    
-  
+<CapRoot>  
   <Wiki name="prototypes" >  
     <Constructor name="Wiki">Wiki</Constructor>
     <Constructor name="User">User</Constructor>       
+    <Constructor name="Editor">Editor</Constructor>
   </Wiki>
+  
+  <Link name="prototype" path="/prototypes" />    
   
   <Wiki name="public">
   </Wiki>

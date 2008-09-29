@@ -25,7 +25,7 @@ def FixIE(presenter):
   def replacePNG(match):
     img = match.group(0)
     attributes = dict(attrs.findall(img))
-    attributes['src'] = attributes['src'].replace('.png', '.gif')
+    attributes['src'] = attributes['src'].replace('.png', '.gif')  #-nq8.png
     return "<img %s />" % ' '.join('%s="%s"' % (key, attributes[key]) for key in attributes)
 
   def __call__(*args, **kargs):
