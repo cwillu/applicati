@@ -55,6 +55,7 @@
         onClick = $(this).filter('a').attr('onClick')
         if (onClick){
           $(this).click()
+          return;
         }  
         href = $(this).filter('a').attr('href')
         if (href)
