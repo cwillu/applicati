@@ -10,15 +10,17 @@
 //  <a href="#edit" onClick="document.edit.submit(); return false;" rel="nofollow" class="wiab wiab_s"><br />Edit</a>
 //  <a href="#foo" onClick="layout();" rel="nofollow" class="wiab wiab_e"><br />Layout</a>
 
+_tool_div = null;
 
-wiab_tool = function(){
-  tool = $('#wiab_tool');
+wiab_tool = function(){  
+
+  tool = $('#wiab_tool');    
   if (tool.length > 0)
     return tool;
+
 //      $("body").append('<div id="wiab_tool" class="wiab_tool">test<br>test  \
 //      </div>'); 
-  alert("fail");
-  return $('#wiab_tool');
+  return wiab_tool();
   
 };
 
@@ -34,6 +36,19 @@ var cancels = [];
 var timeouts = [];
 var was = null;
 $(document).ready(function(){
+  $("body").prepend('\
+      <div id="wiab_tool" class="wiab_tool" > \
+      <img id="wiab_image" src="/static/images/1.png" /> \
+      <a rel="nofollow" class="wiab_arrow wiab_sw wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_arrow wiab_s wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_arrow wiab_se wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_arrow wiab_e wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_arrow wiab_ne wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_arrow wiab_n wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_arrow wiab_nw wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_arrow wiab_w wiab"><br /></a> \
+    </div>');
+
   $(".wiab").hover(function(){
     $(this).addClass("wiab_active")
   }, function(){
@@ -82,12 +97,13 @@ $(document).ready(function(){
     });
 
     timeouts.push(setTimeout(function(){
-      $('.wiab_w,.wiab_e,.wiab_n,.wiab_s').css({display: 'block'});
+      var show ='.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw'  
+      $(show).css({display: 'block'});
       was.addClass("moreActive");
-      wiab_tool().css({position: 'absolute', left: pageX, top: pageY}).fadeIn(100);
+      wiab_tool().css({position: 'relative', left: mouseX, top: mouseY}).fadeIn(100);
       was.focus();          
       cancels.push(function(){
-        wiab_tool().fadeOut(100, function(){$('.wiab_w,.wiab_e,.wiab_n,.wiab_s').css({display: 'none'})});
+        wiab_tool().fadeOut(100, function(){$(show).css({display: 'none'})});
       });
     }, 300));
 

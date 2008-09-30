@@ -267,6 +267,7 @@ class Clone(object):
 class Editor(Wiki):
   def __init__(self, data=''):
     self.data = data
+    self.links = {}
     
   def resolve(self, meta, name):
     return None

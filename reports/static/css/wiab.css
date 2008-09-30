@@ -13,6 +13,61 @@
       top: 200px;  
       z-index: 11;    
     }
+    
+        
+    .wiab_arrow {    
+    }
+    
+    .wiab_arrow .wiab_w {
+      background: url("/static/images/left.png") left no-repeat;    
+    }
+    .wiab_arrow .wiab_s {
+      background: url("/static/images/down.png") bottom no-repeat;    
+    }
+    .wiab_arrow .wiab_e {
+      background: url("/static/images/right.png") right no-repeat;    
+    }
+    .wiab_arrow .wiab_n {
+      background: url("/static/images/up.png") top no-repeat;    
+    }
+    .wiab_arrow .wiab_nw {
+      background: url("/static/images/nw.png") left no-repeat;    
+    }
+    .wiab_arrow .wiab_sw {
+      background: url("/static/images/sw.png") bottom no-repeat;    
+    }
+    .wiab_arrow .wiab_se {
+      background: url("/static/images/se.png") right no-repeat;    
+    }
+    .wiab_arrow .wiab_ne {
+      background: url("/static/images/ne.png") top no-repeat;    
+    }
+    
+    .wiab_arrow .wiab_w .wiab_active {
+      background: url("/static/images/left-active.png") left no-repeat;    
+    }
+    .wiab_arrow .wiab_s .wiab_active {
+      background: url("/static/images/down-active.png") bottom no-repeat;    
+    }
+    .wiab_arrow .wiab_e .wiab_active {
+      background: url("/static/images/right-active.png") right no-repeat;    
+    }
+    .wiab_arrow .wiab_n .wiab_active {
+      background: url("/static/images/up-active.png") top no-repeat;    
+    }    
+    .wiab_arrow .wiab_nw .wiab_active {
+      background: url("/static/images/nw-active.png") left no-repeat;    
+    }
+    .wiab_arrow .wiab_sw .wiab_active {
+      background: url("/static/images/sw-active.png") bottom no-repeat;    
+    }
+    .wiab_arrow .wiab_se .wiab_active {
+      background: url("/static/images/se-active.png") right no-repeat;    
+    }
+    .wiab_arrow .wiab_ne .wiab_active {
+      background: url("/static/images/ne-active.png") top no-repeat;    
+    }
+    
     .wiab {
       display: none;
       position: absolute;
@@ -77,32 +132,7 @@
       right: -91px;  
       top: -80px;
     }
-    
-    .wiab_arrow_w {
-      background: url("/static/images/left.png") left no-repeat;    
-    }
-    .wiab_arrow_s {
-      background: url("/static/images/down.png") bottom no-repeat;    
-    }
-    .wiab_arrow_e {
-      background: url("/static/images/right.png") right no-repeat;    
-    }
-    .wiab_arrow_n {
-      background: url("/static/images/up.png") top no-repeat;    
-    }
-    
-    .wiab_arrow_w.wiab_active {
-      background: url("/static/images/left-active.png") left no-repeat;    
-    }
-    .wiab_arrow_s.wiab_active {
-      background: url("/static/images/down-active.png") bottom no-repeat;    
-    }
-    .wiab_arrow_e.wiab_active {
-      background: url("/static/images/right-active.png") right no-repeat;    
-    }
-    .wiab_arrow_n.wiab_active {
-      background: url("/static/images/up-active.png") top no-repeat;    
-    }
+
     
         
 

@@ -762,11 +762,54 @@ class WikiPresentation(Presentation):
     return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
 
 class WiabPresentation(WikiPresentation):
+  class Cell(object):
+    def __init__(self, index, data, width, height, css):
+      args = locals()
+      for k in args:
+        setattr(self, k, args[k])
+#      self._set(self, index=index, data=data, width=width, height=height, css=css)    
+#    def _set(self, **kargs):
+#      for k in kargs:
+#        setattr(self, k, kargs[k])
+        
   @html.FixIE
   @expose(template="reports.templates.wiab")
   def show(self, obj,  path, formatted=True, prefix=None):
-    content = obj.show(formatted=formatted, prefix=prefix)
-    return dict(session=session, root=session['root'], data=content, path=self._path(path), name=self._name(path), obj=obj)    
+    #currently simplified, only 4-sided shapes    
+    data = obj.show(formatted=formatted, prefix=prefix)
+    if not data:
+      data = ['00000 '*10,
+      '11111<br/>'*5,
+      '22222 '*4,
+      '33333 '*120,
+      '44444 '*60,
+      '5555 '*10,], [[0,0,0],[1,2,2],[1,3,4],[5,5,4]], ([200,600,200], [100,50,1000,100])
+    content, grid, gridSizes = data
+    inverseGrid = list(list(col) for col in zip(*grid))
+
+    seen = set()        
+    outputOrder = []
+    dimensions = []
+    style = []    
+    for y in range(len(gridSizes[1])):
+      row = grid[y]
+      for x in range(len(gridSizes[0])):
+        cell = row[x]
+        if cell in seen:
+          continue
+        seen.add(cell)
+          
+        column = inverseGrid[x]
+        width = sum(gridSizes[0][x:x+row.count(cell)])
+        height = sum(gridSizes[1][y:y+column.count(cell)])
+
+        outputOrder.append(self.Cell(cell, content[cell], width, height, []))
+      
+      outputOrder[-1].css.append('float: right;')
+      
+        
+    width = sum(gridSizes[0])
+    return dict(session=session, root=session['root'], data=outputOrder, pageWidth=width, grid=grid, path=self._path(path), name=self._name(path), obj=obj)    
 
 class PrimitivePresentation(WikiPresentation):
   @html.FixIE

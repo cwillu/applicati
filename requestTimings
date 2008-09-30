@@ -1634,3 +1634,453 @@
   0.275515 http://127.0.0.1:8080/
   0.340662 http://127.0.0.1:8080/trusted/prototype/test/
   0.946562 http://127.0.0.1:8080/?op=search&query=
+  0.206812 http://127.0.0.1:8080/
+  0.035133 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.024887 http://127.0.0.1:8080/test/nonexisting/
+  0.330995 http://127.0.0.1:8080/
+  0.063871 http://127.0.0.1:8080/
+  0.102822 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.005223 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.004564 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.119403 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.006260 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.108898 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.041489 http://127.0.0.1:8080/test/nonexisting/
+  0.082463 http://home.cwillu.com/
+  0.124946 http://home.cwillu.com/?op=edit
+  0.173941 http://home.cwillu.com/?op=save;prototype=Wiki
+  0.124978 http://home.cwillu.com/
+  0.033528 http://home.cwillu.com/foo/
+  0.052224 http://home.cwillu.com/foo/
+  0.096875 http://home.cwillu.com/
+  0.121801 http://home.cwillu.com/
+  0.140084 http://127.0.0.1:8080/
+  0.116016 http://127.0.0.1:8080/public/
+  0.134051 http://127.0.0.1:8080/
+  0.128474 http://127.0.0.1:8080/public/
+  0.146776 http://127.0.0.1:8080/
+  0.136078 http://127.0.0.1:8080/web/
+  0.126879 http://127.0.0.1:8080/web/gateways/
+  0.124517 http://127.0.0.1:8080/web/
+  0.111252 http://home.cwillu.com/
+  0.144630 http://home.cwillu.com/
+  0.176930 http://127.0.0.1:8080/
+  0.120271 http://127.0.0.1:8080/public/
+  0.132311 http://127.0.0.1:8080/
+  0.124672 http://127.0.0.1:8080/untrusted/
+  0.139540 http://127.0.0.1:8080/untrusted/public/
+  0.130111 http://127.0.0.1:8080/untrusted/
+  0.139413 http://127.0.0.1:8080/
+  0.130954 http://127.0.0.1:8080/trustable/
+  0.133334 http://127.0.0.1:8080/trustable/public/
+  0.131754 http://127.0.0.1:8080/trustable/
+  0.114040 http://127.0.0.1:8080/trustable/
+  0.149737 http://127.0.0.1:8080/
+  0.135485 http://127.0.0.1:8080/trusted/
+  0.158431 http://127.0.0.1:8080/trusted/public/
+  0.134536 http://127.0.0.1:8080/trusted/public/public/
+  0.147757 http://127.0.0.1:8080/trusted/public/
+  0.122410 http://127.0.0.1:8080/trusted/
+  0.130044 http://127.0.0.1:8080/
+  0.136329 http://home.cwillu.com/
+  0.122902 http://127.0.0.1:8080/
+  0.073782 http://127.0.0.1:8080/
+  0.095624 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.003696 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.004495 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.091798 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.008271 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.099272 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.047261 http://127.0.0.1:8080/test/nonexisting/
+  0.067415 http://127.0.0.1/
+  0.113765 http://127.0.0.1:8080/
+  0.111496 http://127.0.0.1:8080/public/
+  0.096098 http://127.0.0.1:8080/public/?op=edit
+  0.069845 http://127.0.0.1:8080/public/?op=save;prototype=Wiki
+  0.091559 http://127.0.0.1:8080/public/
+  0.068795 http://127.0.0.1:8080/public/?op=edit
+  0.092139 http://127.0.0.1:8080/public/?op=save;prototype=Wiki
+  0.098640 http://127.0.0.1:8080/public/
+  0.244461 http://127.0.0.1:8080/public/test/
+  0.225746 http://127.0.0.1:8080/public/test/?op=edit
+  0.168365 http://127.0.0.1:8080/public/test/?op=edit;prototype=Editor
+  0.164034 http://127.0.0.1:8080/public/test/?op=save;prototype=Editor
+  0.128664 http://127.0.0.1:8080/public/test/
+  0.129729 http://127.0.0.1:8080/
+  0.087877 http://127.0.0.1:8080/
+  0.084214 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.016484 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.007770 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.134541 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.008304 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.122178 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.048434 http://127.0.0.1:8080/test/nonexisting/
+  0.344558 http://127.0.0.1:8080/public/test/
+  0.127862 http://127.0.0.1:8080/
+  0.152704 http://127.0.0.1:8080/Editor Test/
+  0.206258 http://127.0.0.1:8080/Editor Test/
+  0.135721 http://127.0.0.1:8080/Editor Test/
+  0.193527 http://127.0.0.1:8080/Editor Test/
+  0.065449 http://home.cwillu.com/~cwillu(0ScOiP-2hJ1UrsQ32vTWI)/
+  0.083783 http://home.cwillu.com/
+  0.004662 http://spa.snap.com/snap_preview_anywhere.js?ap=0&si=1&sb=1&key=e5a3c1e6dff5de35b1c6e7c470411886&domain=mattleifer.wordpress.com&fl=wordpress&pub=pub-2311827-www.wordpress.com&es=all&lang=en
+  0.008568 http://spa.snap.com/snap_preview_anywhere.js/
+  0.142885 http://127.0.0.1:8080/
+  0.109891 http://127.0.0.1:8080/Editor Test/
+  0.162015 http://127.0.0.1:8080/Editor Test/
+  0.106144 http://127.0.0.1:8080/Editor Test/
+  0.159120 http://127.0.0.1:8080/Editor Test/
+  0.113404 http://127.0.0.1:8080/Editor Test/
+  0.114479 http://127.0.0.1:8080/Editor Test/
+  0.112382 http://127.0.0.1:8080/Editor Test/
+  0.144151 http://127.0.0.1:8080/Editor Test/
+  0.190240 http://127.0.0.1:8080/Editor Test/
+  0.156199 http://127.0.0.1:8080/Editor Test/
+  0.173845 http://127.0.0.1:8080/Editor Test/
+  0.150238 http://127.0.0.1:8080/Editor Test/
+  0.101950 http://127.0.0.1:8080/Editor Test/
+  0.160696 http://127.0.0.1:8080/Editor Test/
+  0.170743 http://127.0.0.1:8080/Editor Test/
+  0.117383 http://127.0.0.1:8080/Editor Test/
+  0.108880 http://127.0.0.1:8080/Editor Test/
+  0.185625 http://127.0.0.1:8080/Editor Test/
+  0.168273 http://127.0.0.1:8080/Editor Test/
+  0.193753 http://127.0.0.1:8080/Editor Test/
+  0.159002 http://127.0.0.1:8080/Editor Test/
+  0.115651 http://127.0.0.1:8080/Editor Test/
+  0.123560 http://127.0.0.1:8080/Editor Test/
+  0.165133 http://127.0.0.1:8080/Editor Test/
+  0.108997 http://127.0.0.1:8080/Editor Test/
+  0.104943 http://127.0.0.1:8080/Editor Test/
+  0.119910 http://127.0.0.1:8080/Editor Test/
+  0.113646 http://127.0.0.1:8080/Editor Test/
+  0.132570 http://127.0.0.1:8080/Editor Test/
+  0.156089 http://127.0.0.1:8080/Editor Test/
+  0.110697 http://127.0.0.1:8080/Editor Test/
+  0.117907 http://127.0.0.1:8080/Editor Test/
+  0.196785 http://127.0.0.1:8080/Editor Test/
+  0.066759 http://127.0.0.1:8080/Editor Test/
+  0.062149 http://127.0.0.1:8080/Editor Test/
+  0.052731 http://127.0.0.1:8080/Editor Test/
+  0.168276 http://127.0.0.1:8080/Editor Test/
+  0.114088 http://127.0.0.1:8080/Editor Test/
+  0.241032 http://127.0.0.1:8080/Editor Test/
+  0.113045 http://127.0.0.1:8080/Editor Test/
+  0.111508 http://127.0.0.1:8080/Editor Test/
+  0.123503 http://127.0.0.1:8080/Editor Test/
+  0.124833 http://127.0.0.1:8080/Editor Test/
+  0.157316 http://127.0.0.1:8080/Editor Test/
+  0.098253 http://127.0.0.1:8080/Editor Test/
+  0.103263 http://127.0.0.1:8080/Editor Test/
+  0.156396 http://127.0.0.1:8080/Editor Test/
+  0.096822 http://127.0.0.1:8080/Editor Test/
+  0.096999 http://127.0.0.1:8080/Editor Test/
+  0.094289 http://127.0.0.1:8080/Editor Test/
+  0.068750 http://127.0.0.1:8080/Editor Test/
+  0.091100 http://127.0.0.1:8080/Editor Test/
+  0.150916 http://127.0.0.1:8080/Editor Test/
+  0.072510 http://127.0.0.1:8080/Editor Test/
+  0.086322 http://127.0.0.1:8080/Editor Test/
+  0.084687 http://127.0.0.1:8080/Editor Test/
+  0.100846 http://127.0.0.1:8080/Editor Test/
+  0.108506 http://127.0.0.1:8080/Editor Test/
+  0.102601 http://127.0.0.1:8080/Editor Test/
+  0.108535 http://127.0.0.1:8080/Editor Test/
+  0.093186 http://127.0.0.1:8080/Editor Test/
+  0.108924 http://127.0.0.1:8080/Editor Test/
+  0.167004 http://127.0.0.1:8080/Editor Test/
+  0.102898 http://127.0.0.1:8080/Editor Test/
+  0.125156 http://127.0.0.1:8080/Editor Test/
+  0.106520 http://127.0.0.1:8080/Editor Test/
+  0.055522 http://spa.snap.com/snap_preview_anywhere.js?ap=0&si=1&sb=1&key=e5a3c1e6dff5de35b1c6e7c470411886&domain=trixter.wordpress.com&fl=wordpress&pub=pub-2311827-www.wordpress.com&es=all&lang=en
+  0.033263 http://spa.snap.com/snap_preview_anywhere.js/
+  0.080111 http://dominubuntu.local/
+  0.143738 http://127.0.0.1:8080/Editor Test/
+  0.004741 http://read.cwillu.com/robots.txt
+  0.005661 http://69.11.78.72/user/soapCaller.bs
+  0.005620 http://universalcatalog.org/robots.txt
+  0.009137 http://universalcatalog.org/robots.txt/
+  0.008893 http://universalcatalog.org/
+  0.005689 http://www.wantsfly.com/prx1.php?hash=A7C7E7AFDCA3AD0C450B4E480050DDB4D914BE63ECEA
+  0.049496 http://home.cwillu.com/robots.txt
+  0.105930 http://home.cwillu.com/robots.txt/
+  0.006301 http://www.universalcatalog.org/robots.txt
+  0.008824 http://www.universalcatalog.org/
+  0.210294 http://127.0.0.1:8080/
+  0.081639 http://127.0.0.1:8080/
+  0.092763 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.003842 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005662 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.113983 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004752 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.089319 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.045204 http://127.0.0.1:8080/test/nonexisting/
+  0.022769 http://127.0.0.1:8080/Editor Test/
+  0.094893 http://127.0.0.1:8080/
+  0.065017 http://127.0.0.1:8080/
+  0.079221 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.005443 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.007447 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.098873 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.005888 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.134337 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.032318 http://127.0.0.1:8080/test/nonexisting/
+  0.016607 http://127.0.0.1:8080/Editor Test/
+  0.073278 http://127.0.0.1:8080/
+  0.052656 http://127.0.0.1:8080/
+  0.084069 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.004467 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.004426 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.084327 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.016643 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.093684 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.045005 http://127.0.0.1:8080/test/nonexisting/
+  0.017144 http://127.0.0.1:8080/Editor Test/
+  0.019147 http://127.0.0.1:8080/Editor Test/
+  0.013176 http://127.0.0.1:8080/Editor Test/
+  0.077610 http://127.0.0.1:8080/
+  0.067221 http://127.0.0.1:8080/
+  0.074426 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.004753 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.008537 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.101366 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.008599 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.080767 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.045875 http://127.0.0.1:8080/test/nonexisting/
+  0.016363 http://127.0.0.1:8080/Editor Test/
+  0.073079 http://127.0.0.1:8080/
+  0.068849 http://127.0.0.1:8080/
+  0.060788 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.009609 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.008288 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.081437 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.003982 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.077236 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.045454 http://127.0.0.1:8080/test/nonexisting/
+  0.101065 http://127.0.0.1:8080/
+  0.062285 http://127.0.0.1:8080/
+  0.075475 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.004766 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005937 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.096019 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004653 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.066546 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.042132 http://127.0.0.1:8080/test/nonexisting/
+  0.093830 http://127.0.0.1:8080/Editor Test/
+  0.072075 http://127.0.0.1:8080/
+  0.078483 http://127.0.0.1:8080/
+  0.067533 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.003819 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.008103 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.151444 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004706 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.095037 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.045014 http://127.0.0.1:8080/test/nonexisting/
+  0.151353 http://127.0.0.1:8080/Editor Test/
+  0.204755 http://127.0.0.1:8080/Editor Test/
+  0.075309 http://127.0.0.1:8080/
+  0.069080 http://127.0.0.1:8080/
+  0.074591 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.003867 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005179 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.164492 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004530 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.100302 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.032574 http://127.0.0.1:8080/test/nonexisting/
+  0.075891 http://127.0.0.1:8080/
+  0.060857 http://127.0.0.1:8080/
+  0.074946 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.005783 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.004889 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.133084 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004490 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.105196 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.048910 http://127.0.0.1:8080/test/nonexisting/
+  0.265121 http://127.0.0.1:8080/Editor Test/
+  0.254828 http://127.0.0.1:8080/Editor Test/
+  0.103152 http://127.0.0.1:8080/Editor Test/
+  0.119215 http://127.0.0.1:8080/Editor Test/
+  0.212317 http://127.0.0.1:8080/Editor Test/
+  0.227539 http://127.0.0.1:8080/Editor Test/
+  0.261312 http://127.0.0.1:8080/Editor Test/
+  0.242492 http://127.0.0.1:8080/Editor Test/
+  0.103760 http://127.0.0.1:8080/Editor Test/
+  0.495654 http://127.0.0.1:8080/Editor Test/
+  0.518650 http://127.0.0.1:8080/Editor Test/
+  0.240186 http://127.0.0.1:8080/Editor Test/
+  0.284952 http://127.0.0.1:8080/Editor Test/
+  0.125491 http://127.0.0.1:8080/
+  0.133898 http://127.0.0.1:8080/
+  0.087021 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.003863 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005555 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.092843 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.006723 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.143890 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.040470 http://127.0.0.1:8080/test/nonexisting/
+  0.005376 http://home.cwillu.com/robots.txt
+  0.026072 http://home.cwillu.com/robots.txt/
+  0.067595 http://home.cwillu.com/Site Tutorial/Test Page One/Test Page 3/Tutorial/?op=search
+  0.005551 http://69.11.78.72/twiki/bin/configure?action=image;image=|id|;type=text/plain
+  0.005222 http://home.cwillu.com/robots.txt
+  0.025755 http://home.cwillu.com/robots.txt/
+  0.064070 http://home.cwillu.com/Blog/Design Notes/Permissions/Ã¢â‚¬Â /
+  0.004981 http://home.cwillu.com/robots.txt
+  0.023424 http://home.cwillu.com/robots.txt/
+  0.008311 http://spa.snap.com/snap_preview_anywhere.js?ap=0&si=1&sb=1&key=e5a3c1e6dff5de35b1c6e7c470411886&domain=robotpirateninja.com&fl=wordpress&pub=pub-2311827-www.wordpress.com&es=all&lang=en
+  0.008354 http://spa.snap.com/snap_preview_anywhere.js/
+  0.129735 http://dominubuntu.local/
+  0.103672 http://dominubuntu.local/
+  0.076996 http://127.0.0.1:8080/
+  0.050374 http://127.0.0.1:8080/
+  0.083741 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.003833 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.009034 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.103575 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004671 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.072256 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.055673 http://127.0.0.1:8080/test/nonexisting/
+  0.080436 http://127.0.0.1:8080/
+  0.069707 http://127.0.0.1:8080/
+  0.073544 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.004642 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.008649 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.105354 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.006108 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.114454 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.026335 http://127.0.0.1:8080/test/nonexisting/
+  0.149326 http://127.0.0.1:8080/Editor Test/
+  0.146242 http://127.0.0.1:8080/Editor Test/
+  0.262591 http://127.0.0.1:8080/Editor Test/
+  0.077303 http://127.0.0.1:8080/
+  0.059042 http://127.0.0.1:8080/
+  0.070543 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.009411 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005078 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.078189 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004950 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.049015 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.041161 http://127.0.0.1:8080/test/nonexisting/
+  0.338939 http://127.0.0.1:8080/Editor Test/
+  0.324633 http://127.0.0.1:8080/Editor Test/
+  0.089988 http://127.0.0.1:8080/
+  0.105015 http://127.0.0.1:8080/
+  0.094404 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.004276 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005153 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.106806 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004639 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.102808 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.046052 http://127.0.0.1:8080/test/nonexisting/
+  0.208892 http://127.0.0.1:8080/Editor Test/
+  0.120383 http://127.0.0.1:8080/Editor Test/
+  0.473450 http://127.0.0.1:8080/Editor Test/
+  0.202527 http://127.0.0.1:8080/Editor Test/
+  0.099686 http://127.0.0.1:8080/
+  0.069912 http://127.0.0.1:8080/
+  0.084989 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.016327 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.004638 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.097021 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004677 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.076825 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.043506 http://127.0.0.1:8080/test/nonexisting/
+  0.022323 http://127.0.0.1:8080/Editor Test/
+  0.100341 http://127.0.0.1:8080/Editor Test/
+  0.111980 http://127.0.0.1:8080/
+  0.056848 http://127.0.0.1:8080/
+  0.064088 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.008447 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005464 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.067197 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004973 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.067773 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.036814 http://127.0.0.1:8080/test/nonexisting/
+  0.075094 http://127.0.0.1:8080/
+  0.063338 http://127.0.0.1:8080/
+  0.064546 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.003974 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005083 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.099923 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.005817 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.098066 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.031406 http://127.0.0.1:8080/test/nonexisting/
+  0.071862 http://127.0.0.1:8080/
+  0.059896 http://127.0.0.1:8080/
+  0.090151 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.003681 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005402 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.094496 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004632 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.087225 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.046354 http://127.0.0.1:8080/test/nonexisting/
+  0.023343 http://127.0.0.1:8080/Editor Test/
+  0.069020 http://127.0.0.1:8080/
+  0.064519 http://127.0.0.1:8080/
+  0.067687 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.010488 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.005682 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.075056 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004458 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.066494 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.040291 http://127.0.0.1:8080/test/nonexisting/
+  0.059276 http://127.0.0.1:8080/Editor Test/
+  0.071610 http://127.0.0.1:8080/
+  0.059362 http://127.0.0.1:8080/
+  0.070824 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.009494 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.006056 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.074718 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004497 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.052965 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.042578 http://127.0.0.1:8080/test/nonexisting/
+  0.287707 http://127.0.0.1:8080/Editor Test/
+  0.086926 http://127.0.0.1:8080/
+  0.060677 http://127.0.0.1:8080/
+  0.072967 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/
+  0.009455 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root
+  0.006716 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.125780 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.004137 http://127.0.0.1:8080/~test(abcdef-1SHTIO9grtvwmQ)/root/
+  0.101445 http://127.0.0.1:8080/~test(abcdef-5BVGkNMi7sXqwu)/root/
+  0.035894 http://127.0.0.1:8080/test/nonexisting/
+  0.242258 http://127.0.0.1:8080/Editor Test/
+  0.207215 http://127.0.0.1:8080/Editor Test/
+  0.210557 http://127.0.0.1:8080/Editor Test/
+  0.192914 http://127.0.0.1:8080/Editor Test/
+  0.213128 http://127.0.0.1:8080/Editor Test/
+  0.226892 http://127.0.0.1:8080/Editor Test/
+  0.322803 http://127.0.0.1:8080/Editor Test/
+  0.004585 http://home.cwillu.com/robots.txt
+  0.029167 http://home.cwillu.com/robots.txt/
+  0.220960 http://home.cwillu.com/?op=links
+  0.286624 http://127.0.0.1:8080/Editor Test/
+  0.238238 http://127.0.0.1:8080/Editor Test/
+  0.270949 http://127.0.0.1:8080/Editor Test/
+  0.496811 http://127.0.0.1:8080/Editor Test/
+  0.354071 http://127.0.0.1:8080/Editor Test/
+  0.391939 http://127.0.0.1:8080/Editor Test/
+  0.268898 http://127.0.0.1:8080/Editor Test/
+  0.286170 http://127.0.0.1:8080/Editor Test/
+  0.416439 http://127.0.0.1:8080/Editor Test/
+  0.270856 http://127.0.0.1:8080/Editor Test/
+  0.271894 http://127.0.0.1:8080/Editor Test/
+  0.297712 http://127.0.0.1:8080/Editor Test/
+  0.321509 http://127.0.0.1:8080/Editor Test/
+  0.249403 http://127.0.0.1:8080/Editor Test/
+  0.413780 http://127.0.0.1:8080/Editor Test/
+  0.282574 http://127.0.0.1:8080/Editor Test/
+  0.243243 http://127.0.0.1:8080/Editor Test/
+  0.286947 http://127.0.0.1:8080/Editor Test/
+  0.254178 http://127.0.0.1:8080/Editor Test/
+  0.332521 http://127.0.0.1:8080/Editor Test/
+  0.256247 http://127.0.0.1:8080/Editor Test/
+  0.229345 http://127.0.0.1:8080/Editor Test/
+  0.312303 http://127.0.0.1:8080/Editor Test/
+  0.318165 http://127.0.0.1:8080/Editor Test/
+  0.383719 http://127.0.0.1:8080/Editor Test/
+  0.203460 http://127.0.0.1:8080/Editor Test/
+  0.230173 http://127.0.0.1:8080/Editor Test/
+  0.063953 http://home.cwillu.com/robots.txt
+  0.088040 http://home.cwillu.com/robots.txt/
+  0.152048 http://home.cwillu.com/Site Tutorial/Test Page Two/?op=search
