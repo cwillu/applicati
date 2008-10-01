@@ -9,7 +9,7 @@
 <title> ${name} - NeoWiki </title>
 <style type="text/css">
   @import "${tg.url('/static/css/wiab.css')}";
-</style>    
+</style>
 <script src="/static/javascript/jquery-1.2.6.js"></script>
 <script src="/static/javascript/ui.core.js"></script>
 <script src="${tg.url('/static/javascript/shortcut.js')}"></script>
@@ -21,24 +21,9 @@
     return false;
   }, { 'type': 'keydown', 'propagate': false, 'target': document });
 </script>
-
-<style>
-  i {
-    border: 1px solid;
-  }
-  .cell {
-    //position: inline;
-    float: left;
-    border: 1px solid;
-    margin: 0px -1px;
-  }
-  .cell.active {
-    background-color: #cccccc;
-  }
-</style>
 <?python
   globalTemplate = """
-    body,#main_content {
+    #main_content {
       width: %spx;
     }
     """ % pageWidth

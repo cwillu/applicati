@@ -5,6 +5,7 @@
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'" py:attrs="item.items()">
     <meta name="verify-v1" content="tasE1XaBrCBulc5wEzuT4RocTBnZ0f18824WGAwujmE=" />    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title py:replace="''">Your title goes here</title>
+    <link rel="icon" type="image/png" href="/static/images/ne.png" />
     <style type="text/css">
         #pageLogin
         {

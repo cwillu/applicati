@@ -96,14 +96,15 @@ $(document).ready(function(){
       was.unbind('mouseout', checkMouse);    
     });
 
-    timeouts.push(setTimeout(function(){
-      var show ='.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw'  
-      $(show).css({display: 'block'});
-      was.addClass("moreActive");
+    var show ='.wiab_w,.wiab_e,.wiab_n,.wiab_s'  //,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw
+    //show = '.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw'     
+    $(show).css({display: 'block'});
+
+    timeouts.push(setTimeout(function(){  
       wiab_tool().css({position: 'relative', left: mouseX, top: mouseY}).fadeIn(100);
       was.focus();          
       cancels.push(function(){
-        wiab_tool().fadeOut(100, function(){$(show).css({display: 'none'})});
+        wiab_tool().fadeOut(100);
       });
     }, 300));
 
