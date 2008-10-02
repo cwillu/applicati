@@ -103,6 +103,7 @@ img.wiab  {
   height: 256px; 
   width: 256px; 
   color: white;
+  z-index: 11;
 }
 .wiab_w {
   display: none;

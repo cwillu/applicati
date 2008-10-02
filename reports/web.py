@@ -778,12 +778,20 @@ class WiabPresentation(WikiPresentation):
     #currently simplified, only 4-sided shapes    
     data = obj.show(formatted=formatted, prefix=prefix)
     if not data:
-      data = ['00000 '*10,
-      '11111<br/>'*5,
-      '22222 '*4,
-      '33333 '*120,
-      '44444 '*60,
-      '5555 '*10,], [[0,0,0],[1,2,2],[1,3,4],[5,5,4]], ([200,600,200], [100,50,1000,100])
+      data = (['A Headline',
+      '* link<br/>'*5,
+      'Tool | Bar | Button '*4,
+      'dmajcfa '*120,
+      'Side bar content '*20,
+      'Copyright statement '*10,], 
+       [[0,0,0],
+        [1,2,2],
+        [1,3,4],
+        [5,5,4]], 
+        ([200,600,200], [100,50,1000,100]))
+
+
+
     content, grid, gridSizes = data
     inverseGrid = list(list(col) for col in zip(*grid))
 

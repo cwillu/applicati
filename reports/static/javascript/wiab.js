@@ -35,24 +35,22 @@ wiab_tool = function() {
     s: item('Edit', 'wiab_button', null),
     se: item('Links', 'wiab_button', null),
     sw: item('Select', 'wiab_button', null),
-    w: item('Paste', 'wiab_button', null)
+    w: item('Paste', 'wiab_button', null),
   }; 
+ 
    
   var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
-  div.children(all)
-    .css({display: 'none'});
+  var children = div.children(all);
+  children.css({display: 'none'});
   
     var show = '';
     for (direction in menu){
       _class = '.wiab_' + direction
       show += _class + ',';
-      div.children(all).filter(_class).addClass(menu[direction].style).end();
+      children.filter(_class).addClass(menu[direction].style)
     }
     //show = '.wiab_w,.wiab_e,.wiab_n,.wiab_s';
-    div.children(all).filter(show)
-      .css({display: 'block'})
-    .end()
-  .end();
+    children.filter(show).css({display: 'block'})
   
   return div;
 }
