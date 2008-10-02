@@ -1,12 +1,12 @@
-  .cell {
-    //position: inline;
-    float: left;
-    border: 1px solid;
-    margin: 0px -1px;
-  }
-  .cell.moreActive {
-    outline: 3px dotted black;
-  }
+.cell {
+/*  position: inline;*/
+  float: left;
+  border: 1px solid;
+  margin: 0px -1px;
+}
+.cell.moreActive {
+  outline: 3px dotted black;
+}
 
 /*    .active {*/
 /*	    //outline: 1px solid black;*/
@@ -14,136 +14,136 @@
 /*    .moreActive {*/
 /*	    outline: 3px dotted black;*/
 /*    }*/
-    .wiab_tool {
-      display: none;
-      position: relative;
-      width: 0px;
-      height: 0px;
-      left: 300px;
-      top: 200px;  
-      z-index: 11;    
-    }
-    
-    .wiab_button {    
-      background: url("/static/images/buttons.png") 0px 0px;
-    }
-    .wiab_button .wiab_active {
-      background: url("/static/images/buttons.png") 64px 0px;
-    }
-            
-    .wiab_arrow.wiab_n {
-      background: url("/static/images/buttons.png") 0px -64px;
-    }
-    .wiab_arrow.wiab_ne {
-      background: url("/static/images/buttons.png") 0px -128px;
-    }
-    .wiab_arrow.wiab_e {
-      background: url("/static/images/buttons.png") 0px -192px;
-    }
-    .wiab_arrow.wiab_se {
-      background: url("/static/images/buttons.png") 0px -256px;
-    }
-    .wiab_arrow.wiab_s {
-      background: url("/static/images/buttons.png") 0px -320px;
-    }
-    .wiab_arrow.wiab_sw {
-      background: url("/static/images/buttons.png") 0px -384px;
-    }
-    .wiab_arrow.wiab_w {
-      background: url("/static/images/buttons.png") 0px -448px;    
-    }
-    .wiab_arrow.wiab_nw {
-      background: url("/static/images/buttons.png") 0px -512px;
-    }
-    
-    
-    .wiab_arrow.wiab_n.wiab_active {
-      background: url("/static/images/buttons.png") 64px -64px;
-    }    
-    .wiab_arrow.wiab_ne.wiab_active {
-      background: url("/static/images/buttons.png") 64px -128px;
-    }
-    .wiab_arrow.wiab_e.wiab_active {
-      background: url("/static/images/buttons.png") 64px -192px;
-    }
-    .wiab_arrow.wiab_se.wiab_active {
-      background: url("/static/images/buttons.png") 64px -256px;
-    }
-    .wiab_arrow.wiab_s.wiab_active {
-      background: url("/static/images/buttons.png") 64px -320px;
-    }
-    .wiab_arrow.wiab_sw.wiab_active {
-      background: url("/static/images/buttons.png") 64px -384px;
-    }
-    .wiab_arrow.wiab_w.wiab_active {
-      background: url("/static/images/buttons.png") 64px -448px;
-    }
-    .wiab_arrow.wiab_nw.wiab_active {
-      background: url("/static/images/buttons.png") 64px -512px;
-    }
-    
-    .wiab {
-      display: none;
-      position: absolute;
-      text-align: center;
-      text-decoration: none;
-      font-weight: bold;      
-      line-height: 20px;
-      color: #333333;
-      width: 64px;
-      height: 64px;      
-    }
-    .wiab_active {
-      color: #000044;
-    }
-    .wiab img {
-      position: absolute; 
-      left: -128px;
-      top: -128px;
-      height: 256px; 
-      width: 256px; 
-      color: white;
-    }
-    .wiab_w {
-      display: none;
-      left: -128px;
-      top: -32px;  
-    }
-    .wiab_sw {
-      display: none;
-      left: -91px;  
-      bottom: -80px;
-    }
-    .wiab_s {
-      display: none;
-      left: -32px;
-      bottom: -96px;
-    }
-    .wiab_se {
-      display: none;
-      right: -91px;  
-      bottom: -80px;
-    }
-    .wiab_e {
-      display: none;
-      right: -128px;  
-      top: -32px;
-    }
-    .wiab_nw {
-      display: none;
-      left: -91px;  
-      top: -80px;
-    }
-    .wiab_n {
-      display: none;
-      left: -32px;
-      top: -96px;
-    }
-    .wiab_ne {
-      display: none;
-      right: -91px;  
-      top: -80px;
-    }
+.wiab_tool {
+  display: none;
+  position: relative;
+  width: 0px;
+  height: 0px;
+  left: 300px;
+  top: 200px;  
+  z-index: 11;    
+}
+
+.wiab_button {    
+  background: url("/static/images/buttons.png") 0px 0px;
+}
+.wiab_button.wiab_active {
+  background: url("/static/images/buttons.png") 64px 0px;
+}
+        
+.wiab_arrow.wiab_n {
+  background: url("/static/images/buttons.png") 0px -64px;
+}
+.wiab_arrow.wiab_ne {
+  background: url("/static/images/buttons.png") 0px -128px;
+}
+.wiab_arrow.wiab_e {
+  background: url("/static/images/buttons.png") 0px -192px;
+}
+.wiab_arrow.wiab_se {
+  background: url("/static/images/buttons.png") 0px -256px;
+}
+.wiab_arrow.wiab_s {
+  background: url("/static/images/buttons.png") 0px -320px;
+}
+.wiab_arrow.wiab_sw {
+  background: url("/static/images/buttons.png") 0px -384px;
+}
+.wiab_arrow.wiab_w {
+  background: url("/static/images/buttons.png") 0px -448px;    
+}
+.wiab_arrow.wiab_nw {
+  background: url("/static/images/buttons.png") 0px -512px;
+}
+
+
+.wiab_arrow.wiab_n.wiab_active {
+  background: url("/static/images/buttons.png") 64px -64px;
+}    
+.wiab_arrow.wiab_ne.wiab_active {
+  background: url("/static/images/buttons.png") 64px -128px;
+}
+.wiab_arrow.wiab_e.wiab_active {
+  background: url("/static/images/buttons.png") 64px -192px;
+}
+.wiab_arrow.wiab_se.wiab_active {
+  background: url("/static/images/buttons.png") 64px -256px;
+}
+.wiab_arrow.wiab_s.wiab_active {
+  background: url("/static/images/buttons.png") 64px -320px;
+}
+.wiab_arrow.wiab_sw.wiab_active {
+  background: url("/static/images/buttons.png") 64px -384px;
+}
+.wiab_arrow.wiab_w.wiab_active {
+  background: url("/static/images/buttons.png") 64px -448px;
+}
+.wiab_arrow.wiab_nw.wiab_active {
+  background: url("/static/images/buttons.png") 64px -512px;
+}
+
+.wiab {
+  display: none;
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;      
+  line-height: 20px;
+  color: #333333;
+  width: 64px;
+  height: 64px;      
+}
+.wiab_active {
+  color: #000044;
+}
+img.wiab  {
+  position: absolute; 
+  left: -128px;
+  top: -128px;
+  height: 256px; 
+  width: 256px; 
+  color: white;
+}
+.wiab_w {
+  display: none;
+  left: -128px;
+  top: -32px;  
+}
+.wiab_sw {
+  display: none;
+  left: -91px;  
+  bottom: -80px;
+}
+.wiab_s {
+  display: none;
+  left: -32px;
+  bottom: -96px;
+}
+.wiab_se {
+  display: none;
+  right: -91px;  
+  bottom: -80px;
+}
+.wiab_e {
+  display: none;
+  right: -128px;  
+  top: -32px;
+}
+.wiab_nw {
+  display: none;
+  left: -91px;  
+  top: -80px;
+}
+.wiab_n {
+  display: none;
+  left: -32px;
+  top: -96px;
+}
+.wiab_ne {
+  display: none;
+  right: -91px;  
+  top: -80px;
+}
 
     
         

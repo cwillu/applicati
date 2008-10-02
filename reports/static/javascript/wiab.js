@@ -12,7 +12,7 @@
 
 _tool_div = true;
 
-wiab_tool = function(){  
+wiab_pi = function(){  
   _tool_div = !_tool_div
   if (_tool_div)
     return $('#wiab_tool_1');
@@ -20,14 +20,53 @@ wiab_tool = function(){
     return $('#wiab_tool_2');
 };
 
+wiab_tool = function() {
+  var div = wiab_pi();
+  
+  var item = function(n, style, action) {
+    var item = Object();
+    item.n = n;
+    item.style = style;
+    item.action = action;
+    return item;
+  };
+  
+  var menu = {
+    s: item('Edit', 'wiab_button', null),
+    se: item('Links', 'wiab_button', null),
+    sw: item('Select', 'wiab_button', null),
+    w: item('Paste', 'wiab_button', null)
+  }; 
+   
+  var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
+  div.children(all)
+    .css({display: 'none'});
+  
+    var show = '';
+    for (direction in menu){
+      _class = '.wiab_' + direction
+      show += _class + ',';
+      div.children(all).filter(_class).addClass(menu[direction].style).end();
+    }
+    //show = '.wiab_w,.wiab_e,.wiab_n,.wiab_s';
+    div.children(all).filter(show)
+      .css({display: 'block'})
+    .end()
+  .end();
+  
+  return div;
+}
+
+
+
 layout = function() {
   alert($(this));
 };
 
-var defaultDownAction = function(e){
+var defaultDownAction = function(dom, e){
   if (e.button != 0)
     return;
-  var was = $(this);
+  was = dom;
   var currentTool = wiab_tool();
   e.stopPropagation();
   if (was.filter("a").length > 0)
@@ -56,12 +95,18 @@ var defaultDownAction = function(e){
     was.unbind('mouseout', checkMouse);    
   });
 
-  var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
-  var show ='.wiab_w,.wiab_e,.wiab_n,.wiab_s';  //,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw
-  currentTool.children(all).css({display: 'none'}).filter(show).css({display: 'block'}).end().end();
-  timeouts.push(setTimeout(function(){  
+//  var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
+//  var show ='.wiab_w,.wiab_e,.wiab_n,.wiab_s';  //,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw
+//  currentTool.children(all)
+//    .css({display: 'none'}).filter(show)
+//      .css({display: 'block'})
+//    .end()
+//  .end();
+    
+  timeouts.push(setTimeout(function(){
+    was.addClass("moreActive");
     currentTool.css({position: 'relative', left: mouseX, top: mouseY}).fadeIn(100);
-    was.focus();          
+    document.body.focus();
     cancels.push(function(){
       currentTool.fadeOut(100);
     });
@@ -71,7 +116,7 @@ var defaultDownAction = function(e){
   //return false;
 };
 
-var defaultUpAction = function(e){
+var defaultUpAction = function(dom, e){
   e.stopPropagation();
   for (i in timeouts)
     clearTimeout(timeouts.pop());
@@ -86,13 +131,13 @@ var defaultUpAction = function(e){
   }
 };
 
+var was = null;
 var pageX = null;
 var pageY = null;    
 var mouseX = null;
 var mouseY = null;
 var cancels = [];
 var timeouts = [];
-var was = null;
 var clickStack = [{down: defaultDownAction, up: defaultUpAction}];
 
 
@@ -100,26 +145,26 @@ $(document).ready(function(){
   $("body").prepend('\
     <div id="wiab_tool_1" class="wiab_tool" > \
       <img id="wiab_image" src="/static/images/1.png" /> \
-      <a rel="nofollow" class="wiab_arrow wiab_sw wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_s wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_se wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_e wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_ne wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_n wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_nw wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_w wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_n wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_ne wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_e wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_se wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_s wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_sw wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_w wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_nw wiab"><br /></a> \
     </div>');
   $("body").prepend('\
     <div id="wiab_tool_2" class="wiab_tool" > \
       <img id="wiab_image" src="/static/images/1.png" /> \
-      <a rel="nofollow" class="wiab_arrow wiab_sw wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_s wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_se wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_e wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_ne wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_n wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_nw wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_arrow wiab_w wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_n wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_ne wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_e wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_se wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_s wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_sw wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_w wiab"><br /></a> \
+      <a rel="nofollow" class="wiab_nw wiab"><br /></a> \
     </div>');
 
   $(".wiab").hover(function(){
@@ -142,12 +187,12 @@ $(document).ready(function(){
     action = clickStack.pop();
     if (clickStack.length == 0)
       clickStack.push(action)
-    action.down(e)
+    action.down($(this), e)
   }).mouseup(function(e){
     action = clickStack.pop();
     if (clickStack.length == 0)
       clickStack.push(action)
-    action.up(e)
+    action.up($(this), e)
   });
   
 });

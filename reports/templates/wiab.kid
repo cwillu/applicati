@@ -49,6 +49,5 @@
       ${XML(cell.data)}
     </div>
   </div>
-
 </body>
 </html>

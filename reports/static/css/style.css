@@ -15,7 +15,7 @@ tr.even td {background-color:#fff;}
 
 .toolbar {
   height: 18px;
-  background: #224 url(/static/images/toolbar-gradient.png) repeat-y;#  background-color: #224;
+  background: #224 url(/static/images/toolbar-gradient.png) repeat-y;/*  background-color: #224;*/
   padding: 0px;
   color: #ccf;
   font-size: 125%;
