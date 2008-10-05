@@ -89,12 +89,12 @@
   text-decoration: none;
   font-weight: bold;      
   line-height: 20px;
-  color: #333333;
+  color: #000000;
   width: 64px;
-  height: 64px;      
+  height: 64px;   
 }
 .wiab_active {
-  color: #000044;
+  color: #000055;
 }
 img.wiab  {
   position: absolute; 

@@ -11,34 +11,43 @@
 //  <a href="#foo" onClick="layout();" rel="nofollow" class="wiab wiab_e"><br />Layout</a>
 
 _tool_div = true;
+var menu = null;
+
+var item = function(label, style, action) {
+  var item = Object();
+  item.label = label;
+  item.style = style;
+  item.action = action;
+  return item;
+}; 
 
 wiab_pi = function(){  
   _tool_div = !_tool_div
-  if (_tool_div)
+  if (_tool_div){
+    menu = {
+      s: item('Edit', 'wiab_button', null),
+      se: item('Links', 'wiab_button', null),
+      sw: item('Select', 'wiab_button', null),
+      w: item('Paste', 'wiab_button', null),
+    };
     return $('#wiab_tool_1');
-  else
+  } else {
+    menu = {
+      n: item('', 'wiab_arrow', null),
+      s: item('', 'wiab_arrow', null),
+      e: item('', 'wiab_arrow', null),
+      w: item('', 'wiab_arrow', null),
+      ne: item('Layout', 'wiab_button', null),
+      se: item('Links', 'wiab_button', null),
+      sw: item('Delete', 'wiab_button', null),
+      nw: item('', 'wiab_button', null),
+    };  
     return $('#wiab_tool_2');
+  }
 };
 
 wiab_tool = function() {
-  var div = wiab_pi();
-  
-  var item = function(n, style, action) {
-    var item = Object();
-    item.n = n;
-    item.style = style;
-    item.action = action;
-    return item;
-  };
-  
-  var menu = {
-    s: item('Edit', 'wiab_button', null),
-    se: item('Links', 'wiab_button', null),
-    sw: item('Select', 'wiab_button', null),
-    w: item('Paste', 'wiab_button', null),
-  }; 
- 
-   
+  var div = wiab_pi();    
   var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
   var children = div.children(all);
   children.css({display: 'none'});
@@ -47,7 +56,7 @@ wiab_tool = function() {
     for (direction in menu){
       _class = '.wiab_' + direction
       show += _class + ',';
-      children.filter(_class).addClass(menu[direction].style)
+      children.filter(_class).addClass(menu[direction].style).html("<br/>" + menu[direction].label);
     }
     //show = '.wiab_w,.wiab_e,.wiab_n,.wiab_s';
     children.filter(show).css({display: 'block'})
@@ -82,7 +91,7 @@ var defaultDownAction = function(dom, e){
   
   var checkMouse = function(e){
     //alert(e.clientX + ", " + mouseX + ", ");
-    if (Math.abs(e.clientX-mouseX) > 2 || Math.abs(e.clientY-mouseY) > 2) 
+    if (moved(e)) 
       for (i in timeouts)
         clearTimeout(timeouts.pop());                           
   }
@@ -110,9 +119,13 @@ var defaultDownAction = function(dom, e){
     });
   }, 300));
 
-  $(this).mousemove(checkMouse).mouseout(checkMouse);
+  was.mousemove(checkMouse).mouseout(checkMouse);
   //return false;
 };
+
+function moved(e){
+  return Math.abs(e.clientX-mouseX) > 2 || Math.abs(e.clientY-mouseY) > 5;
+}
 
 var defaultUpAction = function(dom, e){
   e.stopPropagation();
@@ -122,7 +135,7 @@ var defaultUpAction = function(dom, e){
   while (cancels.length > 0)
     cancels.pop()();
 
-  if (!(Math.abs(e.clientX-mouseX) > 2 || Math.abs(e.clientY-mouseY) > 2)){
+  if (!moved(e)){
     var href = was.filter('a').attr('href')
     if (href)
       window.location = href
@@ -192,7 +205,6 @@ $(document).ready(function(){
       clickStack.push(action)
     action.up($(this), e)
   });
-  
 });
 
 
