@@ -280,6 +280,20 @@ class Editor(Wiki):
   
   def show(self, meta, formatted=False, prefix=None):
     return self.data
+
+  def reset(self, meta):    
+    self.data = (['A Headline',
+    '* link<br/>'*5,
+    'Tool | Bar | Button '*4,
+    'dmajcfa '*120,
+    'Side bar content '*20,
+    'Copyright statement '*10,], 
+     [[0,0,0],
+      [1,2,2],
+      [1,3,4],
+      [5,5,4]], 
+      ([200,600,200], [100,50,1000,100]))
+    meta.data = self
           
 #  def save(self, meta, data='', links=None):    
 #    pass

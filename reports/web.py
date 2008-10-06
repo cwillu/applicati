@@ -770,28 +770,20 @@ class WiabPresentation(WikiPresentation):
 #      self._set(self, index=index, data=data, width=width, height=height, css=css)    
 #    def _set(self, **kargs):
 #      for k in kargs:
-#        setattr(self, k, kargs[k])
+#        setattr(self, k, kargs[k])    
         
   @html.FixIE
   @expose(template="reports.templates.wiab")
   def show(self, obj,  path, formatted=True, prefix=None):
     #currently simplified, only 4-sided shapes    
     data = obj.show(formatted=formatted, prefix=prefix)
-    if not data:
-      data = (['A Headline',
-      '* link<br/>'*5,
-      'Tool | Bar | Button '*4,
-      'dmajcfa '*120,
-      'Side bar content '*20,
-      'Copyright statement '*10,], 
-       [[0,0,0],
-        [1,2,2],
-        [1,3,4],
-        [5,5,4]], 
-        ([200,600,200], [100,50,1000,100]))
-
-
-
+    if not data:            
+      try:
+        obj.reset()
+        data = obj.show(formatted=formatted, prefix=prefix)
+      except db.PermissionError:
+        pass
+      
     content, grid, gridSizes = data
     inverseGrid = list(list(col) for col in zip(*grid))
 
