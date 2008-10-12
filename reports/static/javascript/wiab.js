@@ -1,222 +1,219 @@
-//  <a href="#select" onClick="document.select.submit(); return false;" rel="nofollow" class="wiab wiab_sw"><br />Select</a>
-//  <a href="?op=links" rel="nofollow" class="wiab wiab_se"><br />Links</a>
-//  <a href="#paste" onClick="document.paste.submit(); return false;" rel="nofollow" class="wiab wiab_w"><br />Paste</a>
-//  <a href="#edit" onClick="document.edit.submit(); return false;" rel="nofollow" class="wiab wiab_s"><br />Edit</a>
-//  <a href="#foo" onClick="layout();" rel="nofollow" class="wiab wiab_e"><br />Layout</a>
-
-//  <a rel="nofollow" class="wiab wiab_sw"><br />Select</a>
-//  <a href="?op=links" rel="nofollow" class="wiab wiab_se"><br />Links</a>
-//  <a href="#paste" onClick="document.paste.submit(); return false;" rel="nofollow" class="wiab wiab_w"><br />Paste</a>
-//  <a href="#edit" onClick="document.edit.submit(); return false;" rel="nofollow" class="wiab wiab_s"><br />Edit</a>
-//  <a href="#foo" onClick="layout();" rel="nofollow" class="wiab wiab_e"><br />Layout</a>
-
-_tool_div = true;
-var menu = null;
-
-var item = function(label, style, action) {
-  var item = Object();
-  item.label = label;
-  item.style = style;
-  item.action = action;
-  return item;
-}; 
-
-wiab_pi = function(){  
-  _tool_div = !_tool_div
-  if (_tool_div){
-    menu = {
-      s: item('Edit', 'wiab_button', null),
-      se: item('Links', 'wiab_button', null),
-      sw: item('Select', 'wiab_button', null),
-      w: item('Paste', 'wiab_button', null),
-    };
-    return $('#wiab_tool_1');
-  } else {
-    menu = {
-      n: item('', 'wiab_arrow', null),
-      s: item('', 'wiab_arrow', null),
-      e: item('', 'wiab_arrow', null),
-      w: item('', 'wiab_arrow', null),
-      ne: item('Layout', 'wiab_button', null),
-      se: item('Links', 'wiab_button', null),
-      sw: item('Delete', 'wiab_button', null),
-      nw: item('', 'wiab_button', null),
-    };  
-    return $('#wiab_tool_2');
-  }
+var insertTools = function() {
+  insertPiMenu();
+  insertSelectionTool();
 };
+var insertPiMenu = function() {
+  toolTemplate = '\
+    <img id="wiab_image" src="/static/images/1.png" /> \
+        <a rel="nofollow" class="wiab_n wiab"><br /></a> \
+        <a rel="nofollow" class="wiab_ne wiab"><br /></a> \
+        <a rel="nofollow" class="wiab_e wiab"><br /></a> \
+        <a rel="nofollow" class="wiab_se wiab"><br /></a> \
+        <a rel="nofollow" class="wiab_s wiab"><br /></a> \
+        <a rel="nofollow" class="wiab_sw wiab"><br /></a> \
+        <a rel="nofollow" class="wiab_w wiab"><br /></a> \
+        <a rel="nofollow" class="wiab_nw wiab"><br /></a> \
+    ';
 
-wiab_tool = function() {
-  var div = wiab_pi();    
-  var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
-  var children = div.children(all);
-  children.css({display: 'none'});
+  $("body").prepend('<div id="wiab_tool_1" class="wiab_tool" >' + toolTemplate + '</div>');
+  $("body").prepend('<div id="wiab_tool_2" class="wiab_tool" >' + toolTemplate + '</div>');
+  $('.wiab_tool>.wiab').hover(function(){
+    $(this).addClass('wiab_active')
+  }, function(){
+    $(this).removeClass('wiab_active')
+  });
+    
+  var toolDiv = true;
+  var getMenu = function(){  
+    toolDiv = !toolDiv
+    if (toolDiv){
+      return $('#wiab_tool_1');
+    } else {
+      return $('#wiab_tool_2');
+    }
+  };
   
+  item = function(label, style, action) {
+    var item = Object();
+    item.label = label;
+    item.style = style;
+    item.action = action;
+    return item;
+  }; 
+  piMenu = function(selector, menu) {
+    var pi = getMenu();    
+    var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
+    var children = pi.children(all);
+    children.css({display: 'none'});
+    
     var show = '';
-    for (direction in menu){
+    for (direction in menu.items){
       _class = '.wiab_' + direction
       show += _class + ',';
-      children.filter(_class).addClass(menu[direction].style).html("<br/>" + menu[direction].label);
+      // 
+      children.filter(_class)
+        .addClass(menu.items[direction].style)
+        .html("<br/>" + menu.items[direction].label)
+        .unbind('mouseup')
+        .mouseup(menu.items[direction].action); 
     }
-    //show = '.wiab_w,.wiab_e,.wiab_n,.wiab_s';
     children.filter(show).css({display: 'block'})
-  
-  return div;
-}
 
-
-
-layout = function() {
-  alert($(this));
-};
-
-var defaultDownAction = function(dom, e){
-  if (e.button != 0)
-    return;
-  was = dom;
-  var currentTool = wiab_tool();
-  e.stopPropagation();
-  if (was.filter("a").length > 0)
-    e.preventDefault();
-
-  var pageX = e.pageX;
-  var pageY = e.pageY;
-  var mouseX = e.clientX;
-  var mouseY = e.clientY;
-
-  was.addClass("active");
-
-  for (i in timeouts)
-    clearTimeout(timeouts.pop());
-  
-  var checkMouse = function(e){
-    //alert(e.clientX + ", " + mouseX + ", ");
-    if (moved(e)) 
-      for (i in timeouts)
-        clearTimeout(timeouts.pop());                           
-  }
-
-  cancels.push(function(){          
-    was.removeClass("active moreActive");
-    was.unbind('mousemove', checkMouse);
-    was.unbind('mouseout', checkMouse);    
-  });
-
-//  var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
-//  var show ='.wiab_w,.wiab_e,.wiab_n,.wiab_s';  //,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw
-//  currentTool.children(all)
-//    .css({display: 'none'}).filter(show)
-//      .css({display: 'block'})
-//    .end()
-//  .end();
+    var cancels = [];
+    var target = null;
+    var originalLocation = {x: null, y: null};
+    var moved = function(e){
+      return Math.abs(e.clientX-originalLocation.x) > 2 || Math.abs(e.clientY-originalLocation.y) > 5;
+    };
     
-  timeouts.push(setTimeout(function(){
-    was.addClass("moreActive");
-    currentTool.css({position: 'relative', left: mouseX, top: mouseY}).fadeIn(100);
-    document.body.focus();
-    cancels.push(function(){
-      currentTool.fadeOut(100);
-    });
-  }, 300));
+    var targetMouseDown = function(e) {
+      if (e.button != 0)
+        return;
+      e.stopPropagation();
+      originalLocation = { x: e.clientX, y: e.clientY };
+      
+      var timeouts = [];
+      var checkMouse = function(e){
+        if (moved(e)){
+          for (i in timeouts)
+            clearTimeout(timeouts.pop());
+          while (cancels.length > 0)
+            cancels.pop()();
+        }
+      };
 
-  was.mousemove(checkMouse).mouseout(checkMouse);
-  //return false;
-};
+      // Is there no better way to do an intersection of two jquery objects!?
+      parents = $(e.target).parents().andSelf().get();
+      while(parents.length > 0){
+        node = parents.pop();        
+        target = selector.filter(function(index) { return selector.get(index) == node; });
+        if (target.length > 0)
+          break;
+      }
+      
+      if ($(e.target).is("a"))
+        e.preventDefault();
 
-function moved(e){
-  return Math.abs(e.clientX-mouseX) > 2 || Math.abs(e.clientY-mouseY) > 5;
-}
+      cancels.push(function(){
+        for (i in timeouts)
+          clearTimeout(timeouts.pop());
+        target.removeClass('active');
+        $('body')
+          .unbind('mousemove', checkMouse)
+          .unbind('mouseout', checkMouse)
+          .unbind('mouseup', defaultMouseUp);
+      });
 
-var defaultUpAction = function(dom, e){
-  e.stopPropagation();
-  for (i in timeouts)
-    clearTimeout(timeouts.pop());
-
-  while (cancels.length > 0)
-    cancels.pop()();
-
-  if (!moved(e)){
-    var href = was.filter('a').attr('href')
-    if (href)
-      window.location = href
+      $('body').mouseup(defaultMouseUp);              
+      timeouts.push(setTimeout(function() {
+        $('body')
+          .unbind('mousemove', checkMouse)
+          .unbind('mouseout', checkMouse);
+        document.body.focus();
+        target.addClass('active');    
+        pi.css({ position: 'absolute', left: e.pageX, top: e.pageY }).fadeIn(100);       
+        cancels.push(function(){
+          pi.fadeOut(100);
+        });
+      }, 300));
+      
+      $('body').mousemove(checkMouse).mouseout(checkMouse);      
+    };
+    var selectionMouseUp = function(e) {
+      while (cancels.length > 0)
+        cancels.pop()();
+      //menu items handled above
+    };
+    var defaultMouseUp = function(e) {
+      while (cancels.length > 0)
+        cancels.pop()();
+      if (!moved(e)){
+        if (menu.default){
+          menu.default(e);
+        }
+      } else {
+        if (menu.cancel){
+          menu.cancel(e);
+        }
+      }
+    };
+           
+    selector.mousedown(targetMouseDown);
   }
 };
-
-var was = null;
-var pageX = null;
-var pageY = null;    
-var mouseX = null;
-var mouseY = null;
-var cancels = [];
-var timeouts = [];
-var clickStack = [{down: defaultDownAction, up: defaultUpAction}];
-
-
-$(document).ready(function(){
+var insertSelectionTool = function() {
   $("body").prepend('\
-    <div id="wiab_tool_1" class="wiab_tool" > \
-      <img id="wiab_image" src="/static/images/1.png" /> \
-      <a rel="nofollow" class="wiab_n wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_ne wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_e wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_se wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_s wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_sw wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_w wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_nw wiab"><br /></a> \
-    </div>');
-  $("body").prepend('\
-    <div id="wiab_tool_2" class="wiab_tool" > \
-      <img id="wiab_image" src="/static/images/1.png" /> \
-      <a rel="nofollow" class="wiab_n wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_ne wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_e wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_se wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_s wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_sw wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_w wiab"><br /></a> \
-      <a rel="nofollow" class="wiab_nw wiab"><br /></a> \
-    </div>');
+      <div id="wiab_selection">\
+        <div class="wiab_n" />\
+        <div class="wiab_ne" />\
+        <div class="wiab_e" />\
+        <div class="wiab_se" />\
+        <div class="wiab_s" />\
+        <div class="wiab_sw" />\
+        <div class="wiab_w" />\
+        <div class="wiab_nw" />\
+      </div>');
+  selectionHandles = function(element) {
+    $('#wiab_selection>.wiab_n' ).css({left: element.offset().left+element.width()/2, top: element.offset().top});
+    $('#wiab_selection>.wiab_ne').css({left: element.offset().left+element.width(), top: element.offset().top});
+    $('#wiab_selection>.wiab_e' ).css({left: element.offset().left+element.width(), top: element.offset().top+element.height()/2});
+    $('#wiab_selection>.wiab_se').css({left: element.offset().left+element.width(), top: element.offset().top+element.height()});
+    $('#wiab_selection>.wiab_s' ).css({left: element.offset().left+element.width()/2, top: element.offset().top+element.height()});
+    $('#wiab_selection>.wiab_sw').css({left: element.offset().left, top: element.offset().top+element.height()});
+    $('#wiab_selection>.wiab_w' ).css({left: element.offset().left, top: element.offset().top+element.height()/2});
+    $('#wiab_selection>.wiab_nw').css({left: element.offset().left, top: element.offset().top});
+    
+    var timeouts = [];
+    var cancels = [];
+    var target = null;
+    var originalLocation = {x: null, y: null};
+    var startMove = function(e) {
+      if (e.button != 0)
+        return;    
+      e.stopPropagation();
+        
+      target = $(e.target).parents(selector);
 
-  $(".wiab").hover(function(){
-    $(this).addClass("wiab_active")
-  }, function(){
-    $(this).removeClass("wiab_active")
-  }).mouseup(function(){
-    onClick = $(this).filter('a').attr('onClick')
-    if (onClick){
-      $(this).click()
-    }  
-    href = $(this).filter('a').attr('href')
-    if (href)
-      window.location = href
-  });
+      var pageX = e.pageX;
+      var pageY = e.pageY;
+      originalLocation = { x: e.clientX, y: e.clientY };
 
-  
-  
-  $("*").mousedown(function(e){
-    action = clickStack.pop();
-    if (clickStack.length == 0)
-      clickStack.push(action)
-    action.down($(this), e)
-  }).mouseup(function(e){
-    action = clickStack.pop();
-    if (clickStack.length == 0)
-      clickStack.push(action)
-    action.up($(this), e)
-  });
+      for (i in timeouts)
+        clearTimeout(timeouts.pop());
+    
+    };
+    var stopMove = function(e) {
+    };
+    
+    $('#wiab_selection>*').mousedown(startMove);
+  };
+};
+
+var click = function(e){  
+  onClick = $(e.target).filter('a').attr('onClick');
+  if (onClick){
+    $(e.target).click();
+  }  
+  href = $(e.target).filter('a').attr('href');
+  if (href){
+    window.location = href;
+  }
+}
+
+var mainMenu = function() {
+  piMenu($('.cell'), {
+    default: click,
+    cancel: null,
+    items: {
+      s: item('Move', 'wiab_arrow', null),
+      se: item('Edit', 'wiab_arrow', null),
+      sw: item('Select', 'wiab_button', null),
+      w: item('Paste', 'wiab_button', null),
+    },
+  }); 
+};
+
+$(function(){
+  insertTools();
+  mainMenu();
 });
-
-
-
-      
-      //  $("*").droppable({
-//          accept: '*',
-//          activeClass: 'droppable-active', 
-//        	hoverClass: 'droppable-hover' 
-//        });
-
-
-//        $("*").droppable("destroy");
-
-

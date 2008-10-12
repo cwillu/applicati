@@ -61,6 +61,11 @@ def car(a, b):
 def cdr(a, b):
   return b
 
+class _(object):
+  def __init__(self, **kargs):
+    for k in kargs:
+      setattr(self, k, kargs[k])
+
 @compile
 def bitString(bits, dictionary='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'):
   requiredLength = math.ceil(bits / math.log(len(dictionary), 2))
@@ -176,8 +181,8 @@ class Wrapper(object):
   def __init__(self, data, page):
     if data is None and page is not None:
       data = page.data
-    if data is None:
-      raise AttributeError
+#    if data is None:
+#      raise AttributeError
     self._data = data
     self.page = page
     if not page:
@@ -200,6 +205,8 @@ class Wrapper(object):
   
   @property
   def __class__(self):
+    if not self._data:
+      return Wrapper
     ''' hack '''
     logging.getLogger('root.controller.wrapper').debug("Faking class: %s", self._data.__class__)
     return self._data.__class__
@@ -405,7 +412,7 @@ class Root(controllers.RootController):
         if not prototype:          
           prototype = Wrapper(None, findPage(('prototype',), loginRoot(), path))
 #          prototype = Wrapper(None, findPage(('prototype',), loginRoot(), path))
-          prototype.show()
+#          prototype.show()
           if prototype.show:
             prototype = prototype.show().strip().splitlines()[0].strip().strip('[()]')
           else:
@@ -762,11 +769,7 @@ class WikiPresentation(Presentation):
     return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
 
 class WiabPresentation(WikiPresentation):
-  class Cell(object):
-    def __init__(self, index, data, width, height, css):
-      args = locals()
-      for k in args:
-        setattr(self, k, args[k])
+  
 #      self._set(self, index=index, data=data, width=width, height=height, css=css)    
 #    def _set(self, **kargs):
 #      for k in kargs:
@@ -774,42 +777,22 @@ class WiabPresentation(WikiPresentation):
         
   @html.FixIE
   @expose(template="reports.templates.wiab")
-  def show(self, obj,  path, formatted=True, prefix=None):
-    #currently simplified, only 4-sided shapes    
+  def show(self, obj,  path, formatted=True, prefix=None):    
     data = obj.show(formatted=formatted, prefix=prefix)
-    if not data:            
-      try:
-        obj.reset()
-        data = obj.show(formatted=formatted, prefix=prefix)
-      except db.PermissionError:
-        pass
-      
-    content, grid, gridSizes = data
-    inverseGrid = list(list(col) for col in zip(*grid))
-
-    seen = set()        
-    outputOrder = []
-    dimensions = []
-    style = []    
-    for y in range(len(gridSizes[1])):
-      row = grid[y]
-      for x in range(len(gridSizes[0])):
-        cell = row[x]
-        if cell in seen:
-          continue
-        seen.add(cell)
           
-        column = inverseGrid[x]
-        width = sum(gridSizes[0][x:x+row.count(cell)])
-        height = sum(gridSizes[1][y:y+column.count(cell)])
-
-        outputOrder.append(self.Cell(cell, content[cell], width, height, []))
-      
-      outputOrder[-1].css.append('float: right;')
-      
-        
-    width = sum(gridSizes[0])
-    return dict(session=session, root=session['root'], data=outputOrder, pageWidth=width, grid=grid, path=self._path(path), name=self._name(path), obj=obj)    
+    pageWidth = sum(data.grid.x)
+    output = []
+    for content, dim in zip(data.content, data.dimensions):
+      output.append(_(
+        content=content, 
+        x=sum(data.grid.x[:dim[0].x]),
+        y=sum(data.grid.y[:dim[0].y]),
+        width=sum(data.grid.x[dim[0].x:dim[1].x]),
+        height=sum(data.grid.y[dim[0].y:dim[1].y]),
+        css=[],
+        ))
+     
+    return dict(session=session, root=session['root'], data=output, pageWidth=pageWidth, path=self._path(path), name=self._name(path), obj=obj)
 
 class PrimitivePresentation(WikiPresentation):
   @html.FixIE

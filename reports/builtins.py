@@ -13,6 +13,11 @@ from docutils.core import publish_parts
 
 import logging
 
+class _(object):
+  def __init__(self, **kargs):
+    for k in kargs:
+      setattr(self, k, kargs[k])
+
 try:  
   import psycos
   psyco.log()
@@ -279,21 +284,31 @@ class Editor(Wiki):
     pass
   
   def show(self, meta, formatted=False, prefix=None):
+    self.reset(meta)
     return self.data
 
   def reset(self, meta):    
-    self.data = (['A Headline',
-    '* link<br/>'*5,
-    'Tool | Bar | Button '*4,
-    'dmajcfa '*120,
-    'Side bar content '*20,
-    'Copyright statement '*10,], 
-     [[0,0,0],
-      [1,2,2],
-      [1,3,4],
-      [5,5,4]], 
-      ([200,600,200], [100,50,1000,100]))
-    meta.data = self
+    self.data = _(
+      content=[ 
+        'A Headline',
+        '* link<br/>'*5,
+        'Tool | Bar | Button '*4,
+        'dmajcfa '*120,
+        'Side bar content '*20,
+        'Footer '*10,
+        'Copyright statement '*10,
+        ], 
+      grid=_(x=[120,640,240], y=[100,50,360,100,100]),      
+      dimensions=[
+        (_(x=0, y=0), _(x=3, y=1)), #h
+        (_(x=0, y=1), _(x=1, y=3)), #*
+        (_(x=1, y=1), _(x=3, y=2)), #t
+        (_(x=1, y=2), _(x=2, y=3)), #c
+        (_(x=2, y=2), _(x=3, y=4)), #s
+        (_(x=0, y=3), _(x=2, y=4)), #f
+        (_(x=0, y=4), _(x=3, y=5)), #@
+        ], 
+      )    
           
 #  def save(self, meta, data='', links=None):    
 #    pass

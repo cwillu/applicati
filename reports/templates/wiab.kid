@@ -10,34 +10,32 @@
 <style type="text/css">
   @import "${tg.url('/static/css/wiab.css')}";
 </style>
-<script src="/static/javascript/jquery-1.2.6.js"></script>
-<script src="/static/javascript/ui.core.js"></script>
-<script src="${tg.url('/static/javascript/shortcut.js')}"></script>
 
 <script  src="/static/javascript/wiab.js"></script>
-<script language="javascript">
-  shortcut.add("Ctrl+s", function() {
-    document.edit.submit();
-    return false;
-  }, { 'type': 'keydown', 'propagate': false, 'target': document });
-</script>
+
 <?python
   globalTemplate = """
     #main_content {
+      position: relative;
+      left: -10px;
       width: %spx;
     }
-    """ % pageWidth
+    """ % 800 #(pageWidth)
     
   itemTemplate = """
     #a%s {
+      position: absolute;
+      left: %spx;
+      top: %spx;      
       width: %spx;
+      height: %spx;
       %s
-    }
+    }    
     """
 
   style = [globalTemplate]
-  for cell in data:
-    style.append(itemTemplate % (cell.index, cell.width, ''.join(cell.css)))
+  for index, cell in enumerate(data):
+    style.append(itemTemplate % (index, cell.x, cell.y, cell.width, cell.height, ';'.join(cell.css)+(';' if cell.css else '')))
   
   style = ''.join(style)
 ?>
@@ -45,8 +43,9 @@
 </head>
 <body>
   <div id="main_content">
-    <div class="cell" id="a${cell.index}" py:for="cell in data">
-      ${XML(cell.data)}
+    <div class="cell" id="a${index}" py:for="index, cell in enumerate(data)">
+      <a href="#">Test</a>
+      ${XML(cell.content)}
     </div>
   </div>
 </body>

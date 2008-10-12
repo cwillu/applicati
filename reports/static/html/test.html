@@ -2,6 +2,9 @@
 <head>
   <script type="text/javascript" src="/static/javascript/jquery-1.2.6.js"></script>
   <script src="/static/javascript/ui.core.js"></script>
+  <style type="text/css">
+    @import "/static/css/wiab.css";
+  </style>
   <style>
     body {
       width: 1000px;
@@ -10,55 +13,226 @@
       border: 1px solid;
     }
     .cell {
-      //position: inline;
-      float: left;
+      position: absolute;
+      //float: left;
       border: 1px solid;
       margin: 0px -1px;
     }
     #a0 {
       color: #ff3333;
       width: 1000px;
+      left: 0px;
+      top: 0px;
     }
     
     #a1 {
       color: #33ff33;
       width: 200px;
+      left: 0px;
+      top: 103px;
       //min-height: 1000px;
     }
     
     #a2 {
       color: #3333ff;
       width: 800px;
+      left: 200px;
+      top: 103px;
     }
     
     #a3 {
       color: #777777;
       width: 600px;
+      left: 200px;
+      top: 125px;
     }
     
     #a4 {
       float: right;      
       color: #00aaaa;
       width: 200px;
+      left: 800px;
+      top: 125px;
     }
     
     #a5 {
       color: #000000;
       width: 800px;
+      left: 0px;
+      top: 800px;
     }  
     
     #a6 {
       color: #555555;
       width: 1000px;
+      left: 0px;
+      top: 900px;
     }
   </style>
   <script language="javascript">
-    $(function(){
+  
+    whichParent = function(selector, node) {
+      var parents = node.parents().andSelf().get();
+      var target = [];
+      while(parents.length > 0){
+        var parent = parents.pop();        
+        target = selector.filter(function(index) { return selector.get(index) == parent; });
+        if (target.length > 0)
+          break;
+      }
+      return target.length > 0 ? target : null;
+    }
+    var isWest = function(query){
+      return query.is('.wiab_w,.wiab_sw,.wiab_nw');
+    };
+    var isEast = function(query){
+      return query.is('.wiab_e,.wiab_se,.wiab_ne');
+    };
+    var isNorth = function(query){
+      return query.is('.wiab_n,.wiab_nw,.wiab_ne');
+    };
+    var isSouth = function(query){
+      return query.is('.wiab_s,.wiab_sw,.wiab_se');
+    };  
+    var updateSelectionBox = function(element) {
+      $('#wiab_selection>.wiab_n' ).css({left: element.offset().left+element.width()/2, top: element.offset().top});
+      $('#wiab_selection>.wiab_ne').css({left: element.offset().left+element.width(), top: element.offset().top});
+      $('#wiab_selection>.wiab_e' ).css({left: element.offset().left+element.width(), top: element.offset().top+element.height()/2});
+      $('#wiab_selection>.wiab_se').css({left: element.offset().left+element.width(), top: element.offset().top+element.height()});
+      $('#wiab_selection>.wiab_s' ).css({left: element.offset().left+element.width()/2, top: element.offset().top+element.height()});
+      $('#wiab_selection>.wiab_sw').css({left: element.offset().left, top: element.offset().top+element.height()});
+      $('#wiab_selection>.wiab_w' ).css({left: element.offset().left, top: element.offset().top+element.height()/2});
+      $('#wiab_selection>.wiab_nw').css({left: element.offset().left, top: element.offset().top});
+    };
+    insertTool = function() {
+      $("body").prepend(
+        '<div id="wiab_selection">'+
+          '<div class="wiab_n" />'+
+          '<div class="wiab_ne" />'+
+          '<div class="wiab_e" />'+
+          '<div class="wiab_se" />'+
+          '<div class="wiab_s" />'+
+          '<div class="wiab_sw" />'+
+          '<div class="wiab_w" />'+
+          '<div class="wiab_nw" />'+
+        '</div>');
+      $("body").prepend('<div id="wiab_guide_horizontal" />');
+      $("body").prepend('<div id="wiab_guide_vertical" />');
+    };
+    
+    var scope = function(){      
+      var intervals = [];
+      var cancels = [];
+      var scope = {      
+        stop: function() {
+          while(cancels.length > 0)
+            cancels.pop()();        
+          while (intervals.length > 0)
+            clearInterval(intervals.pop());
+        },
+        after: function(func) {
+          cancels.push(func);
+          return scope;
+        },
+        bind: function(query, bindings) {
+          cancels.push(function() {
+            for (event in bindings)
+              query.unbind(event, bindings[event]);
+          });
+          
+          for (event in bindings)
+            query.bind(event, bindings[event]);        
+          return scope;
+        },
+        interval: function(func, time){
+          intervals.push(setInterval(func, time));
+          return scope;
+        },
+      };
+      return scope;
+    }
+    
+    var whileSelected = scope();
+    var select = function(element) {
+      var selection = element;
+      updateSelectionBox(element);
+     
+      var startDrag = function(e) {
+        e.preventDefault();
+        
+        var whileDragging = scope();
+        
+        var target = $(e.target);        
+        var x = isWest(target) || isEast(target);
+        var y = isNorth(target) || isSouth(target);
+
+        var initialClick = { x: e.pageX, y: e.pageY };
+        var currentLocation = { x: null, y: null };
+        var initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY };
+        var drag = function(e) {
+          e.stopPropagation();
+          currentLocation = { x: e.pageX, y: e.pageY, pageX: e.pageX - e.clientX, pageY: e.pageY - e.clientY };
+        };
+        var updateLocation = function() {
+          if (y)
+            $('#wiab_guide_horizontal').css({ left: currentLocation.pageX, top: currentLocation.y + initialDelta.y });
+          if (x) 
+            $('#wiab_guide_vertical').css({ left: currentLocation.x + initialDelta.x, top: currentLocation.pageY }); 
+        };
+        var stopDrag = function(e) {
+          $('#wiab_guide_horizontal,#wiab_guide_vertical').hide();
+          whileDragging.stop();
+          var finalLocation = currentLocation;
+          selection.each(function() {
+            var location = $(this).position();
+            var size = { width: $(this).width(), height: $(this).height() };
+            var delta = { x: finalLocation.x - initialClick.x, y: finalLocation.y - initialClick.y }; 
+            if (isWest(target)) {              
+              $(this).css({ left: location.left + delta.x});
+              $(this).width(size.width - delta.x);                            
+            } else if (isEast(target)) {
+              $(this).width(size.width + delta.x);
+            }
+            if (isNorth(target)) {
+              $(this).css({ top: location.top + delta.y});
+              $(this).height(size.height - delta.y);                            
+            } else if (isSouth(target)) {
+              $(this).height(size.height + delta.y);
+            }
+          });
+          updateSelectionBox(selection);
+        };
+        
+        drag(e);
+        updateLocation(e);
+        if (y)
+          $('#wiab_guide_horizontal').show();
+        if (x)
+          $('#wiab_guide_vertical').show();
+
+        whileDragging.interval(updateLocation, 20);
+        whileDragging.bind($('*'), {
+          mousemove: drag,
+          mouseup: stopDrag,
+        });
+      };    
+           
+      whileSelected.bind($('#wiab_selection>div'), { mousedown: startDrag });
+    }  
       
+    var selection = null;  
+
+    $(function(){
+      insertTool();
+      $('.cell').click(function(e) {
+        whileSelected.stop();
+        select(whichParent($('.cell'), $(e.target)));
+      });
     });        
   </script>
 </head>
 <body>  
+<div style="position: relative; left: 0px; top: 10px;">
   <div id="a0" class="cell"> <b>0</b> <h1>Moreover, the more factors to be considered in a decision</h1></div>
   <div id="a1" class="cell"> <b>1</b> <ul><li>Moreover, the</li><li>more factors to</li><li>be considered in a decision</li><li>the more likely</li><li>the unconscious brain</li><li>handled it all better,</li><li>Moreover, the</li><li>more factors to</li><li>be considered in a decision</li><li>the more likely</li><li>the unconscious brain</li><li>handled it all better,</li><li>Moreover, the</li><li>more factors to</li><li>be considered in a decision</li><li>the more likely</li><li>the unconscious brain</li><li>handled it all better,</li><li>Moreover, the</li><li>more factors to</li><li>be considered in a decision</li><li>the more likely</li><li>the unconscious brain</li><li>handled it all better,</li></ul></div>
   <div id="a2" class="cell"> <b>2</b> <i>Moreover, the </i><i> factors to be  in a decision,</i><i>the more likely  unconscious brain</i><i>handled it all better</i></div>
@@ -104,5 +278,6 @@ With co-author Giulio Tononi, Nobel laureate Gerald Edleman explores his biology
   <div id="a6" class="cell"> <b>6</b> An outside caller enters into this mechanism via the __call__ method.  This method creates a new channel, and then passes that channel, and the parameters it was called with along the object's channel.  It then waits for data to be sent back to it.  After a quick look at the data returned, it either returns the data through the traditional means or raises an exception (if it received an exception).
 </div>
 
+</div>
 </body>
 </html>
