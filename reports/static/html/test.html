@@ -70,18 +70,18 @@
     }
   </style>
   <script language="javascript">
-  
-    whichParent = function(selector, node) {
+    var whichParent = function(selector, node) {
       var parents = node.parents().andSelf().get();
       var target = [];
       while(parents.length > 0){
         var parent = parents.pop();        
-        target = selector.filter(function(index) { return selector.get(index) == parent; });
-        if (target.length > 0)
+        target = selector.filter(function(index) { return selector.get(index) === parent; });
+        if (target.length > 0){        
           break;
+        }
       }
       return target.length > 0 ? target : null;
-    }
+    };
     var isWest = function(query){
       return query.is('.wiab_w,.wiab_sw,.wiab_nw');
     };
@@ -94,7 +94,7 @@
     var isSouth = function(query){
       return query.is('.wiab_s,.wiab_sw,.wiab_se');
     };  
-    var updateSelectionBox = function(element) {
+    var updateSelectionBox = function(element) {      
       $('#wiab_selection>.wiab_n' ).css({left: element.offset().left+element.width()/2, top: element.offset().top});
       $('#wiab_selection>.wiab_ne').css({left: element.offset().left+element.width(), top: element.offset().top});
       $('#wiab_selection>.wiab_e' ).css({left: element.offset().left+element.width(), top: element.offset().top+element.height()/2});
@@ -104,7 +104,8 @@
       $('#wiab_selection>.wiab_w' ).css({left: element.offset().left, top: element.offset().top+element.height()/2});
       $('#wiab_selection>.wiab_nw').css({left: element.offset().left, top: element.offset().top});
     };
-    insertTool = function() {
+    var insertTool = function() {
+      $("body").append('<div><div id="wiab_guide_horizontal" /><div id="wiab_guide_vertical" /></div>');
       $("body").prepend(
         '<div id="wiab_selection">'+
           '<div class="wiab_n" />'+
@@ -116,8 +117,6 @@
           '<div class="wiab_w" />'+
           '<div class="wiab_nw" />'+
         '</div>');
-      $("body").prepend('<div id="wiab_guide_horizontal" />');
-      $("body").prepend('<div id="wiab_guide_vertical" />');
     };
     
     var scope = function(){      
@@ -125,10 +124,12 @@
       var cancels = [];
       var scope = {      
         stop: function() {
-          while(cancels.length > 0)
+          while(cancels.length > 0){
             cancels.pop()();        
-          while (intervals.length > 0)
+          }
+          while (intervals.length > 0){
             clearInterval(intervals.pop());
+          }
         },
         after: function(func) {
           cancels.push(func);
@@ -136,21 +137,23 @@
         },
         bind: function(query, bindings) {
           cancels.push(function() {
-            for (event in bindings)
+            for (var event in bindings){
               query.unbind(event, bindings[event]);
+            }
           });
           
-          for (event in bindings)
-            query.bind(event, bindings[event]);        
+          for (var event in bindings){          
+            query.bind(event, bindings[event]);
+          }        
           return scope;
         },
         interval: function(func, time){
           intervals.push(setInterval(func, time));
           return scope;
-        },
+        }
       };
       return scope;
-    }
+    };
     
     var whileSelected = scope();
     var select = function(element) {
@@ -173,14 +176,20 @@
           e.stopPropagation();
           currentLocation = { x: e.pageX, y: e.pageY, pageX: e.pageX - e.clientX, pageY: e.pageY - e.clientY };
         };
+        var odd = false
         var updateLocation = function() {
-          if (y)
-            $('#wiab_guide_horizontal').css({ left: currentLocation.pageX, top: currentLocation.y + initialDelta.y });
-          if (x) 
-            $('#wiab_guide_vertical').css({ left: currentLocation.x + initialDelta.x, top: currentLocation.pageY }); 
+          odd = !odd;          
+          if (odd && x){ 
+            $('#wiab_guide_vertical').css('left', currentLocation.x + initialDelta.x);
+            $('#wiab_guide_vertical').css('top', currentLocation.pageY);
+          } 
+          if (!odd && y){
+            $('#wiab_guide_horizontal').css('left', currentLocation.pageX);             
+            $('#wiab_guide_horizontal').css('top', currentLocation.y + initialDelta.y);
+          }
         };
         var stopDrag = function(e) {
-          $('#wiab_guide_horizontal,#wiab_guide_vertical').hide();
+          $('#wiab_guide_horizontal,#wiab_guide_vertical').fadeOut(300);
           whileDragging.stop();
           var finalLocation = currentLocation;
           selection.each(function() {
@@ -205,20 +214,22 @@
         
         drag(e);
         updateLocation(e);
-        if (y)
-          $('#wiab_guide_horizontal').show();
-        if (x)
-          $('#wiab_guide_vertical').show();
+        if (y){
+          $('#wiab_guide_horizontal').fadeIn(200);
+        }
+        if (x){
+          $('#wiab_guide_vertical').fadeIn(200);
+        }
 
-        whileDragging.interval(updateLocation, 20);
+        whileDragging.interval(updateLocation, 15);
         whileDragging.bind($('*'), {
           mousemove: drag,
-          mouseup: stopDrag,
+          mouseup: stopDrag
         });
       };    
            
       whileSelected.bind($('#wiab_selection>div'), { mousedown: startDrag });
-    }  
+    };  
       
     var selection = null;  
 
