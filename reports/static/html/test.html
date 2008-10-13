@@ -69,7 +69,7 @@
       top: 900px;
     }
   </style>
-  <script language="javascript">
+  <script language="javascript"><!--
     var whichParent = function(selector, node) {
       var parents = node.parents().andSelf().get();
       var target = [];
@@ -83,16 +83,16 @@
       return target.length > 0 ? target : null;
     };
     var isWest = function(query){
-      return query.is('.wiab_w,.wiab_sw,.wiab_nw');
+      return query.is('div.wiab_w,div.wiab_sw,div.wiab_nw');
     };
     var isEast = function(query){
-      return query.is('.wiab_e,.wiab_se,.wiab_ne');
+      return query.is('div.wiab_e,div.wiab_se,div.wiab_ne');
     };
     var isNorth = function(query){
-      return query.is('.wiab_n,.wiab_nw,.wiab_ne');
+      return query.is('div.wiab_n,div.wiab_nw,div.wiab_ne');
     };
     var isSouth = function(query){
-      return query.is('.wiab_s,.wiab_sw,.wiab_se');
+      return query.is('div.wiab_s,div.wiab_sw,div.wiab_se');
     };  
     var updateSelectionBox = function(element) {      
       $('#wiab_selection>.wiab_n' ).css({left: element.offset().left+element.width()/2, top: element.offset().top});
@@ -105,7 +105,7 @@
       $('#wiab_selection>.wiab_nw').css({left: element.offset().left, top: element.offset().top});
     };
     var insertTool = function() {
-      $("body").append('<div><div id="wiab_guide_horizontal" /><div id="wiab_guide_vertical" /></div>');
+      $("body").append('<div id="wiab_guide_horizontal" /><div id="wiab_guide_vertical" />'); //<script->
       $("body").prepend(
         '<div id="wiab_selection">'+
           '<div class="wiab_n" />'+
@@ -115,10 +115,11 @@
           '<div class="wiab_s" />'+
           '<div class="wiab_sw" />'+
           '<div class="wiab_w" />'+
-          '<div class="wiab_nw" />'+
-        '</div>');
-    };
-    
+          '<div class="wiab_nw" />'+ 
+        '</div>'); 
+
+    };  //<script->
+        
     var scope = function(){      
       var intervals = [];
       var cancels = [];
@@ -172,6 +173,12 @@
         var initialClick = { x: e.pageX, y: e.pageY };
         var currentLocation = { x: null, y: null };
         var initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY };
+        if (isEast(target)) {
+          initialDelta.x++;
+        }
+        if (isSouth(target)) {
+          initialDelta.y++;
+        }
         var drag = function(e) {
           e.stopPropagation();
           currentLocation = { x: e.pageX, y: e.pageY, pageX: e.pageX - e.clientX, pageY: e.pageY - e.clientY };
@@ -235,11 +242,12 @@
 
     $(function(){
       insertTool();
-      $('.cell').click(function(e) {
+      $('div.cell').click(function(e) {
         whileSelected.stop();
-        select(whichParent($('.cell'), $(e.target)));
+        select(whichParent($('div.cell'), $(e.target)));
       });
-    });        
+    });     
+  -->   
   </script>
 </head>
 <body>  
