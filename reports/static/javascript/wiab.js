@@ -1,3 +1,5 @@
+var fadeOutTime = 300;
+
 var scope = function(){      
   var intervals = [];
   var timeouts = [];
@@ -130,10 +132,10 @@ var insertPiMenu = function() {
       }
       children.filter(show).css({display: 'block'})
       
-      pi.css({ position: 'absolute', left: e.pageX, top: e.pageY }).fadeIn(100);       
+      pi.css({ position: 'absolute', left: e.pageX, top: e.pageY }).show();       
       whileMenuShown.after(function(){
         target.removeClass('active');
-        pi.fadeOut(100);
+        pi.fadeOut(fadeOutTime);
       });
     };
     
@@ -142,7 +144,7 @@ var insertPiMenu = function() {
     var targetMouseDown = function(e) {
       if (e.button != 0)
         return;
-      e.stopPropagation();
+      //e.stopPropagation();
       originalLocation = { x: e.clientX, y: e.clientY };
       
       var timeouts = [];
@@ -223,19 +225,25 @@ var insertSelectionTool = function() {
     $('#wiab_selection>.wiab_sw').css({left: element.offset().left, top: element.offset().top+element.height()});
     $('#wiab_selection>.wiab_w' ).css({left: element.offset().left, top: element.offset().top+element.height()/2});
     $('#wiab_selection>.wiab_nw').css({left: element.offset().left, top: element.offset().top});
+    $('#wiab_selection').show();
   };      
       
   var whileSelected = scope();      
   select = function(element) {
-    whileSelected.stop(); 
-    updateSelectionBox(element);
-    var whileDragging = scope();
+    whileSelected.stop();
     var selection = element;
     var initialClick = { x: null, y: null };
     var initialDelta = { x: null, y: null };
     var currentLocation = { x: null, y: null };
     var x = null, y = null;
     var target = null;
+    var whileDragging = scope();
+    if (!element) {
+      setTimeout(function() { $('#wiab_selection').fadeOut(fadeOutTime); }, 0);
+      return false;
+    }
+
+    updateSelectionBox(element);
 
     var startDrag = function(e) {
       if (e.button != 0)
@@ -258,10 +266,10 @@ var insertSelectionTool = function() {
       drag(e);
       updateLocation(e);
       if (y){
-        $('#wiab_guide_horizontal').fadeIn(200);
+        $('#wiab_guide_horizontal').show();
       }
       if (x){
-        $('#wiab_guide_vertical').fadeIn(200);
+        $('#wiab_guide_vertical').show();
       }
 
       whileDragging.interval(updateLocation, 15);
@@ -278,16 +286,14 @@ var insertSelectionTool = function() {
     var updateLocation = function() {
       _odd = !_odd;          
       if (_odd && x){ 
-        $('#wiab_guide_vertical').css('left', currentLocation.x + initialDelta.x);
-        $('#wiab_guide_vertical').css('top', currentLocation.pageY);
+        $('#wiab_guide_vertical').css({ left: currentLocation.x + initialDelta.x, top: currentLocation.pageY });
       } 
       if (!_odd && y){
-        $('#wiab_guide_horizontal').css('left', currentLocation.pageX);             
-        $('#wiab_guide_horizontal').css('top', currentLocation.y + initialDelta.y);
+        $('#wiab_guide_horizontal').css({ left: currentLocation.pageX, top: currentLocation.y + initialDelta.y });
       }
     };    
     var stopDrag = function(e) {
-      $('#wiab_guide_horizontal,#wiab_guide_vertical').fadeOut(300);
+      $('#wiab_guide_horizontal,#wiab_guide_vertical').fadeOut(fadeOutTime);
       whileDragging.stop();
       var finalLocation = currentLocation;
       selection.each(function() {
@@ -310,7 +316,9 @@ var insertSelectionTool = function() {
       updateSelectionBox(selection);
     };    
 
-    whileSelected.bind($('#wiab_selection>div'), { mousedown: startDrag });          
+    whileSelected.bind($('#wiab_selection>div'), { mousedown: startDrag });
+    whileSelected.bind(element, { mousedown: function() { return false; } });
+    whileSelected.bind($('body'), { mousedown: function() { return select(null); } });          
   };
 };
 
