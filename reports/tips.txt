@@ -1,3 +1,5 @@
 *If in doubt, leave it out.*
 
 Put less stuff on a page, and make up for it by having more pages.  It makes things easier to use, find and read.
+----
+

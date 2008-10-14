@@ -182,7 +182,6 @@ var insertPiMenu = function () {
       
       whileMenuShown.bind($('body'), { mousemove: checkMouse, mouseout: checkMouse });      
     };
-
            
     selector.mousedown(targetMouseDown);
   };
@@ -201,16 +200,16 @@ var insertSelectionTool = function () {
     '  <div class="wiab_nw" />' +
     '</div>');
           
-  var isWest = function (query) {
+  isWest = function (query) {
     return query.is('div.wiab_w,div.wiab_sw,div.wiab_nw');
   };
-  var isEast = function (query) {
+  isEast = function (query) {
     return query.is('div.wiab_e,div.wiab_se,div.wiab_ne');
   };
-  var isNorth = function (query) {
+  isNorth = function (query) {
     return query.is('div.wiab_n,div.wiab_nw,div.wiab_ne');
   };
-  var isSouth = function (query) {
+  isSouth = function (query) {
     return query.is('div.wiab_s,div.wiab_sw,div.wiab_se');
   };  
   var updateSelectionBox = function (element) {      
@@ -226,7 +225,7 @@ var insertSelectionTool = function () {
   };      
       
   var whileSelected = scope();      
-  select = function (element) {
+  select = function (element, actions) {
     whileSelected.stop();
     var selection = element;
     var initialClick = { x: null, y: null };
@@ -260,24 +259,8 @@ var insertSelectionTool = function () {
     var stopDrag = function (e) {
       $('#wiab_guide_horizontal,#wiab_guide_vertical').fadeOut(fadeOutTime);
       whileDragging.stop();
-      var finalLocation = currentLocation;
-      selection.each(function () {
-        var location = $(this).position();
-        var size = { width: $(this).width(), height: $(this).height() };
-        var delta = { x: finalLocation.x - initialClick.x, y: finalLocation.y - initialClick.y }; 
-        if (isWest(target)) {              
-          $(this).css({ left: location.left + delta.x});
-          $(this).width(size.width - delta.x);                            
-        } else if (isEast(target)) {
-          $(this).width(size.width + delta.x);
-        }
-        if (isNorth(target)) {
-          $(this).css({ top: location.top + delta.y});
-          $(this).height(size.height - delta.y);                            
-        } else if (isSouth(target)) {
-          $(this).height(size.height + delta.y);
-        }
-      });
+      var delta = { x: currentLocation.x - initialClick.x, y: currentLocation.y - initialClick.y }; 
+      actions.moved(selection, target, delta);
       updateSelectionBox(selection);
     };  
     var startDrag = function (e) {
@@ -287,7 +270,7 @@ var insertSelectionTool = function () {
       e.stopPropagation();
       e.preventDefault();
                
-      target = $(e.target);        
+      target = $(e.target);
       x = isWest(target) || isEast(target);
       y = isNorth(target) || isSouth(target);
       initialClick = { x: e.pageX, y: e.pageY };
@@ -314,7 +297,6 @@ var insertSelectionTool = function () {
         mouseup: stopDrag
       });    
     };
-  
 
     whileSelected.bind($('#wiab_selection>div'), { mousedown: startDrag });
     whileSelected.bind(element, { mousedown: False });
@@ -322,12 +304,14 @@ var insertSelectionTool = function () {
       return select(null); 
     } });          
   };
+  select.actions = function (actions) {
+    return function (element) {
+      select(element, actions);
+    };
+  };
+
 };
 
-var insertTools = function () {
-  insertPiMenu();
-  insertSelectionTool();
-};
 
 var click = function (e) {  
   var onClick = $(e.target).filter('a').attr('onClick');
@@ -340,17 +324,81 @@ var click = function (e) {
   }
 };
 
+var moveGuide = function (selection, handle, delta) {
+  var edges = { x: [], y: [] };
+  $.each(selection[0].className.split(' '), function () {
+    query = this.match(/wiab_(\D+)(\d+)/);
+    if (!query || !query[1].match(/north|south|east|west/)) {
+      return;
+    }
+    edges[query[1]] = query[2];
+  });
+
+  var x = null;
+  var y = null;
+  if (isWest(handle)) {
+    x = { guide: edges.west };
+  } else if (isEast(handle)) {
+    x = { guide: edges.east };
+  }
+  if (isNorth(handle)) {
+    y = { guide: edges.north };
+  } else if (isSouth(handle)) {
+    y = { guide: edges.south };
+  }  
+  
+  var update = {
+    north: function () {
+      var location = $(this).position();
+      var size = { width: $(this).width(), height: $(this).height() };  
+      $(this).css({ top: location.top + delta.y});
+      $(this).height(size.height - delta.y);                            
+    },
+    south: function () {
+      var location = $(this).position();
+      var size = { width: $(this).width(), height: $(this).height() };  
+      $(this).height(size.height + delta.y);
+    },
+    east: function () {
+      var location = $(this).position();
+      var size = { width: $(this).width(), height: $(this).height() };  
+      $(this).width(size.width + delta.x);
+    },
+    west: function () {
+      var location = $(this).position();
+      var size = { width: $(this).width(), height: $(this).height() };  
+      $(this).css({ left: location.left + delta.x});
+      $(this).width(size.width - delta.x);                            
+    },
+  }
+  
+  if (x) {
+    $('div.wiab_west'+x.guide).each(update.west);
+    $('div.wiab_east'+x.guide).each(update.east);
+  }
+  if (y) {
+    $('div.wiab_north'+y.guide).each(update.north);
+    $('div.wiab_south'+y.guide).each(update.south);
+  }
+  
+
+};
 var mainMenu = function () {
-  piMenu($('.cell'), {
+  piMenu($('div.cell'), {
     primary: click,
     cancel: null,
     items: {
-      s: item('Move', 'wiab_arrow', select),
+      s: item('Move', 'wiab_arrow', select.actions({moved: moveGuide})),
       se: item('Edit', 'wiab_arrow', null),
       sw: item('Select', 'wiab_button', null),
       w: item('Paste', 'wiab_button', null)
     }
   });
+};
+
+var insertTools = function () {
+  insertPiMenu();
+  insertSelectionTool();
 };
 
 $(function () {

@@ -46,6 +46,7 @@
   width: 100%;
   height: 0px;
   margin: 4px 0px;
+  z-index: 11;    
 }
 #wiab_guide_vertical {
   display: none;
@@ -54,6 +55,7 @@
   width: 0px;
   height: 100%;
   margin: 0px 4px;  
+  z-index: 11;    
 }
 
 #wiab_selection {

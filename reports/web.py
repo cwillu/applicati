@@ -769,12 +769,6 @@ class WikiPresentation(Presentation):
     return builtins.Wiki.linkWords.sub(resolveLinks, content), nameMapping
 
 class WiabPresentation(WikiPresentation):
-  
-#      self._set(self, index=index, data=data, width=width, height=height, css=css)    
-#    def _set(self, **kargs):
-#      for k in kargs:
-#        setattr(self, k, kargs[k])    
-        
   @html.FixIE
   @expose(template="reports.templates.wiab")
   def show(self, obj,  path, formatted=True, prefix=None):    
@@ -790,7 +784,8 @@ class WiabPresentation(WikiPresentation):
         width=sum(data.grid.x[dim[0].x:dim[1].x]),
         height=sum(data.grid.y[dim[0].y:dim[1].y]),
         css=[],
-        ))
+        styles=["wiab_west%s" % dim[0].x, "wiab_north%s" % dim[0].y, "wiab_east%s" % dim[1].x, "wiab_south%s" % dim[1].y],
+      ))
      
     return dict(session=session, root=session['root'], data=output, pageWidth=pageWidth, path=self._path(path), name=self._name(path), obj=obj)
 

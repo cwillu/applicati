@@ -43,7 +43,7 @@
 </head>
 <body>
   <div id="main_content">
-    <div class="cell" id="a${index}" py:for="index, cell in enumerate(data)">
+    <div class="${' '.join(['cell'] + cell.styles)}" id="a${index}" py:for="index, cell in enumerate(data)">
       <a href="#">Test</a>
       ${XML(cell.content)}
     </div>
