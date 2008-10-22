@@ -105,7 +105,7 @@ var insertPiMenu = function () {
     var pi = getMenu();    
     var all = '.wiab_w,.wiab_e,.wiab_n,.wiab_s,.wiab_nw,.wiab_se,.wiab_ne,.wiab_sw';
     var children = pi.children(all);
-    children.css({display: 'none'});
+    children.css({ display: 'none' });
     
     var whileMenuShown = scope();
     var originalTarget = null;
@@ -139,12 +139,13 @@ var insertPiMenu = function () {
       for (var direction in menu.items) {
         var class_ = '.wiab_' + direction;
         show += class_ + ',';
-        children.filter(class_)
-          .addClass(menu.items[direction].style)
-          .html("<br/>" + menu.items[direction].label);
+        child = children.filter(class_)
+        child.addClass(menu.items[direction].style);
+        child.html("<br/>" + menu.items[direction].label);
+        
         if (menu.items[direction].action) {
           var action = menu.items[direction].action;                  
-          whileMenuShown.bind(children, { 
+          whileMenuShown.bind(child, { 
             mouseup: function () { 
               whileMenuShown.stop();
               action(target); 
@@ -205,14 +206,14 @@ var insertSelectionTool = function () {
   $("body").prepend('<div id="wiab_guide_horizontal" /><div id="wiab_guide_vertical" />');
   $("body").prepend('' +
     '<div id="wiab_selection">' +
-    '  <div class="wiab_n" />' +
     '  <div class="wiab_ne" />' +
-    '  <div class="wiab_e" />' +
-    '  <div class="wiab_se" />' +
-    '  <div class="wiab_s" />' +
-    '  <div class="wiab_sw" />' +
-    '  <div class="wiab_w" />' +
     '  <div class="wiab_nw" />' +
+    '  <div class="wiab_se" />' +
+    '  <div class="wiab_sw" />' +
+    '  <div class="wiab_n" />' +
+    '  <div class="wiab_s" />' +
+    '  <div class="wiab_e" />' +
+    '  <div class="wiab_w" />' +
     '</div>');
           
   isWest = function (query) {
@@ -289,16 +290,24 @@ var insertSelectionTool = function () {
       e.preventDefault();
                
       target = $(e.target);
-      x = isWest(target) || isEast(target);
-      y = isNorth(target) || isSouth(target);
       initialClick = { x: e.pageX, y: e.pageY };
-      initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY }; 
-           
-      if (isEast(target)) {
-        initialDelta.x++;
+      initialDelta = { x: null, y: null }; 
+      
+      x = true                 
+      if (isWest(target)) {
+        initialDelta.x = selection.offset().left - e.pageX;
+      } else if (isEast(target)) {
+        initialDelta.x = 1 + selection.offset().left + selection.width() - e.pageX ;
+      } else {
+        x = false;
       }
-      if (isSouth(target)) {
-        initialDelta.y++;
+      y = true;
+      if (isNorth(target)) {
+        initialDelta.y = selection.offset().top - e.pageY;
+      } else if (isSouth(target)) {
+        initialDelta.y = 1 + selection.offset().top + selection.height() - e.pageY;
+      } else {
+        y = false;
       }  
       
       drag(e);
@@ -333,6 +342,7 @@ var insertSelectionTool = function () {
       target = element;
       x = true;
       y = true;
+      foo=target;
       initialClick = { x: e.pageX, y: e.pageY };
       initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY };      
 
@@ -397,11 +407,10 @@ var getEdges = function (cell) {
   }));
   return edges;
 };
-
-var moveGuide = function (selection, handle, delta) {
+var getFarEdge = function(cells) {
   var farEdge = { x: 0, y: 0 }
   var cellClasses = [];
-  moveGuide.cells.each(function () { 
+  cells.each(function () { 
     cellClasses = cellClasses.concat(this.className.split(' '));
   }) 
   $.each(cellClasses, ifEdge(function (edge, index) {
@@ -411,7 +420,11 @@ var moveGuide = function (selection, handle, delta) {
       farEdge.x = index;
     }
   }));
+  return farEdge;
+};
 
+var moveGuide = function (selection, handle, delta) {
+  var farEdge = getFarEdge(moveGuide.cells);
   var edges = getEdges(selection[0]);
   
   var x = null;
@@ -482,20 +495,26 @@ var moveGuide = function (selection, handle, delta) {
       }
     });
   }
-  
-  return;
-
-  if (x) {
-    $('div.wiab_west'+x.guide).each(update.west);
-    $('div.wiab_east'+x.guide).each(update.east);
-  }
-  if (y) {
-    $('div.wiab_north'+y.guide).each(update.north);
-    $('div.wiab_south'+y.guide).each(update.south);
-  }
 };
 var moveObject = function (selection, handle, delta) {
-  var edges = {};
+  var farEdge = getFarEdge(moveGuide.cells);
+  var edges = getEdges(selection[0]);
+
+  var uses = { north: 0, south: 0, east: 0, west: 0 };
+  uses.west += $('div.cell.wiab_west' + edges.west).length;
+  uses.west += $('div.cell.wiab_east' + edges.west).length;
+  uses.east += $('div.cell.wiab_west' + edges.east).length;
+  uses.east += $('div.cell.wiab_east' + edges.east).length;  
+  uses.north += $('div.cell.wiab_north' + edges.north).length;
+  uses.north += $('div.cell.wiab_south' + edges.north).length;
+  uses.south += $('div.cell.wiab_north' + edges.south).length;
+  uses.south += $('div.cell.wiab_south' + edges.south).length;
+  
+  if (uses.west > 1) {
+    $('div.wiab_'
+    selection.removeClass('wiab_west' + edges.west);
+    selection.removeClass('wiab_west' + edges.west);
+  }
   $.each(selection[0].className.split(' '), function () {
     var query = this.match(/wiab_(\D+)(\d+)/);
     if (!query || !query[1].match(/north|south|east|west/)) {
