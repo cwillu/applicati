@@ -33,10 +33,10 @@ tr.even td {background-color:#fff;}
 }
 
 .bot {
- position: absolute; 
- bottom: 0px;
- width: 100%;
- border-bottom: 7px solid #223;
+  position: absolute; 
+  bottom: 0px;
+  width: 100%;
+  border-bottom: 7px solid #223;
 }
 
 .top .right {
@@ -49,7 +49,7 @@ a.link, a, a.active {
   color: #369;
 }
 
-.toolbar a.link, .toolbar a, .toolbar a.active { color: #0af;
+.toolbar a.link, .toolbar a, .toolbar a.active {  color: #0af;
 }
 
 .space { 

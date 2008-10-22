@@ -93,18 +93,18 @@
       </div>
       <div class="spacer" />
     </div>    <div class="bot"><div class="toolbar"> 
-      <div class="left">
-          <form name="edit" action="?op=edit" method="POST">
-            <a href="#edit" onClick="document.edit.submit(); return false;">Edit</a>
-          </form>
-        | <a href="?op=links">Links</a>
-        | <form name="select" action="?op=copy" method="POST">
-            <a href="#select" onClick="document.select.submit(); return false;">Select</a>
-          </form>
-        | <form name="paste" action="?op=write" method="POST">
-            <a href="#paste" onClick="document.paste.submit(); return false;">Paste</a>
-          </form>
-      </div>
+<!--      <div class="left">-->
+<!--          <form name="edit" action="?op=edit" method="POST">-->
+<!--            <a href="#edit" onClick="document.edit.submit(); return false;">Edit</a>-->
+<!--          </form>-->
+<!--        | <a href="?op=links">Links</a>-->
+<!--        | <form name="select" action="?op=copy" method="POST">-->
+<!--            <a href="#select" onClick="document.select.submit(); return false;">Select</a>-->
+<!--          </form>-->
+<!--        | <form name="paste" action="?op=write" method="POST">-->
+<!--            <a href="#paste" onClick="document.paste.submit(); return false;">Paste</a>-->
+<!--          </form>-->
+<!--      </div>-->
       <div class="right">
       
         <span py:for="perm in ['read', 'modify', 'replace', 'cross', 'override']">

@@ -45,7 +45,7 @@
   border-top: 1px dotted #000;
   width: 100%;
   height: 0px;
-  margin: 4px 0px;
+  margin: 16px 0px;
   z-index: 11;    
 }
 #wiab_guide_vertical {
@@ -54,51 +54,80 @@
   border-left: 1px dotted #000;
   width: 0px;
   height: 100%;
-  margin: 0px 4px;  
+  margin: 0px 16px;  
   z-index: 11;    
 }
+#wiab_guide_horizontal.wide {
+  border-bottom: 1px dotted #000;
+}
+#wiab_guide_vertical.wide {
+  border-right: 1px dotted #000;
+}
+
 
 #wiab_selection {
   position: relative;
+  display: none;
 }
 
 #wiab_selection * {
-  border: 1px solid #88b;
-  background-color: #448;
   position: absolute;
-  margin: -4px;
-  width: 8px;
-  height: 8px;
+  margin: -16px;
+  width: 32px;
+  height: 32px;
   z-index: 11;
 } 
-#wiab_selection .wiab_n {
-  top: 0px;
-} 
-#wiab_selection .wiab_ne {
-  top: 0px;
-  right: 0px;
-} 
-#wiab_selection .wiab_e {
-  right: 0px;
-} 
-#wiab_selection .wiab_se {
-  bottom: 0px;
-  right: 0px;
-} 
-#wiab_selection .wiab_s {
-  bottom: 0px;
-} 
-#wiab_selection .wiab_sw {
-  bottom: 0px;
-  left: 0px;
-} 
-#wiab_selection .wiab_w {
-  left: 0px;
-} 
 #wiab_selection .wiab_nw {
-  top: 0px;
-  left: 0px;
+  background: url("/static/images/grabbers.png") 0px -96px;
 }
+#wiab_selection .wiab_ne {
+  background: url("/static/images/grabbers.png") 0px -128px;
+}
+#wiab_selection .wiab_se {
+  background: url("/static/images/grabbers.png") 0px -32px;
+}
+#wiab_selection .wiab_sw {
+  background: url("/static/images/grabbers.png") 0px -64px;
+}
+#wiab_selection .wiab_e {
+  background: url("/static/images/grabbers.png") 0px -160px;
+}
+#wiab_selection .wiab_w {
+  background: url("/static/images/grabbers.png") 0px -160px;    
+}
+#wiab_selection .wiab_n {
+  background: url("/static/images/grabbers.png") 0px -192px;
+}
+#wiab_selection .wiab_s {
+  background: url("/static/images/grabbers.png") 0px -192px;
+}
+
+#wiab_selection .wiab_nw.wiab_active {
+  background: url("/static/images/grabbers.png") 32px -96px;
+}
+#wiab_selection .wiab_ne.wiab_active {
+  background: url("/static/images/grabbers.png") 32px -128px;
+}
+#wiab_selection .wiab_se.wiab_active {
+  background: url("/static/images/grabbers.png") 32px -32px;
+}
+#wiab_selection .wiab_sw.wiab_active {
+  background: url("/static/images/grabbers.png") 32px -64px;
+}
+#wiab_selection .wiab_e.wiab_active {
+  background: url("/static/images/grabbers.png") 32px -160px;
+}
+#wiab_selection .wiab_w.wiab_active {
+  background: url("/static/images/grabbers.png") 32px -160px;    
+}
+#wiab_selection .wiab_n.wiab_active {
+  background: url("/static/images/grabbers.png") 32px -192px;
+}
+#wiab_selection .wiab_s.wiab_active {
+  background: url("/static/images/grabbers.png") 32px -192px;
+}
+
+
 
 img.wiab  {
   position: absolute; 

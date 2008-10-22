@@ -409,7 +409,7 @@ class Root(controllers.RootController):
       if not meta._query('read'):
         obj = blank()        
       elif not meta.data:
-        if not prototype:          
+        if not prototype:
           prototype = Wrapper(None, findPage(('prototype',), loginRoot(), path))
 #          prototype = Wrapper(None, findPage(('prototype',), loginRoot(), path))
 #          prototype.show()

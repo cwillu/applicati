@@ -60,6 +60,13 @@ var whichParent = function (selector, node) {
   }
   return target.length > 0 ? target : null;
 };
+
+
+
+//////////////////////////////////////////////////
+
+
+
 var insertPiMenu = function () {
   var toolTemplate = '' +
     '<img id="wiab_image" src="/static/images/1.png" />' +
@@ -186,6 +193,14 @@ var insertPiMenu = function () {
     selector.mousedown(targetMouseDown);
   };
 };
+
+
+
+/////////////////////////////////////////////////////
+
+
+
+
 var insertSelectionTool = function () {
   $("body").prepend('<div id="wiab_guide_horizontal" /><div id="wiab_guide_vertical" />');
   $("body").prepend('' +
@@ -221,6 +236,11 @@ var insertSelectionTool = function () {
     $('#wiab_selection>.wiab_sw').css({ left: element.offset().left, top: element.offset().top + element.height() });
     $('#wiab_selection>.wiab_w ').css({ left: element.offset().left, top: element.offset().top + element.height() / 2 });
     $('#wiab_selection>.wiab_nw').css({ left: element.offset().left, top: element.offset().top });
+    $('#wiab_selection div').hover(function () {
+      $(this).addClass('wiab_active');
+    }, function () {
+      $(this).removeClass('wiab_active');
+    });
     $('#wiab_selection').show();
   };      
       
@@ -243,27 +263,25 @@ var insertSelectionTool = function () {
 
     updateSelectionBox(element);
     var drag = function (e) {
-      e.stopPropagation();
       currentLocation = { x: e.pageX, y: e.pageY, pageX: e.pageX - e.clientX, pageY: e.pageY - e.clientY };
     };
-    var odd_ = false;
-    var updateLocation = function () {
-      odd_ = !odd_;          
-      if (odd_ && x) { 
-        $('#wiab_guide_vertical').css({ left: currentLocation.x + initialDelta.x, top: currentLocation.pageY });
-      } 
-      if (!odd_ && y) {
-        $('#wiab_guide_horizontal').css({ left: currentLocation.pageX, top: currentLocation.y + initialDelta.y });
-      }
+    var vertical = $('#wiab_guide_vertical')[0].style;
+    var horizontal = $('#wiab_guide_horizontal')[0].style;
+    
+    var updateGuideLocation = function () {
+      vertical.left = currentLocation.x + initialDelta.x + "px";
+      vertical.top = currentLocation.pageY + "px";
+      horizontal.left = currentLocation.pageX + "px";
+      horizontal.top = currentLocation.y + initialDelta.y + "px";
     };    
-    var stopDrag = function (e) {
+    var stopGuideDrag = function (e) {
       $('#wiab_guide_horizontal,#wiab_guide_vertical').fadeOut(fadeOutTime);
       whileDragging.stop();
       var delta = { x: currentLocation.x - initialClick.x, y: currentLocation.y - initialClick.y }; 
-      actions.moved(selection, target, delta);
+      actions.edgeMoved(selection, target, delta);
       updateSelectionBox(selection);
     };  
-    var startDrag = function (e) {
+    var startGuideDrag = function (e) {
       if (e.button < 0) {
         return;    
       }
@@ -274,7 +292,8 @@ var insertSelectionTool = function () {
       x = isWest(target) || isEast(target);
       y = isNorth(target) || isSouth(target);
       initialClick = { x: e.pageX, y: e.pageY };
-      initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY };      
+      initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY }; 
+           
       if (isEast(target)) {
         initialDelta.x++;
       }
@@ -283,23 +302,54 @@ var insertSelectionTool = function () {
       }  
       
       drag(e);
-      updateLocation(e);
+      updateGuideLocation();      
       if (y) {
-        $('#wiab_guide_horizontal').show();
+        $('#wiab_guide_horizontal').height(0).removeClass('wide').show();
       }
       if (x) {
-        $('#wiab_guide_vertical').show();
+        $('#wiab_guide_vertical').width(0).removeClass('wide').show();
       }
 
-      whileDragging.interval(updateLocation, 15);
-      whileDragging.bind($('*'), {
+      whileDragging.interval(updateGuideLocation, 15);
+      whileDragging.bind($(document), {
         mousemove: drag,
-        mouseup: stopDrag
+        mouseup: stopGuideDrag
       });    
-    };
+    };    
+    var stopCellDrag = function (e) {
+      $('#wiab_guide_horizontal,#wiab_guide_vertical').fadeOut(fadeOutTime);
+      whileDragging.stop();
+      var delta = { x: currentLocation.x - initialClick.x, y: currentLocation.y - initialClick.y }; 
+      actions.objectMoved(selection, target, delta);
+      updateSelectionBox(selection);
+    };  
+    var startCellDrag = function (e) {
+      if (e.button < 0) {
+        return;    
+      }
+      e.stopPropagation();
+      e.preventDefault();
+               
+      target = element;
+      x = true;
+      y = true;
+      initialClick = { x: e.pageX, y: e.pageY };
+      initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY };      
 
-    whileSelected.bind($('#wiab_selection>div'), { mousedown: startDrag });
-    whileSelected.bind(element, { mousedown: False });
+      drag(e);
+      updateGuideLocation(e);
+      $('#wiab_guide_horizontal').height(target.height()).addClass('wide').show();
+      $('#wiab_guide_vertical').width(target.width()).addClass('wide').show();
+
+      whileDragging.interval(updateGuideLocation, 15);
+      whileDragging.bind($(document.body), {
+        mousemove: drag,
+        mouseup: stopGuideDrag
+      });
+    };    
+
+    whileSelected.bind($('#wiab_selection>div'), { mousedown: startGuideDrag });
+    whileSelected.bind(element, { mousedown: startCellDrag });
     whileSelected.bind($('body'), { mousedown: function () { 
       return select(null); 
     } });          
@@ -313,6 +363,9 @@ var insertSelectionTool = function () {
 };
 
 
+////////////////////////////////////////////
+
+
 var click = function (e) {  
   var onClick = $(e.target).filter('a').attr('onClick');
   if (onClick) {
@@ -324,54 +377,114 @@ var click = function (e) {
   }
 };
 
-var moveGuide = function (selection, handle, delta) {
-  var edges = { x: [], y: [] };
-  $.each(selection[0].className.split(' '), function () {
-    query = this.match(/wiab_(\D+)(\d+)/);
+var ifEdge = function (then) {
+  return function () {
+    var query = this.match(/wiab_(\D+)(\d+)/);
     if (!query || !query[1].match(/north|south|east|west/)) {
       return;
     }
-    edges[query[1]] = query[2];
-  });
+    edge = query[1];
+    index = parseInt(query[2], 10);
+    
+    then.this = this;
+    then(edge, index); 
+  }
+};
+var getEdges = function (cell) {
+  var edges = {};
+  $.each(cell.className.split(' '), ifEdge(function (edge, index) {
+    edges[edge] = index;
+  }));
+  return edges;
+};
 
+var moveGuide = function (selection, handle, delta) {
+  var farEdge = { x: 0, y: 0 }
+  var cellClasses = [];
+  moveGuide.cells.each(function () { 
+    cellClasses = cellClasses.concat(this.className.split(' '));
+  }) 
+  $.each(cellClasses, ifEdge(function (edge, index) {
+    if (farEdge.y < index && (edge === 'north' || edge === 'south')) {
+      farEdge.y = index;
+    } else if (farEdge.x < index && (edge === 'west' || edge === 'east')) {
+      farEdge.x = index;
+    }
+  }));
+
+  var edges = getEdges(selection[0]);
+  
   var x = null;
   var y = null;
   if (isWest(handle)) {
-    x = { guide: edges.west };
+    x = { guide: edges.west, edge: 'west' };
+
+    moveGuide.cells.each(function () {  
+      var cell = getEdges(this);
+      var location = $(this).position();
+      if (x.guide !== 0 && cell.west === 0 && cell.east > x.guide) {
+        return;
+      } else if (x.guide !== 0 && cell.west === 0 && cell.east <= x.guide) {
+        $(this).width($(this).width() + delta.x);
+      } else if (cell.west <= x.guide && cell.east > x.guide) {
+        $(this).width($(this).width() - delta.x);
+        $(this).css({ left: location.left + delta.x});
+      } else if (cell.west <= x.guide && cell.east <= x.guide) {
+        $(this).css({ left: location.left + delta.x});
+      }
+    });
   } else if (isEast(handle)) {
-    x = { guide: edges.east };
+    x = { guide: edges.east, edge: 'east' };
+    
+    moveGuide.cells.each(function () {  
+      var cell = getEdges(this);
+      var location = $(this).position();
+      if (x.guide !== farEdge.x && cell.east === farEdge.x && cell.west < x.guide) {
+        return;
+      } else if (x.guide !== farEdge.x && cell.east === farEdge.x && cell.west >= x.guide) {
+        $(this).css({ left: location.left + delta.x});
+        $(this).width($(this).width() - delta.x);
+      } else if (cell.east >= x.guide && cell.west < x.guide) {
+        $(this).width($(this).width() + delta.x);
+      } else if (cell.east >= x.guide && cell.west >= x.guide) {
+        $(this).css({ left: location.left + delta.x});
+      }
+    });
   }
+  
   if (isNorth(handle)) {
-    y = { guide: edges.north };
+    y = { guide: edges.north, edge: 'north' };
+
+    moveGuide.cells.each(function () {  
+      var cell = getEdges(this);
+      var location = $(this).position();
+      if (y.guide !== 0 && cell.north === 0 && cell.south > y.guide) {
+        return;
+      } else if (y.guide !== 0 && cell.north === 0 && cell.south <= y.guide) {
+        $(this).height($(this).height() + delta.y);
+      } else if (cell.north <= y.guide && cell.south > y.guide) {
+        $(this).height($(this).height() - delta.y);
+        $(this).css({ top: location.top + delta.y});
+      } else if (cell.north <= y.guide && cell.south <= y.guide) {
+        $(this).css({ top: location.top + delta.y});
+      }
+    });
   } else if (isSouth(handle)) {
-    y = { guide: edges.south };
-  }  
-  
-  var update = {
-    north: function () {
+    y = { guide: edges.south, edge: 'south' };
+    
+    moveGuide.cells.each(function () {  
+      var cell = getEdges(this);
       var location = $(this).position();
-      var size = { width: $(this).width(), height: $(this).height() };  
-      $(this).css({ top: location.top + delta.y});
-      $(this).height(size.height - delta.y);                            
-    },
-    south: function () {
-      var location = $(this).position();
-      var size = { width: $(this).width(), height: $(this).height() };  
-      $(this).height(size.height + delta.y);
-    },
-    east: function () {
-      var location = $(this).position();
-      var size = { width: $(this).width(), height: $(this).height() };  
-      $(this).width(size.width + delta.x);
-    },
-    west: function () {
-      var location = $(this).position();
-      var size = { width: $(this).width(), height: $(this).height() };  
-      $(this).css({ left: location.left + delta.x});
-      $(this).width(size.width - delta.x);                            
-    },
+      if (cell.south >= y.guide && cell.north < y.guide) {
+        $(this).height($(this).height() + delta.y);
+      } else if (cell.south >= y.guide && cell.north >= y.guide) {
+        $(this).css({ top: location.top + delta.y});
+      }
+    });
   }
   
+  return;
+
   if (x) {
     $('div.wiab_west'+x.guide).each(update.west);
     $('div.wiab_east'+x.guide).each(update.east);
@@ -380,18 +493,33 @@ var moveGuide = function (selection, handle, delta) {
     $('div.wiab_north'+y.guide).each(update.north);
     $('div.wiab_south'+y.guide).each(update.south);
   }
-  
-
 };
+var moveObject = function (selection, handle, delta) {
+  var edges = {};
+  $.each(selection[0].className.split(' '), function () {
+    var query = this.match(/wiab_(\D+)(\d+)/);
+    if (!query || !query[1].match(/north|south|east|west/)) {
+      return;
+    }
+    
+    edge = query[1]
+    index = query[2]
+    edges[edge] = index;
+  });
+}
+
 var mainMenu = function () {
-  piMenu($('div.cell'), {
+  cells = $('div.cell');
+  moveGuide.cells = cells;
+  moveObject.cells = cells;
+  piMenu(cells, {
     primary: click,
     cancel: null,
     items: {
-      s: item('Move', 'wiab_arrow', select.actions({moved: moveGuide})),
+      s: item('Move', 'wiab_arrow', select.actions( { edgeMoved: moveGuide, objectMoved: moveObject} )),
       se: item('Edit', 'wiab_arrow', null),
-      sw: item('Select', 'wiab_button', null),
-      w: item('Paste', 'wiab_button', null)
+      sw: item('Style', 'wiab_arrow', null),
+      w: item('Current', 'wiab_button', null)
     }
   });
 };

@@ -396,8 +396,8 @@ def BaseComponent(rootFolder, componentPath=()):
       return self.get(self.resolve(name), name)
       
     def resolve(self, name):
-      data = self._selfGetData()
-      return data.resolve(self, name)
+      data = self._selfGetData()      
+      return data.resolve(self, name) if data else None
 
     def get(self, descriptor, segment=None, path=None):
 #      self._check('read')   #XXX ideally would be 'traverse', but current resolving requires reading the actual object anyway
