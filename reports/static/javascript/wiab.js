@@ -203,7 +203,7 @@ var insertPiMenu = function () {
 
 
 var insertSelectionTool = function () {
-  $("body").prepend('<div id="wiab_guide_horizontal" /><div id="wiab_guide_vertical" />');
+  $("body").prepend('<div id="wiab_guide_horizontal" /><div id="wiab_guide_vertical" /><div id="wiab_guide_box" />');
   $("body").prepend('' +
     '<div id="wiab_selection">' +
     '  <div class="wiab_ne" />' +
@@ -268,18 +268,20 @@ var insertSelectionTool = function () {
     };
     var vertical = $('#wiab_guide_vertical')[0].style;
     var horizontal = $('#wiab_guide_horizontal')[0].style;
+    var box = $('#wiab_guide_box')[0].style;
+    var action = null;
     
     var updateGuideLocation = function () {
       vertical.left = currentLocation.x + initialDelta.x + "px";
-      vertical.top = currentLocation.pageY + "px";
-      horizontal.left = currentLocation.pageX + "px";
       horizontal.top = currentLocation.y + initialDelta.y + "px";
+      box.left = currentLocation.x + initialDelta.x + "px";
+      box.top = currentLocation.y + initialDelta.y + "px";
     };    
     var stopGuideDrag = function (e) {
-      $('#wiab_guide_horizontal,#wiab_guide_vertical').fadeOut(fadeOutTime);
+      $('#wiab_guide_horizontal,#wiab_guide_vertical,#wiab_guide_box').fadeOut(fadeOutTime);
       whileDragging.stop();
       var delta = { x: currentLocation.x - initialClick.x, y: currentLocation.y - initialClick.y }; 
-      actions.edgeMoved(selection, target, delta);
+      action(selection, target, delta);
       updateSelectionBox(selection);
     };  
     var startGuideDrag = function (e) {
@@ -288,36 +290,29 @@ var insertSelectionTool = function () {
       }
       e.stopPropagation();
       e.preventDefault();
-               
+      
+      action = actions.edgeMoved;
       target = $(e.target);
       initialClick = { x: e.pageX, y: e.pageY };
       initialDelta = { x: null, y: null }; 
       
-      x = true                 
       if (isWest(target)) {
         initialDelta.x = selection.offset().left - e.pageX;
+        $('#wiab_guide_vertical').show();
       } else if (isEast(target)) {
         initialDelta.x = 1 + selection.offset().left + selection.width() - e.pageX ;
-      } else {
-        x = false;
+        $('#wiab_guide_vertical').show();
       }
-      y = true;
       if (isNorth(target)) {
         initialDelta.y = selection.offset().top - e.pageY;
+        $('#wiab_guide_horizontal').show();
       } else if (isSouth(target)) {
         initialDelta.y = 1 + selection.offset().top + selection.height() - e.pageY;
-      } else {
-        y = false;
+        $('#wiab_guide_horizontal').show();
       }  
       
       drag(e);
       updateGuideLocation();      
-      if (y) {
-        $('#wiab_guide_horizontal').height(0).removeClass('wide').show();
-      }
-      if (x) {
-        $('#wiab_guide_vertical').width(0).removeClass('wide').show();
-      }
 
       whileDragging.interval(updateGuideLocation, 15);
       whileDragging.bind($(document), {
@@ -326,7 +321,7 @@ var insertSelectionTool = function () {
       });    
     };    
     var stopCellDrag = function (e) {
-      $('#wiab_guide_horizontal,#wiab_guide_vertical').fadeOut(fadeOutTime);
+      $('#wiab_guide_horizontal,#wiab_guide_vertical,#wiab_guide_box').fadeOut(fadeOutTime);
       whileDragging.stop();
       var delta = { x: currentLocation.x - initialClick.x, y: currentLocation.y - initialClick.y }; 
       actions.objectMoved(selection, target, delta);
@@ -338,20 +333,17 @@ var insertSelectionTool = function () {
       }
       e.stopPropagation();
       e.preventDefault();
-               
+      
+      action = actions.objectMoved;
       target = element;
-      x = true;
-      y = true;
-      foo=target;
       initialClick = { x: e.pageX, y: e.pageY };
       initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY };      
 
       drag(e);
       updateGuideLocation(e);
-      $('#wiab_guide_horizontal').height(target.height()).addClass('wide').show();
-      $('#wiab_guide_vertical').width(target.width()).addClass('wide').show();
+      $('#wiab_guide_box').height(target.height()).width(target.width()).show();
 
-      whileDragging.interval(updateGuideLocation, 15);
+      whileDragging.interval(updateGuideLocation, 30);
       whileDragging.bind($(document.body), {
         mousemove: drag,
         mouseup: stopGuideDrag
@@ -499,7 +491,11 @@ var moveGuide = function (selection, handle, delta) {
 var moveObject = function (selection, handle, delta) {
   var farEdge = getFarEdge(moveGuide.cells);
   var edges = getEdges(selection[0]);
+  
+  var pos = selection.position()
+  selection.css({ left: pos.left + delta.x, top: pos.top + delta.y }); 
 
+  return;
   var uses = { north: 0, south: 0, east: 0, west: 0 };
   uses.west += $('div.cell.wiab_west' + edges.west).length;
   uses.west += $('div.cell.wiab_east' + edges.west).length;
@@ -511,7 +507,7 @@ var moveObject = function (selection, handle, delta) {
   uses.south += $('div.cell.wiab_south' + edges.south).length;
   
   if (uses.west > 1) {
-    $('div.wiab_'
+    $('div.wiab_')
     selection.removeClass('wiab_west' + edges.west);
     selection.removeClass('wiab_west' + edges.west);
   }
