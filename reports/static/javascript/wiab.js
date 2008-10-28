@@ -259,8 +259,10 @@ var insertSelectionTool = function () {
     }
 
     updateSelectionBox(element);
+    var currentDropTarget = null;
     var drag = function (e) {
       currentLocation = { x: e.pageX, y: e.pageY, pageX: e.pageX - e.clientX, pageY: e.pageY - e.clientY };
+      currentDropTarget = e.target;
     };
     var vertical = $('#wiab_guide_vertical')[0].style;
     var horizontal = $('#wiab_guide_horizontal')[0].style;
@@ -272,7 +274,13 @@ var insertSelectionTool = function () {
       horizontal.top = currentLocation.y + initialDelta.y + "px";
       box.left = currentLocation.x + initialDelta.x + "px";
       box.top = currentLocation.y + initialDelta.y + "px";
-    };    
+    };
+    var activeDropTarget = null;
+    var updateAnchorIndicators = function () {
+      $(activeDropTarget).removeClass('active');
+      $(currentDropTarget).addClass('active');
+      activeDropTarget = currentDropTarget;
+    };
     var stopGuideDrag = function (e) {
       $('#wiab_guide_horizontal,#wiab_guide_vertical,#wiab_guide_box').fadeOut(fadeOutTime);
       whileDragging.stop();
@@ -314,7 +322,7 @@ var insertSelectionTool = function () {
       whileDragging.bind($(document), {
         mousemove: drag,
         mouseup: stopGuideDrag
-      });    
+      });
     };    
     var stopCellDrag = function (e) {
       $('#wiab_guide_horizontal,#wiab_guide_vertical,#wiab_guide_box').fadeOut(fadeOutTime);
@@ -330,6 +338,8 @@ var insertSelectionTool = function () {
       e.stopPropagation();
       e.preventDefault();
       
+      $('div.cell').css({'z-index': 15});
+      
       action = actions.objectMoved;
       target = element;
       initialClick = { x: e.pageX, y: e.pageY };
@@ -340,6 +350,7 @@ var insertSelectionTool = function () {
       $('#wiab_guide_box').height(target.height()).width(target.width()).show();
 
       whileDragging.interval(updateGuideLocation, 30);
+      whileDragging.interval(updateAnchorIndicators, 100);
       whileDragging.bind($(document.body), {
         mousemove: drag,
         mouseup: stopGuideDrag
