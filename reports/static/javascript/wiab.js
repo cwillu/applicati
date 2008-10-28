@@ -1,6 +1,6 @@
 var fadeOutTime = 300;
 
-var scope = function () {      
+jQuery.scope = function () {      
   var intervals = [];
   var timeouts = [];
   var cancels = [];
@@ -43,29 +43,25 @@ var scope = function () {
   };
   return scope;
 };
-var False = function () {
+jQuery.False = function () {
   return false;
 };
-var whichParent = function (selector, node) {
+jQuery.fn.whichParent = function (node) {
   var parents = node.parents().andSelf().get();
   var target = [];
   while (parents.length > 0) {
-    var parent = parents.pop();        
-    target = selector.filter(function (index) { 
-      return selector.get(index) === parent; 
+    var parent = parents.pop();
+    target = this.filter(function (index) { 
+      return this === parent; 
     });
     if (target.length > 0) {
       break;
     }
   }
-  return target.length > 0 ? target : null;
+  return target;
 };
 
-
-
 //////////////////////////////////////////////////
-
-
 
 var insertPiMenu = function () {
   var toolTemplate = '' +
@@ -107,7 +103,7 @@ var insertPiMenu = function () {
     var children = pi.children(all);
     children.css({ display: 'none' });
     
-    var whileMenuShown = scope();
+    var whileMenuShown = $.scope();
     var originalTarget = null;
     var target = null;
     var originalLocation = {x: null, y: null};
@@ -177,7 +173,7 @@ var insertPiMenu = function () {
         }
       };
       originalTarget = e.target;
-      target = whichParent(selector, $(e.target));
+      target = selector.whichParent($(e.target));
 
       if ($(e.target).is("a")) {
         e.preventDefault();
@@ -245,7 +241,7 @@ var insertSelectionTool = function () {
     $('#wiab_selection').show();
   };      
       
-  var whileSelected = scope();      
+  var whileSelected = $.scope();      
   select = function (element, actions) {
     whileSelected.stop();
     var selection = element;
@@ -254,7 +250,7 @@ var insertSelectionTool = function () {
     var currentLocation = { x: null, y: null };
     var x = null, y = null;
     var target = null;
-    var whileDragging = scope();
+    var whileDragging = $.scope();
     if (!element) {
       setTimeout(function () { 
         $('#wiab_selection').fadeOut(fadeOutTime); 
