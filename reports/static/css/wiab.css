@@ -60,7 +60,9 @@
 #wiab_guide_box {
   display: none;
   position: absolute;
-  border: 1px dotted #000;
+  outline: 3px dotted #000;
+  background: #48f;
+  opacity: 0.2;
   width: 0px;
   height: 0px;
   margin: 0px 0px;
@@ -129,7 +131,22 @@
   background: url("/static/images/grabbers.png") 32px -192px;
 }
 
+.wiab_active_north {
+  border-top: 3px dotted black;  
+}
+.wiab_active_east {
+  border-right: 3px dotted black;  
+}
+.wiab_active_south {
+  border-bottom: 3px dotted black;  
+}
+.wiab_active_west {
+  border-left: 3px dotted black;  
+}
 
+.wiab_front {
+  z-index: 99 !important;
+}
 
 img.wiab  {
   position: absolute; 

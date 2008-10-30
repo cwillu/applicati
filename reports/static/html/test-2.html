@@ -12,6 +12,10 @@
     i {
       border: 1px solid;
     }
+    .active {
+      color: #00ff00;
+      border: 1px solid;
+    }
     .cell {
       position: absolute;
       //float: left;
@@ -71,16 +75,32 @@
   </style>
   <script language="javascript"><!--
 
+    $(document).ready(function () {
+
+  $('#t1').click(function () {
+    alert('test');
+    $(this).attr('href', 'http://google.ca');
+  } );
+
+    });
+
   </script>
 </head>
 <body>  
+
+
+<a id="t1" href="#">Test</a>
+
+
+
+
 <div style="position: relative; left: 0px; top: 10px;">
   <div id="a0" class="cell"> <b>0</b> <h2>Moreover, the more factors to be considered in a decision</h2></div>
   <div id="a1" class="cell"> <b>1</b> <ul><li>Moreover, the</li><li>more factors to</li><li>be considered in a decision</li><li>the more likely</li><li>the unconscious brain</li><li>handled it all better,</li><li>Moreover, the</li><li>more factors to</li><li>be considered in a decision</li><li>the more likely</li><li>the unconscious brain</li><li>handled it all better,</li><li>Moreover, the</li><li>more factors to</li><li>be considered in a decision</li><li>the more likely</li><li>the unconscious brain</li><li>handled it all better,</li><li>Moreover, the</li><li>more factors to</li><li>be considered in a decision</li><li>the more likely</li><li>the unconscious brain</li><li>handled it all better,</li></ul></div>
   <div id="a2" class="cell"> <b>2</b> <i>Moreover, the </i><i> factors to be  in a decision,</i><i>the more likely  unconscious brain</i><i>handled it all better</i></div>
   <div id="a3" class="cell"> <b>3</b> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur semper. Aliquam ullamcorper suscipit est. Aliquam nisi. Vivamus aliquet arcu in metus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Morbi feugiat. Mauris lacinia lectus ut pede. Praesent id arcu. Curabitur scelerisque dui id quam. Morbi dui nibh, scelerisque eu, convallis eu, volutpat non, leo. Sed at nulla. Nulla risus felis, posuere a, ornare non, fermentum eget, velit. Aenean a libero ut felis suscipit porta.
 
-<div style="float: left; width: 200px; padding: 10px;">Aenean eget lorem sed sem adipiscing feugiat. Quisque vitae sem. Sed sit amet magna vel sapien volutpat vehicula. Maecenas aliquet neque sit amet velit. Fusce urna pede, tempus nec, eleifend dapibus, rutrum egestas, neque. Quisque vel arcu id dui condimentum sodales. Mauris adipiscing ornare nibh. In ut lectus eget sem congue hendrerit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus feugiat leo non elit. Maecenas feugiat scelerisque quam. Integer ante neque, ultrices eu, euismod ut, sodales quis, quam. Quisque ac sapien quis lacus tempor dignissim. Vestibulum tortor. In tincidunt iaculis lacus. Fusce facilisis massa pretium diam. Sed justo libero, bibendum at, aliquet et, vulputate sit amet, enim.</div>
+<div style="float: left; width: 200px; margin: 10px;">Aenean eget lorem sed sem adipiscing feugiat. Quisque vitae sem. Sed sit amet magna vel sapien volutpat vehicula. Maecenas aliquet neque sit amet velit. Fusce urna pede, tempus nec, eleifend dapibus, rutrum egestas, neque. Quisque vel arcu id dui condimentum sodales. Mauris adipiscing ornare nibh. In ut lectus eget sem congue hendrerit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Phasellus feugiat leo non elit. Maecenas feugiat scelerisque quam. Integer ante neque, ultrices eu, euismod ut, sodales quis, quam. Quisque ac sapien quis lacus tempor dignissim. Vestibulum tortor. In tincidunt iaculis lacus. Fusce facilisis massa pretium diam. Sed justo libero, bibendum at, aliquet et, vulputate sit amet, enim.</div>
 
 Mauris a pede at nulla auctor tristique. Aenean tortor libero, feugiat sed, eleifend nec, interdum vel, lacus. Nunc ultrices placerat arcu. Donec mi felis, vestibulum at, scelerisque eget, ultrices nec, mauris. Fusce scelerisque sodales odio. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis mauris tortor, elementum ut, mattis nec, semper vitae, eros. Suspendisse purus nisl, porta a, dapibus non, sollicitudin sit amet, urna. Nulla faucibus pharetra eros. Mauris velit tellus, tincidunt at, sollicitudin at, tempor eu, tortor. Etiam nisi. Etiam venenatis risus vitae arcu. Suspendisse dictum nisi sit amet dolor hendrerit lacinia.
 

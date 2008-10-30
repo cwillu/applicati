@@ -13,7 +13,7 @@ jQuery.scope = function () {
         clearInterval(intervals.pop());
       }
       while (cancels.length > 0) {
-        cancels.pop()();        
+        cancels.pop().call(this);
       }
     },
     after: function (func) {
@@ -224,7 +224,7 @@ var insertSelectionTool = function () {
   isSouth = function (query) {
     return query.is('div.wiab_s,div.wiab_sw,div.wiab_se');
   };  
-  var updateSelectionBox = function (element) {      
+  var updateSelectionBox = function (element) {   
     $('#wiab_selection>.wiab_n ').css({ left: element.offset().left + element.width() / 2, top: element.offset().top });
     $('#wiab_selection>.wiab_ne').css({ left: element.offset().left + element.width(), top: element.offset().top });
     $('#wiab_selection>.wiab_e ').css({ left: element.offset().left + element.width(), top: element.offset().top + element.height() / 2 });
@@ -242,7 +242,7 @@ var insertSelectionTool = function () {
   };      
       
   var whileSelected = $.scope();      
-  select = function (element, actions) {
+  select = function (element, actions, selector) {
     whileSelected.stop();
     var selection = element;
     var initialClick = { x: null, y: null };
@@ -261,25 +261,18 @@ var insertSelectionTool = function () {
     updateSelectionBox(element);
     var currentDropTarget = null;
     var drag = function (e) {
-      currentLocation = { x: e.pageX, y: e.pageY, pageX: e.pageX - e.clientX, pageY: e.pageY - e.clientY };
+      currentLocation = { x: e.pageX, y: e.pageY, scrollX: e.pageX - e.clientX, scrollY: e.pageY - e.clientY };
       currentDropTarget = e.target;
     };
     var vertical = $('#wiab_guide_vertical')[0].style;
-    var horizontal = $('#wiab_guide_horizontal')[0].style;
-    var box = $('#wiab_guide_box')[0].style;
+    var horizontal = $('#wiab_guide_horizontal')[0].style;    
     var action = null;
     
     var updateGuideLocation = function () {
       vertical.left = currentLocation.x + initialDelta.x + "px";
-      horizontal.top = currentLocation.y + initialDelta.y + "px";
-      box.left = currentLocation.x + initialDelta.x + "px";
-      box.top = currentLocation.y + initialDelta.y + "px";
-    };
-    var activeDropTarget = null;
-    var updateAnchorIndicators = function () {
-      $(activeDropTarget).removeClass('active');
-      $(currentDropTarget).addClass('active');
-      activeDropTarget = currentDropTarget;
+      vertical.top = currentLocation.scrollY + "px";
+      horizontal.left = currentLocation.scrollX + "px";
+      horizontal.top = currentLocation.y + initialDelta.y + "px";  
     };
     var stopGuideDrag = function (e) {
       $('#wiab_guide_horizontal,#wiab_guide_vertical,#wiab_guide_box').fadeOut(fadeOutTime);
@@ -327,10 +320,10 @@ var insertSelectionTool = function () {
     var stopCellDrag = function (e) {
       $('#wiab_guide_horizontal,#wiab_guide_vertical,#wiab_guide_box').fadeOut(fadeOutTime);
       whileDragging.stop();
-      var delta = { x: currentLocation.x - initialClick.x, y: currentLocation.y - initialClick.y }; 
-      actions.objectMoved(selection, target, delta);
+      actions.objectMoved(element, currentLocation, currentDropTarget);
+      //actions.objectMoved(selection, target, edge);
       updateSelectionBox(selection);
-    };  
+    };
     var startCellDrag = function (e) {
       if (e.button < 0) {
         return;    
@@ -338,7 +331,7 @@ var insertSelectionTool = function () {
       e.stopPropagation();
       e.preventDefault();
       
-      $('div.cell').css({'z-index': 15});
+      $('div.cell').addClass('wiab_front');
       
       action = actions.objectMoved;
       target = element;
@@ -346,14 +339,16 @@ var insertSelectionTool = function () {
       initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY };      
 
       drag(e);
-      updateGuideLocation(e);
+      updateAnchorIndicators(element, currentLocation, currentDropTarget);
       $('#wiab_guide_box').height(target.height()).width(target.width()).show();
 
-      whileDragging.interval(updateGuideLocation, 30);
-      whileDragging.interval(updateAnchorIndicators, 100);
+      whileDragging.interval(function () { actions.objectMoving(selection, currentLocation, currentDropTarget); }, 200);
+      whileDragging.after(function () {
+        $('div.cell').removeClass('wiab_front');
+      });
       whileDragging.bind($(document.body), {
         mousemove: drag,
-        mouseup: stopGuideDrag
+        mouseup: stopCellDrag
       });
     };    
 
@@ -363,9 +358,9 @@ var insertSelectionTool = function () {
       return select(null); 
     } });          
   };
-  select.actions = function (actions) {
+  select.actions = function (actions, selector) {
     return function (element) {
-      select(element, actions);
+      select(element, actions, selector);
     };
   };
 
@@ -395,8 +390,7 @@ var ifEdge = function (then) {
     edge = query[1];
     index = parseInt(query[2], 10);
     
-    then.this = this;
-    then(edge, index); 
+    then.call(this, edge, index); 
   }
 };
 var getEdges = function (cell) {
@@ -420,6 +414,61 @@ var getFarEdge = function(cells) {
     }
   }));
   return farEdge;
+};
+
+var updateAnchorIndicators = function (selection, location, hover, move) {
+  var target = updateAnchorIndicators.cells.whichParent($(hover));
+  var box = move ? selection : $('#wiab_guide_box');
+  var offset = move ? target.position() : target.offset(); //KILL THIS 
+  
+  box = box[0].style;
+  
+  if (target[0] === selection[0]) {
+    box.left = (offset.left) + "px";
+    box.top = (offset.top) + "px";
+    box.width = (target.width()) + "px";
+    box.height = (target.height()) + "px";      
+    return;
+  }
+  var side = { 
+    west: Math.abs(location.x - target.offset().left),
+    north: Math.abs(location.y - target.offset().top),
+    east: Math.abs(location.x - (target.offset().left + target.width())),
+    south: Math.abs(location.y - (target.offset().top + target.height()))
+  };
+  var edge;
+  if (Math.min(side.west, side.east) < Math.min(side.north, side.south)) {
+    edge = side.west < side.east ? 'west' : 'east';
+  } else {
+    edge = side.north < side.south ? 'north' : 'south';
+  } 
+
+  switch(edge){
+  case "west":
+    box.left = (offset.left) + "px";
+    box.top = (offset.top) + "px";
+    box.width = (target.width() / 3) + "px";
+    box.height = (target.height()) + "px";
+    break;
+  case "east":
+    box.left = (offset.left + target.width()*2/3) + "px";
+    box.top = (offset.top) + "px";
+    box.width = (target.width() / 3) + "px";
+    box.height = (target.height()) + "px";
+    break;
+  case "north":
+    box.left = (offset.left) + "px";
+    box.top = (offset.top) + "px";
+    box.width = (target.width()) + "px";
+    box.height = (target.height()/3) + "px";
+    break;
+  case "south":
+    box.left = (offset.left) + "px";
+    box.top = (offset.top + target.height()*2/3) + "px";
+    box.width = (target.width()) + "px";
+    box.height = (target.height()/3) + "px";
+    break;
+  }
 };
 
 var moveGuide = function (selection, handle, delta) {
@@ -495,50 +544,58 @@ var moveGuide = function (selection, handle, delta) {
     });
   }
 };
-var moveObject = function (selection, handle, delta) {
-  var farEdge = getFarEdge(moveGuide.cells);
-  var edges = getEdges(selection[0]);
-  
-  var pos = selection.position()
-  selection.css({ left: pos.left + delta.x, top: pos.top + delta.y }); 
+var moveObject = function (selection, location, hover) { 
+  //(selection, handle, delta) {
+  updateAnchorIndicators(selection, location, hover, true);
+//  return; 
+//  var farEdge = getFarEdge(moveGuide.cells);
+//  var edges = getEdges(selection[0]);
+//  
+//  var pos = selection.position()
+//  selection.css({ left: pos.left + delta.x, top: pos.top + delta.y }); 
 
-  return;
-  var uses = { north: 0, south: 0, east: 0, west: 0 };
-  uses.west += $('div.cell.wiab_west' + edges.west).length;
-  uses.west += $('div.cell.wiab_east' + edges.west).length;
-  uses.east += $('div.cell.wiab_west' + edges.east).length;
-  uses.east += $('div.cell.wiab_east' + edges.east).length;  
-  uses.north += $('div.cell.wiab_north' + edges.north).length;
-  uses.north += $('div.cell.wiab_south' + edges.north).length;
-  uses.south += $('div.cell.wiab_north' + edges.south).length;
-  uses.south += $('div.cell.wiab_south' + edges.south).length;
-  
-  if (uses.west > 1) {
-    $('div.wiab_')
-    selection.removeClass('wiab_west' + edges.west);
-    selection.removeClass('wiab_west' + edges.west);
-  }
-  $.each(selection[0].className.split(' '), function () {
-    var query = this.match(/wiab_(\D+)(\d+)/);
-    if (!query || !query[1].match(/north|south|east|west/)) {
-      return;
-    }
-    
-    edge = query[1]
-    index = query[2]
-    edges[edge] = index;
-  });
+//  return;
+//  var uses = { north: 0, south: 0, east: 0, west: 0 };
+//  uses.west += $('div.cell.wiab_west' + edges.west).length;
+//  uses.west += $('div.cell.wiab_east' + edges.west).length;
+//  uses.east += $('div.cell.wiab_west' + edges.east).length;
+//  uses.east += $('div.cell.wiab_east' + edges.east).length;  
+//  uses.north += $('div.cell.wiab_north' + edges.north).length;
+//  uses.north += $('div.cell.wiab_south' + edges.north).length;
+//  uses.south += $('div.cell.wiab_north' + edges.south).length;
+//  uses.south += $('div.cell.wiab_south' + edges.south).length;
+//  
+//  if (uses.west > 1) {
+//    $('div.wiab_')
+//    selection.removeClass('wiab_west' + edges.west);
+//    selection.removeClass('wiab_west' + edges.west);
+//  }
+//  $.each(selection[0].className.split(' '), function () {
+//    var query = this.match(/wiab_(\D+)(\d+)/);
+//    if (!query || !query[1].match(/north|south|east|west/)) {
+//      return;
+//    }
+//    
+//    edge = query[1]
+//    index = query[2]
+//    edges[edge] = index;
+//  });
 }
 
 var mainMenu = function () {
   cells = $('div.cell');
   moveGuide.cells = cells;
   moveObject.cells = cells;
+  updateAnchorIndicators.cells = cells;
   piMenu(cells, {
     primary: click,
     cancel: null,
     items: {
-      s: item('Move', 'wiab_arrow', select.actions( { edgeMoved: moveGuide, objectMoved: moveObject} )),
+      s: item('Move', 'wiab_arrow', select.actions( { 
+        edgeMoved: moveGuide, 
+        objectMoved: moveObject, 
+        objectMoving: updateAnchorIndicators
+      }, cells )),
       se: item('Edit', 'wiab_arrow', null),
       sw: item('Style', 'wiab_arrow', null),
       w: item('Current', 'wiab_button', null)
