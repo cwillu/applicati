@@ -400,7 +400,15 @@ var getEdges = function (cell) {
   }));
   return edges;
 };
-var getFarEdge = function(cells) {
+var toClassLine = function (edges) {
+  var line = [];
+  for (d in edges) {
+    line.push('wiab_' + d + edges[d]);
+  }
+  return line.join(' ');
+};
+var getFarEdge = function() {
+  var cells = moveGuide.cells;
   var farEdge = { x: 0, y: 0 }
   var cellClasses = [];
   cells.each(function () { 
@@ -448,18 +456,84 @@ var snapToSide = function (target, location) {
   switch(edge){
   case 'x':
     if (from.west < from.east) {
+      console.log('west');
       return 'west';
     } else {
+      console.log('east');
       return 'east';
     }
   case 'y':
     if (from.north < from.south) {
+      console.log('north');
       return 'north';
     } else {
+      console.log('south');
       return 'south';
     }
   }
 };
+
+var divideCell = function (cell, edge, offsets) {
+  if (!offsets) {
+    offsets = { top: 0, left: 0 };
+  }
+  var offset = {
+    left: cell.offset().left + offsets.left,
+    top: cell.offset().top + offsets.top
+  };
+  box = [
+    {top: null, left: null, width: null, height: null},
+    {top: null, left: null, width: null, height: null},
+  ];
+  switch (edge) {
+  case "west":
+    box[0].left = (offset.left) + "px";
+    box[0].top = (offset.top) + "px";
+    box[0].width = (cell.width() / 3) + "px";
+    box[0].height = (cell.height()) + "px";
+
+    box[1].left = (offset.left + cell.width()/3) + "px";
+    box[1].top = (offset.top) + "px";
+    box[1].width = (cell.width()*2/3) + "px";
+    box[1].height = (cell.height()) + "px";
+    break;
+  case "east":
+    box[0].left = (offset.left + cell.width()*2/3) + "px";
+    box[0].top = (offset.top) + "px";
+    box[0].width = (cell.width() / 3) + "px";
+    box[0].height = (cell.height()) + "px";
+
+    box[1].left = (offset.left) + "px";
+    box[1].top = (offset.top) + "px";
+    box[1].width = (cell.width()*2/3) + "px";
+    box[1].height = (cell.height()) + "px";
+    break;
+  case "north":
+    box[0].left = (offset.left) + "px";
+    box[0].top = (offset.top) + "px";
+    box[0].width = (cell.width()) + "px";
+    box[0].height = (cell.height()/3) + "px";
+
+    box[1].left = (offset.left) + "px";
+    box[1].top = (offset.top + cell.height()/3) + "px";
+    box[1].width = (cell.width()) + "px";
+    box[1].height = (cell.height()*2/3) + "px";
+    break;
+  case "south":
+    box[0].left = (offset.left) + "px";
+    box[0].top = (offset.top + cell.height()*2/3) + "px";
+    box[0].width = (cell.width()) + "px";
+    box[0].height = (cell.height()/3) + "px";
+
+    box[1].left = (offset.left) + "px";
+    box[1].top = (offset.top) + "px";
+    box[1].width = (cell.width()) + "px";
+    box[1].height = (cell.height()*2/3) + "px";
+    break;
+  }
+  return box;
+};
+
 var updateAnchorIndicators = function (selection, location, hover, move) {
   var target = updateAnchorIndicators.cells.whichParent($(hover));
   var edge = snapToSide(target, location);
@@ -480,36 +554,16 @@ var updateAnchorIndicators = function (selection, location, hover, move) {
     return;
   }
   
-  switch(edge){
-  case "west":
-    box.left = (offset.left) + "px";
-    box.top = (offset.top) + "px";
-    box.width = (target.width() / 3) + "px";
-    box.height = (target.height()) + "px";
-    break;
-  case "east":
-    box.left = (offset.left + target.width()*2/3) + "px";
-    box.top = (offset.top) + "px";
-    box.width = (target.width() / 3) + "px";
-    box.height = (target.height()) + "px";
-    break;
-  case "north":
-    box.left = (offset.left) + "px";
-    box.top = (offset.top) + "px";
-    box.width = (target.width()) + "px";
-    box.height = (target.height()/3) + "px";
-    break;
-  case "south":
-    box.left = (offset.left) + "px";
-    box.top = (offset.top + target.height()*2/3) + "px";
-    box.width = (target.width()) + "px";
-    box.height = (target.height()/3) + "px";
-    break;
-  }
+  sizes = divideCell(target, edge);
+  
+  box.left = sizes[0].left;
+  box.top = sizes[0].top;
+  box.width = sizes[0].width;
+  box.height = sizes[0].height;
 };
 
 var moveGuide = function (selection, handle, delta) {
-  var farEdge = getFarEdge(moveGuide.cells);
+  var farEdge = getFarEdge();
   var edges = getEdges(selection[0]);
   
   var x = null;
@@ -582,41 +636,103 @@ var moveGuide = function (selection, handle, delta) {
   }
 };
 var moveObject = function (selection, location, hover) { 
-  //(selection, handle, delta) {
-  updateAnchorIndicators(selection, location, hover, true);
-//  return; 
-//  var farEdge = getFarEdge(moveGuide.cells);
-//  var edges = getEdges(selection[0]);
-//  
-//  var pos = selection.position()
-//  selection.css({ left: pos.left + delta.x, top: pos.top + delta.y }); 
+  var target = updateAnchorIndicators.cells.whichParent($(hover));
+  if (target[0] === selection[0]) {
+    return;
+  }
 
-//  return;
-//  var uses = { north: 0, south: 0, east: 0, west: 0 };
-//  uses.west += $('div.cell.wiab_west' + edges.west).length;
-//  uses.west += $('div.cell.wiab_east' + edges.west).length;
-//  uses.east += $('div.cell.wiab_west' + edges.east).length;
-//  uses.east += $('div.cell.wiab_east' + edges.east).length;  
-//  uses.north += $('div.cell.wiab_north' + edges.north).length;
-//  uses.north += $('div.cell.wiab_south' + edges.north).length;
-//  uses.south += $('div.cell.wiab_north' + edges.south).length;
-//  uses.south += $('div.cell.wiab_south' + edges.south).length;
-//  
-//  if (uses.west > 1) {
-//    $('div.wiab_')
-//    selection.removeClass('wiab_west' + edges.west);
-//    selection.removeClass('wiab_west' + edges.west);
-//  }
-//  $.each(selection[0].className.split(' '), function () {
-//    var query = this.match(/wiab_(\D+)(\d+)/);
-//    if (!query || !query[1].match(/north|south|east|west/)) {
-//      return;
-//    }
-//    
-//    edge = query[1]
-//    index = query[2]
-//    edges[edge] = index;
-//  });
+  var edge = snapToSide(target, location);
+
+  var offset = {
+    left: selection.position().left - selection.offset().left,
+    top: selection.position().top - selection.offset().top
+  }
+  sizes = divideCell(target, edge, offset);
+
+
+  console.log('selection ', selection.attr('class'));
+  console.log('target ', target.attr('class'));
+  
+  var box = selection[0].style;
+  box.left = sizes[0].left;
+  box.top = sizes[0].top;
+  box.width = sizes[0].width;
+  box.height = sizes[0].height;
+
+  var shoved = target[0].style;
+  shoved.left = sizes[1].left;
+  shoved.top = sizes[1].top;
+  shoved.width = sizes[1].width;
+  shoved.height = sizes[1].height;
+  
+  oldEdges = getEdges(selection[0]);
+  
+  edges = getEdges(target[0]);
+  var farEdge = getFarEdge();
+
+  selection.removeClass(toClassLine(oldEdges));
+  target.removeClass(toClassLine(edges));
+
+  switch (edge) {  //make room by moving each cell
+  case 'west':
+  case 'east':
+    moveGuide.cells.each(function () {
+      var cellEdges = getEdges(this);
+      var newEdges = {};
+      if (cellEdges.west >= edges.east) {
+        newEdges.west = cellEdges.west;
+      }
+      if (cellEdges.east >= edges.east) {
+        newEdges.east = cellEdges.east;
+      }
+      $(this).removeClass(toClassLine(newEdges));
+      for (var edge in newEdges) {
+        newEdges[edge] += 1;
+      }
+      $(this).addClass(toClassLine(newEdges));
+    });
+    break;
+  case 'north':
+  case 'south':
+    moveGuide.cells.each(function () {
+      var cellEdges = getEdges(this);
+      var newEdges = {};
+      if (cellEdges.north >= edges.south) {
+        newEdges.north = cellEdges.north;
+      }
+      if (cellEdges.south >= edges.south) {
+        newEdges.south = cellEdges.south;
+      }
+      $(this).removeClass(toClassLine(newEdges));
+      for (var edge in newEdges) {
+        newEdges[edge] += 1;
+      }
+      $(this).addClass(toClassLine(newEdges));
+    });
+    break;
+  }
+  
+  switch (edge) {  //split the cell
+  case 'west':
+    selection.addClass(toClassLine(edges));
+    target.addClass(toClassLine({ west: edges.west+1, east: edges.east+1, north: edges.north, south: edges.south }));
+    break;
+  case 'east':        
+    selection.addClass(toClassLine({ west: edges.west+1, east: edges.east+1, north: edges.north, south: edges.south }));
+    target.addClass(toClassLine(edges));
+    break;
+  case 'north':
+    selection.addClass(toClassLine(edges));
+    target.addClass(toClassLine({ west: edges.west, east: edges.east, north: edges.north+1, south: edges.south+1 }));
+    break;
+  case 'south':
+    selection.addClass(toClassLine({ west: edges.west, east: edges.east, north: edges.north+1, south: edges.south+1 }));
+    target.addClass(toClassLine(edges));
+    break;
+  }
+  
+  console.log('selection ', selection.attr('class'));
+  console.log('target ', target.attr('class'));
 }
 
 var mainMenu = function () {
