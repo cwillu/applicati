@@ -87,6 +87,39 @@
   </script>
 </head>
 <body>  
+<form>
+<select id="A">
+    <option value="foo">foo</option>
+    <option value="bar">bar</option>
+</select>
+
+<select id="B" style="display:none">
+    <option value="frob">frob</option>
+    <option value="quux">quux</option>
+</select>
+
+<select id="C" style="display:none">
+    <option value="blap">blap</option>
+    <option value="biff">biff</option>
+</select>
+
+<div id="choices">
+    <input type="radio" name="chooser" value="false"
+                        onclick="choose_it()"/>
+    <input type="radio" name="chooser" value="true"
+                        onclick="choose_it()"/>
+</div>
+</form>
+<script type="text/javascript">
+  choose_it = function () {
+    var choice = $('#choices :radio:checked').val();
+    console.log(choice?"true":"false");
+    var options = bool(choice) ? $('#B').html() : $('#C').html();
+    console.log(options);
+    $('#A').html(options);
+  };
+</script>
+
 
 
 <a id="t1" href="#">Test</a>

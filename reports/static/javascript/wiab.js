@@ -339,8 +339,8 @@ var insertSelectionTool = function () {
       initialDelta = { x: target.offset().left - e.pageX, y: target.offset().top - e.pageY };      
 
       drag(e);
-      updateAnchorIndicators(element, currentLocation, currentDropTarget);
       $('#wiab_guide_box').height(target.height()).width(target.width()).show();
+      updateAnchorIndicators(element, currentLocation, currentDropTarget);
 
       whileDragging.interval(function () { actions.objectMoving(selection, currentLocation, currentDropTarget); }, 200);
       whileDragging.after(function () {
@@ -416,33 +416,70 @@ var getFarEdge = function(cells) {
   return farEdge;
 };
 
+var snapToSide = function (target, location) {
+  var diff = (target.width() - target.height()) / 4;
+  var outright = {
+    x: diff > 0 ? diff : 0,
+    y: diff < 0 ? -diff : 0
+  };
+  var from = { 
+    west: Math.abs(location.x - target.offset().left),
+    north: Math.abs(location.y - target.offset().top),
+    east: Math.abs(-location.x + (target.offset().left + target.width())),
+    south: Math.abs(-location.y + (target.offset().top + target.height()))
+  };
+  var minHorizontal = Math.min(from.west, from.east);
+  var minVertical = Math.min(from.north, from.south);
+
+  var edge;
+  if (minHorizontal < outright.x) {
+    edge = 'x';
+  } else if (minVertical < outright.y) {
+    edge = 'y'; 
+  } else if (Math.abs(from.north - from.south) < outright.y*2){
+    edge = 'x';
+  } else if (Math.abs(from.west - from.east) < outright.x*2){
+    edge = 'y';
+  } else if (minHorizontal - outright.x < minVertical) {
+    edge = 'x';
+  } else {
+    edge = 'y';
+  } 
+  switch(edge){
+  case 'x':
+    if (from.west < from.east) {
+      return 'west';
+    } else {
+      return 'east';
+    }
+  case 'y':
+    if (from.north < from.south) {
+      return 'north';
+    } else {
+      return 'south';
+    }
+  }
+};
 var updateAnchorIndicators = function (selection, location, hover, move) {
   var target = updateAnchorIndicators.cells.whichParent($(hover));
+  var edge = snapToSide(target, location);
+
   var box = move ? selection : $('#wiab_guide_box');
-  var offset = move ? target.position() : target.offset(); //KILL THIS 
+  var offset = {
+    left: box.position().left - box.offset().left + target.offset().left,
+    top: box.position().top - box.offset().top + target.offset().top
+  }
   
   box = box[0].style;
-  
+
   if (target[0] === selection[0]) {
     box.left = (offset.left) + "px";
     box.top = (offset.top) + "px";
     box.width = (target.width()) + "px";
-    box.height = (target.height()) + "px";      
+    box.height = (target.height()) + "px";
     return;
   }
-  var side = { 
-    west: Math.abs(location.x - target.offset().left),
-    north: Math.abs(location.y - target.offset().top),
-    east: Math.abs(location.x - (target.offset().left + target.width())),
-    south: Math.abs(location.y - (target.offset().top + target.height()))
-  };
-  var edge;
-  if (Math.min(side.west, side.east) < Math.min(side.north, side.south)) {
-    edge = side.west < side.east ? 'west' : 'east';
-  } else {
-    edge = side.north < side.south ? 'north' : 'south';
-  } 
-
+  
   switch(edge){
   case "west":
     box.left = (offset.left) + "px";
