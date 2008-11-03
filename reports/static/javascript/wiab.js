@@ -670,69 +670,54 @@ var moveObject = function (selection, location, hover) {
   edges = getEdges(target[0]);
   var farEdge = getFarEdge();
 
-  selection.removeClass(toClassLine(oldEdges));
-  target.removeClass(toClassLine(edges));
+  var bumpGuides = function (index) {
+    moveGuide.cells.each(function () {
+      var edges = getEdges(this);
+      var classes = {};
+      if (edges.west >= index) {
+        classes.west = index;
+      }
+      if (edges.east >= index) {
+        classes.east = index;
+      }
+      $(this).removeClass(toClassLine(classes));
+      for (var edge in classes) {
+        classes[edge] += 1;
+      }
+      $(this).addClass(toClassLine(classes));
+    });
+  }
 
-  switch (edge) {  //make room by moving each cell
-  case 'west':
-  case 'east':
-    moveGuide.cells.each(function () {
-      var cellEdges = getEdges(this);
-      var newEdges = {};
-      if (cellEdges.west >= edges.east) {
-        newEdges.west = cellEdges.west;
+  var insertGuide = function (offset) {
+    var farEdge = getFarEdge();
+    var guides = []
+    var currentOffset = 0;
+    
+    var checkGuide = function (index) {
+      var west = $('wiab_west' + index);
+      var east = $('wiab_east' + index);
+      if (west.length > 0){
+        currentOffset = west.offset().left;
+      } else if (east.length > 0) {
+        currentOffset = west.offset().left + west.width();
+      } else {
+        alert('Undefined guide '+index+' (last guide was '+currentOffset+')');
       }
-      if (cellEdges.east >= edges.east) {
-        newEdges.east = cellEdges.east;
-      }
-      $(this).removeClass(toClassLine(newEdges));
-      for (var edge in newEdges) {
-        newEdges[edge] += 1;
-      }
-      $(this).addClass(toClassLine(newEdges));
-    });
-    break;
-  case 'north':
-  case 'south':
-    moveGuide.cells.each(function () {
-      var cellEdges = getEdges(this);
-      var newEdges = {};
-      if (cellEdges.north >= edges.south) {
-        newEdges.north = cellEdges.north;
-      }
-      if (cellEdges.south >= edges.south) {
-        newEdges.south = cellEdges.south;
-      }
-      $(this).removeClass(toClassLine(newEdges));
-      for (var edge in newEdges) {
-        newEdges[edge] += 1;
-      }
-      $(this).addClass(toClassLine(newEdges));
-    });
-    break;
-  }
-  
-  switch (edge) {  //split the cell
-  case 'west':
-    selection.addClass(toClassLine(edges));
-    target.addClass(toClassLine({ west: edges.west+1, east: edges.east+1, north: edges.north, south: edges.south }));
-    break;
-  case 'east':        
-    selection.addClass(toClassLine({ west: edges.west+1, east: edges.east+1, north: edges.north, south: edges.south }));
-    target.addClass(toClassLine(edges));
-    break;
-  case 'north':
-    selection.addClass(toClassLine(edges));
-    target.addClass(toClassLine({ west: edges.west, east: edges.east, north: edges.north+1, south: edges.south+1 }));
-    break;
-  case 'south':
-    selection.addClass(toClassLine({ west: edges.west, east: edges.east, north: edges.north+1, south: edges.south+1 }));
-    target.addClass(toClassLine(edges));
-    break;
-  }
-  
-  console.log('selection ', selection.attr('class'));
-  console.log('target ', target.attr('class'));
+      return offset < currentOffset
+    }
+    
+    for (var i = 0; i <= farEdge.x; i++) {
+      if (checkGuide(i))
+        break;
+      guides.push(currentOffset);
+    }        
+    guides.push(offset);
+    bumpGuides(i);
+    for (; i <= farEdge.x; i++) {
+      checkGuide(i);
+      guides.push(currentOffset);
+    } 
+  } 
 }
 
 var mainMenu = function () {
