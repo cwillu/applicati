@@ -60,6 +60,10 @@ jQuery.fn.whichParent = function (node) {
   }
   return target;
 };
+jQuery.error = function (msg) {
+  console.log.apply(console.log, arguments);
+  alert('Error');
+};
 
 //////////////////////////////////////////////////
 
@@ -342,7 +346,7 @@ var insertSelectionTool = function () {
       $('#wiab_guide_box').height(target.height()).width(target.width()).show();
       updateAnchorIndicators(element, currentLocation, currentDropTarget);
 
-      whileDragging.interval(function () { actions.objectMoving(selection, currentLocation, currentDropTarget); }, 200);
+      whileDragging.interval(function () { actions.objectMoving(selection, currentLocation, currentDropTarget); }, 100);
       whileDragging.after(function () {
         $('div.cell').removeClass('wiab_front');
       });
@@ -381,49 +385,6 @@ var click = function (e) {
   }
 };
 
-var ifEdge = function (then) {
-  return function () {
-    var query = this.match(/wiab_(\D+)(\d+)/);
-    if (!query || !query[1].match(/north|south|east|west/)) {
-      return;
-    }
-    edge = query[1];
-    index = parseInt(query[2], 10);
-    
-    then.call(this, edge, index); 
-  }
-};
-var getEdges = function (cell) {
-  var edges = {};
-  $.each(cell.className.split(' '), ifEdge(function (edge, index) {
-    edges[edge] = index;
-  }));
-  return edges;
-};
-var toClassLine = function (edges) {
-  var line = [];
-  for (d in edges) {
-    line.push('wiab_' + d + edges[d]);
-  }
-  return line.join(' ');
-};
-var getFarEdge = function() {
-  var cells = moveGuide.cells;
-  var farEdge = { x: 0, y: 0 }
-  var cellClasses = [];
-  cells.each(function () { 
-    cellClasses = cellClasses.concat(this.className.split(' '));
-  }) 
-  $.each(cellClasses, ifEdge(function (edge, index) {
-    if (farEdge.y < index && (edge === 'north' || edge === 'south')) {
-      farEdge.y = index;
-    } else if (farEdge.x < index && (edge === 'west' || edge === 'east')) {
-      farEdge.x = index;
-    }
-  }));
-  return farEdge;
-};
-
 var snapToSide = function (target, location) {
   var diff = (target.width() - target.height()) / 4;
   var outright = {
@@ -456,18 +417,14 @@ var snapToSide = function (target, location) {
   switch(edge){
   case 'x':
     if (from.west < from.east) {
-      console.log('west');
       return 'west';
     } else {
-      console.log('east');
       return 'east';
     }
   case 'y':
     if (from.north < from.south) {
-      console.log('north');
       return 'north';
     } else {
-      console.log('south');
       return 'south';
     }
   }
@@ -481,98 +438,70 @@ var divideCell = function (cell, edge, offsets) {
     left: cell.offset().left + offsets.left,
     top: cell.offset().top + offsets.top
   };
-  box = [
+  var box = [
     {top: null, left: null, width: null, height: null},
     {top: null, left: null, width: null, height: null},
   ];
   switch (edge) {
   case "west":
-    box[0].left = (offset.left) + "px";
-    box[0].top = (offset.top) + "px";
-    box[0].width = (cell.width() / 3) + "px";
-    box[0].height = (cell.height()) + "px";
+    box[0].left = (offset.left);
+    box[0].top = (offset.top);
+    box[0].width = (cell.width() / 3);
+    box[0].height = (cell.height());
 
-    box[1].left = (offset.left + cell.width()/3) + "px";
-    box[1].top = (offset.top) + "px";
-    box[1].width = (cell.width()*2/3) + "px";
-    box[1].height = (cell.height()) + "px";
+    box[1].left = (offset.left + cell.width()/3);
+    box[1].top = (offset.top);
+    box[1].width = (cell.width()*2/3);
+    box[1].height = (cell.height());
     break;
   case "east":
-    box[0].left = (offset.left + cell.width()*2/3) + "px";
-    box[0].top = (offset.top) + "px";
-    box[0].width = (cell.width() / 3) + "px";
-    box[0].height = (cell.height()) + "px";
+    box[0].left = (offset.left + cell.width()*2/3);
+    box[0].top = (offset.top);
+    box[0].width = (cell.width() / 3);
+    box[0].height = (cell.height());
 
-    box[1].left = (offset.left) + "px";
-    box[1].top = (offset.top) + "px";
-    box[1].width = (cell.width()*2/3) + "px";
-    box[1].height = (cell.height()) + "px";
+    box[1].left = (offset.left);
+    box[1].top = (offset.top);
+    box[1].width = (cell.width()*2/3);
+    box[1].height = (cell.height());
     break;
   case "north":
-    box[0].left = (offset.left) + "px";
-    box[0].top = (offset.top) + "px";
-    box[0].width = (cell.width()) + "px";
-    box[0].height = (cell.height()/3) + "px";
+    box[0].left = (offset.left);
+    box[0].top = (offset.top);
+    box[0].width = (cell.width());
+    box[0].height = (cell.height()/3);
 
-    box[1].left = (offset.left) + "px";
-    box[1].top = (offset.top + cell.height()/3) + "px";
-    box[1].width = (cell.width()) + "px";
-    box[1].height = (cell.height()*2/3) + "px";
+    box[1].left = (offset.left);
+    box[1].top = (offset.top + cell.height()/3);
+    box[1].width = (cell.width());
+    box[1].height = (cell.height()*2/3);
     break;
   case "south":
-    box[0].left = (offset.left) + "px";
-    box[0].top = (offset.top + cell.height()*2/3) + "px";
-    box[0].width = (cell.width()) + "px";
-    box[0].height = (cell.height()/3) + "px";
+    box[0].left = (offset.left);
+    box[0].top = (offset.top + cell.height()*2/3);
+    box[0].width = (cell.width());
+    box[0].height = (cell.height()/3);
 
-    box[1].left = (offset.left) + "px";
-    box[1].top = (offset.top) + "px";
-    box[1].width = (cell.width()) + "px";
-    box[1].height = (cell.height()*2/3) + "px";
+    box[1].left = (offset.left);
+    box[1].top = (offset.top);
+    box[1].width = (cell.width());
+    box[1].height = (cell.height()*2/3);
     break;
   }
   return box;
 };
 
-var updateAnchorIndicators = function (selection, location, hover, move) {
-  var target = updateAnchorIndicators.cells.whichParent($(hover));
-  var edge = snapToSide(target, location);
-
-  var box = move ? selection : $('#wiab_guide_box');
-  var offset = {
-    left: box.position().left - box.offset().left + target.offset().left,
-    top: box.position().top - box.offset().top + target.offset().top
-  }
-  
-  box = box[0].style;
-
-  if (target[0] === selection[0]) {
-    box.left = (offset.left) + "px";
-    box.top = (offset.top) + "px";
-    box.width = (target.width()) + "px";
-    box.height = (target.height()) + "px";
-    return;
-  }
-  
-  sizes = divideCell(target, edge);
-  
-  box.left = sizes[0].left;
-  box.top = sizes[0].top;
-  box.width = sizes[0].width;
-  box.height = sizes[0].height;
-};
-
 var moveGuide = function (selection, handle, delta) {
-  var farEdge = getFarEdge();
-  var edges = getEdges(selection[0]);
+  var farEdge = guides.farEdge();
+  var edges = guides.edges(selection[0]);
   
   var x = null;
   var y = null;
   if (isWest(handle)) {
     x = { guide: edges.west, edge: 'west' };
 
-    moveGuide.cells.each(function () {  
-      var cell = getEdges(this);
+    guides.cells.each(function () {  
+      var cell = guides.edges(this);
       var location = $(this).position();
       if (x.guide !== 0 && cell.west === 0 && cell.east > x.guide) {
         return;
@@ -588,8 +517,8 @@ var moveGuide = function (selection, handle, delta) {
   } else if (isEast(handle)) {
     x = { guide: edges.east, edge: 'east' };
     
-    moveGuide.cells.each(function () {  
-      var cell = getEdges(this);
+    guides.cells.each(function () {  
+      var cell = guides.edges(this);
       var location = $(this).position();
       if (x.guide !== farEdge.x && cell.east === farEdge.x && cell.west < x.guide) {
         return;
@@ -607,8 +536,8 @@ var moveGuide = function (selection, handle, delta) {
   if (isNorth(handle)) {
     y = { guide: edges.north, edge: 'north' };
 
-    moveGuide.cells.each(function () {  
-      var cell = getEdges(this);
+    guides.cells.each(function () {  
+      var cell = guides.edges(this);
       var location = $(this).position();
       if (y.guide !== 0 && cell.north === 0 && cell.south > y.guide) {
         return;
@@ -624,8 +553,8 @@ var moveGuide = function (selection, handle, delta) {
   } else if (isSouth(handle)) {
     y = { guide: edges.south, edge: 'south' };
     
-    moveGuide.cells.each(function () {  
-      var cell = getEdges(this);
+    guides.cells.each(function () {  
+      var cell = guides.edges(this);
       var location = $(this).position();
       if (cell.south >= y.guide && cell.north < y.guide) {
         $(this).height($(this).height() + delta.y);
@@ -635,8 +564,138 @@ var moveGuide = function (selection, handle, delta) {
     });
   }
 };
+
+var updateAnchorIndicators = function (selection, location, hover) {
+  var target = guides.cells.whichParent($(hover));
+  var edge = snapToSide(target, location);
+  var last = updateAnchorIndicators.last;
+
+  var guide = $('#wiab_guide_box');
+  var offset = {
+    left: target.offset().left,
+    top: target.offset().top
+  }
+  
+  var box = guide[0].style;
+
+  if (target[0] === selection[0]) {
+    box.left = (offset.left) + "px";
+    box.top = (offset.top) + "px";
+    box.width = (target.width()) + "px";
+    box.height = (target.height()) + "px";
+    return;
+  }
+  
+  sizes = divideCell(target, edge);
+
+  box.left = sizes[0].left + "px";
+  box.top = sizes[0].top + "px";
+  box.width = sizes[0].width + "px";
+  box.height = sizes[0].height + "px";
+};
+
+var guides = {
+  cells: null,
+  ifEdge: function (then) {
+    return function () {
+      var query = this.match(/wiab_(\D+)(\d+)/);
+      if (!query || !query[1].match(/north|south|east|west/)) {
+        return;
+      }
+      edge = query[1];
+      index = parseInt(query[2], 10);
+      
+      then.call(this, edge, index); 
+    }
+  },
+  edges: function (cell) {
+    var edges = {};
+    $.each(cell.className.split(' '), guides.ifEdge(function (edge, index) {
+      edges[edge] = index;
+    }));
+    return edges;
+  },
+  asClass: function (edges) {
+    var line = [];
+    for (d in edges) {
+      line.push('wiab_' + d + edges[d]);
+    }
+    return line.join(' ');
+  },
+  farEdge: function() {
+    var farEdge = { x: 0, y: 0 }
+    var cellClasses = [];
+    guides.cells.each(function () { 
+      cellClasses = cellClasses.concat(this.className.split(' '));
+    }) 
+    $.each(cellClasses, guides.ifEdge(function (edge, index) {
+      if (farEdge.y < index && (edge === 'north' || edge === 'south')) {
+        farEdge.y = index;
+      } else if (farEdge.x < index && (edge === 'west' || edge === 'east')) {
+        farEdge.x = index;
+      }
+    }));
+    return farEdge;
+  },
+  bump: function (index) {
+    guides.cells.each(function () {
+      var edges = guides.edges(this);
+      var classes = {};
+      if (edges.west >= index) {
+        classes.west = edges.west;
+      }
+      if (edges.east >= index) {
+        classes.east = edges.east;
+      }
+      $(this).removeClass(guides.asClass(classes));
+      for (var edge in classes) {
+        classes[edge] += 1;
+      }
+      $(this).addClass(guides.asClass(classes));
+    });
+  },
+  insert: function (offset) {
+    console.log('offset: ', offset);
+    var farEdge = guides.farEdge();
+    var offsets = []
+    var currentOffset = 0;
+    
+    var checkGuide = function (index) {
+      var west = $('.wiab_west' + index);
+      var east = $('.wiab_east' + index);
+      if (west.length > 0){
+        currentOffset = west.position().left;
+        console.log('west', currentOffset);
+      } else if (east.length > 0) {
+        currentOffset = east.position().left + east.width();
+        console.log('east', east.position().left, east.width(), currentOffset);
+      } else {
+        $.error('Undefined guide '+index+' (last guide was '+currentOffset+')');
+      }
+      return offset < currentOffset;
+    }
+    
+    for (var i = 0; i <= farEdge.x; i++) {
+      if (checkGuide(i)){
+        break;
+      }
+      offsets.push(currentOffset);
+    }        
+    
+    offsets.push(offset);
+    var insert = i;
+    
+    for (; i <= farEdge.x; i++) {
+      checkGuide(i);
+      offsets.push(currentOffset);
+    } 
+    guides.bump(insert);
+    console.log('offsets: ', offsets);
+    return insert;
+  } 
+}
 var moveObject = function (selection, location, hover) { 
-  var target = updateAnchorIndicators.cells.whichParent($(hover));
+  var target = guides.cells.whichParent($(hover));
   if (target[0] === selection[0]) {
     return;
   }
@@ -647,85 +706,62 @@ var moveObject = function (selection, location, hover) {
     left: selection.position().left - selection.offset().left,
     top: selection.position().top - selection.offset().top
   }
-  sizes = divideCell(target, edge, offset);
+  var sizes = divideCell(target, edge, offset);
 
 
   console.log('selection ', selection.attr('class'));
   console.log('target ', target.attr('class'));
   
   var box = selection[0].style;
-  box.left = sizes[0].left;
-  box.top = sizes[0].top;
-  box.width = sizes[0].width;
-  box.height = sizes[0].height;
+  box.left = sizes[0].left + "px";
+  box.top = sizes[0].top + "px";
+  box.width = sizes[0].width + "px";
+  box.height = sizes[0].height + "px";
 
   var shoved = target[0].style;
-  shoved.left = sizes[1].left;
-  shoved.top = sizes[1].top;
-  shoved.width = sizes[1].width;
-  shoved.height = sizes[1].height;
+  shoved.left = sizes[1].left + "px";
+  shoved.top = sizes[1].top + "px";
+  shoved.width = sizes[1].width + "px";
+  shoved.height = sizes[1].height + "px";
   
-  oldEdges = getEdges(selection[0]);
+  var oldEdges = guides.edges(selection[0]);
+  selection.removeClass(guides.asClass(oldEdges));
   
-  edges = getEdges(target[0]);
-  var farEdge = getFarEdge();
+  console.log(0, sizes[0]);
+  console.log(1, sizes[1]);
+  console.log('before: ', guides.edges(target[0]));
+  var guide = guides.insert(Math.max(sizes[0].left, sizes[1].left));
 
-  var bumpGuides = function (index) {
-    moveGuide.cells.each(function () {
-      var edges = getEdges(this);
-      var classes = {};
-      if (edges.west >= index) {
-        classes.west = index;
-      }
-      if (edges.east >= index) {
-        classes.east = index;
-      }
-      $(this).removeClass(toClassLine(classes));
-      for (var edge in classes) {
-        classes[edge] += 1;
-      }
-      $(this).addClass(toClassLine(classes));
-    });
+  var shovedEdges = guides.edges(target[0]);
+  var insertedEdges = guides.edges(target[0]);
+  console.log("after: ", insertedEdges);
+  target.removeClass(guides.asClass(shovedEdges));  
+  console.log(target.attr('class'));
+  switch (edge) {
+  case 'east':
+    shovedEdges.east = guide;
+    insertedEdges.west = guide;
+    break;
+  case 'west':
+    shovedEdges.west = guide;
+    insertedEdges.east = guide;
+    break;
+  case 'north':
+    shovedEdges.south = guide;
+    insertedEdges.north = guide;
+    break;
+  case 'south':
+    shovedEdges.north = guide;
+    insertedEdges.south = guide;
+    break;
   }
-
-  var insertGuide = function (offset) {
-    var farEdge = getFarEdge();
-    var guides = []
-    var currentOffset = 0;
-    
-    var checkGuide = function (index) {
-      var west = $('wiab_west' + index);
-      var east = $('wiab_east' + index);
-      if (west.length > 0){
-        currentOffset = west.offset().left;
-      } else if (east.length > 0) {
-        currentOffset = west.offset().left + west.width();
-      } else {
-        alert('Undefined guide '+index+' (last guide was '+currentOffset+')');
-      }
-      return offset < currentOffset
-    }
-    
-    for (var i = 0; i <= farEdge.x; i++) {
-      if (checkGuide(i))
-        break;
-      guides.push(currentOffset);
-    }        
-    guides.push(offset);
-    bumpGuides(i);
-    for (; i <= farEdge.x; i++) {
-      checkGuide(i);
-      guides.push(currentOffset);
-    } 
-  } 
+  target.addClass(guides.asClass(shovedEdges));  
+  selection.addClass(guides.asClass(insertedEdges));
 }
 
 var mainMenu = function () {
-  cells = $('div.cell');
-  moveGuide.cells = cells;
-  moveObject.cells = cells;
-  updateAnchorIndicators.cells = cells;
-  piMenu(cells, {
+  guides.cells = $('div.cell');
+  piMenu(guides.cells, {
     primary: click,
     cancel: null,
     items: {
@@ -733,7 +769,7 @@ var mainMenu = function () {
         edgeMoved: moveGuide, 
         objectMoved: moveObject, 
         objectMoving: updateAnchorIndicators
-      }, cells )),
+      }, guides.cells )),
       se: item('Edit', 'wiab_arrow', null),
       sw: item('Style', 'wiab_arrow', null),
       w: item('Current', 'wiab_button', null)
