@@ -637,15 +637,15 @@ var guides = {
     }));
     return farEdge;
   },
-  bump: function (index) {
+  bump: function (index, d) {
     guides.cells.each(function () {
       var edges = guides.edges(this);
       var classes = {};
-      if (edges.west >= index) {
-        classes.west = edges.west;
+      if (edges[d.west] >= index) {
+        classes[d.west] = edges[d.west];
       }
-      if (edges.east >= index) {
-        classes.east = edges.east;
+      if (edges[d.east] >= index) {
+        classes[d.east] = edges[d.east];
       }
       $(this).removeClass(guides.asClass(classes));
       for (var edge in classes) {
@@ -654,25 +654,31 @@ var guides = {
       $(this).addClass(guides.asClass(classes));
     });
   },
-  insert: function (offset) {
-    console.log('offset: ', offset);
+  insert: function (edge, offset) {
+    var horizontal = (edge === 'west' || edge === 'east')
+    var d = {
+      left: horizontal ? 'left' : 'top',
+      width: horizontal ? 'width' : 'height',
+      west: horizontal ? 'west' : 'north',
+      east: horizontal ? 'east' : 'south'
+    }
     var farEdge = guides.farEdge();
     var offsets = []
     var currentOffset = 0;
     
     var checkGuide = function (index) {
-      var west = $('.wiab_west' + index);
-      var east = $('.wiab_east' + index);
+      var west = $('.wiab_' + d.west + index);
+      var east = $('.wiab_' + d.east + index);
       if (west.length > 0){
-        currentOffset = west.position().left;
-        console.log('west', currentOffset);
+        currentOffset = west.position()[d.left];
+        console.log(d.west, currentOffset);
       } else if (east.length > 0) {
-        currentOffset = east.position().left + east.width();
-        console.log('east', east.position().left, east.width(), currentOffset);
+        currentOffset = east.position()[d.left] + east[d.width]();
+        console.log(d.east, east.position()[d.left], east[d.width](), currentOffset);
       } else {
         $.error('Undefined guide '+index+' (last guide was '+currentOffset+')');
       }
-      return offset < currentOffset;
+      return offset[d.left] < currentOffset;
     }
     
     for (var i = 0; i <= farEdge.x; i++) {
@@ -682,14 +688,14 @@ var guides = {
       offsets.push(currentOffset);
     }        
     
-    offsets.push(offset);
+    offsets.push(offset[d.left]);
     var insert = i;
     
     for (; i <= farEdge.x; i++) {
       checkGuide(i);
       offsets.push(currentOffset);
     } 
-    guides.bump(insert);
+    guides.bump(insert, d);
     console.log('offsets: ', offsets);
     return insert;
   } 
@@ -727,10 +733,7 @@ var moveObject = function (selection, location, hover) {
   var oldEdges = guides.edges(selection[0]);
   selection.removeClass(guides.asClass(oldEdges));
   
-  console.log(0, sizes[0]);
-  console.log(1, sizes[1]);
-  console.log('before: ', guides.edges(target[0]));
-  var guide = guides.insert(Math.max(sizes[0].left, sizes[1].left));
+  var guide = guides.insert(edge, { left: Math.max(sizes[0].left, sizes[1].left), top: Math.max(sizes[0].top, sizes[1].top) });
 
   var shovedEdges = guides.edges(target[0]);
   var insertedEdges = guides.edges(target[0]);
@@ -738,21 +741,21 @@ var moveObject = function (selection, location, hover) {
   target.removeClass(guides.asClass(shovedEdges));  
   console.log(target.attr('class'));
   switch (edge) {
-  case 'east':
-    shovedEdges.east = guide;
-    insertedEdges.west = guide;
-    break;
   case 'west':
     shovedEdges.west = guide;
     insertedEdges.east = guide;
     break;
-  case 'north':
-    shovedEdges.south = guide;
-    insertedEdges.north = guide;
+  case 'east':  
+    insertedEdges.west = guide;
+    shovedEdges.east = guide;
     break;
-  case 'south':
+  case 'north':
     shovedEdges.north = guide;
     insertedEdges.south = guide;
+    break;
+  case 'south':
+    insertedEdges.north = guide;
+    shovedEdges.south = guide;
     break;
   }
   target.addClass(guides.asClass(shovedEdges));  
