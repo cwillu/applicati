@@ -752,6 +752,11 @@ var moveObject = function (selection, location, hover) {
   selection.addClass(guides.asClass(insertedEdges));
 };
 
+$.editor = function () {
+  $(this )
+};
+
+
 //var mainMenu = function () {
 //  guides.cells = $('div.cell');
 //  piMenu(guides.cells, {

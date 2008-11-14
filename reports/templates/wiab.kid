@@ -11,7 +11,8 @@
   @import "${tg.url('/static/css/wiab.css')}";
 </style>
 
-<script  src="/static/javascript/wiab_spike.js"></script>
+<script src="/static/javascript/wiab_tools.js"></script>
+<script src="/static/javascript/wiab_spike2.js"></script>
 
 <?python
   globalTemplate = """
