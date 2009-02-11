@@ -16,16 +16,16 @@ var mainMenu = function () {
 
   var edit = function (target) {
     var html = target.html();
-    var editor = $('#wiab_editor');
+    var editor = $('#wiab_editor,#wiab_editor textarea');
+    editor.css("z-index", "0");
+    editor.css(target.dimensions());
+    
+    $('#wiab_editor textarea').text(html);
+    editor.show();
+    
     target.fadeOut(200, function () {
       editor.css("z-index", "20");
     });
-    editor.css(target.dimensions());
-    editor.css("z-index", "0");
-    
-    $('#wiab_editor textarea').text(html);
-    
-    editor.show();
   };
 
   guides.cells = $('div.cell');
