@@ -239,7 +239,7 @@ def BaseComponent(rootFolder, componentPath=()):
           logging.getLogger('root.model').error("Recreating root page!!")
 
           if getattr(self, 'recreate', None):
-            assert False            
+            assert False
           self.recreate = True
           createBase('pickles')
           return self._getData()

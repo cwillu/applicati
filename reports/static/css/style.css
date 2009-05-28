@@ -8,6 +8,10 @@ html, body {
   height: 100%;
 }
 
+img { 
+  -ms-interpolation-mode:bicubic; 
+}
+
 td, th {padding:3px;border:none;}
 tr th {text-align:left;background-color:#f0f0f0;color:#333;}
 tr.odd td {background-color:#edf3fe;}

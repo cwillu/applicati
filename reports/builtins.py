@@ -19,7 +19,7 @@ class _(object):
       setattr(self, k, kargs[k])
 
 try:  
-  import psycos
+  import psyco
   psyco.log()
   compile = psyco.proxy
   publish_parts = psyco.proxy(publish_parts)

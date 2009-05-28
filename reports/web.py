@@ -51,7 +51,8 @@ except ImportError:
 compile = lambda func: func
 
 import logging
-logging.getLogger('root').setLevel(19)
+logging.getLogger('root').setLevel(20)
+logging.getLogger('root.controller').setLevel(10)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 
@@ -96,8 +97,10 @@ assert "71681123891927401278340" == baseToHex(hexToBase("71681123891927401278340
     
 corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 
-
-baseMeta = db.BaseComponent('pickles')/'web'
+rootDir = '/tmp/pickles'
+os.system('rm -r "%s"' % rootDir)
+db.createBase(rootDir)
+baseMeta = db.BaseComponent(rootDir)/'web'
 
 @compile
 def visit(root, path, op):
