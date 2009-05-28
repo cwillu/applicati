@@ -52,7 +52,7 @@ compile = lambda func: func
 
 import logging
 logging.getLogger('root').setLevel(20)
-logging.getLogger('root.controller').setLevel(10)
+#logging.getLogger('root.controller').setLevel(10)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 
@@ -112,9 +112,10 @@ def visit(root, path, op):
   for segment in path:
     assert type(segment) in [str, unicode], (path, segment, type(segment))
     source = target
-    descriptor = source.resolve(segment)
-      
-    if not descriptor:
+    try:
+      descriptor = source.resolve(segment)
+      assert descriptor
+    except KeyError:
       return op(result, None)
                 
     target = source.get(descriptor, segment)
@@ -401,7 +402,7 @@ class Root(controllers.RootController):
     op = str(args.pop('op', ''))
     prototype = args.pop('prototype', None)
     try:
-      meta = self.find(path, args)           
+      meta = self.find(path, args)
               
       if not meta:
         response.status=404

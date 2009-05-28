@@ -132,6 +132,7 @@ class Wiki(object):
     for key in self.links:
       if hasattr(key, 'lower') and name == key.lower():
         return self.links[key]
+    raise KeyError(name)
     
   def link(self, meta, name, id):
     logging.getLogger('root.controller.http').debug("Linking %s %s", name, id)
@@ -223,7 +224,7 @@ class Raw(object):
     return self.links
 
   def resolve(self, meta, name):
-    return self.links.get(name, None)
+    return self.links[name]
     
   def link(self, meta, name, id):
     self.links[name] = id    
@@ -248,7 +249,7 @@ class XML(object):
     return self.links
 
   def resolve(self, meta, name):
-    return self.links.get(name, None)
+    return self.links[name]
     
   def link(self, meta, name, id):
     self.links[name] = id    
@@ -275,7 +276,7 @@ class Editor(Wiki):
     self.links = {}
     
   def resolve(self, meta, name):
-    return None
+    raise KeyError(name)
     
   def link(self, meta, name, id):
     pass

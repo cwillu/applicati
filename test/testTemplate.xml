@@ -24,10 +24,14 @@
   </Wiki>
   
   <Wiki name="web">
+    <Link path="/" name="root" />
     <Wiki name="gateways">
       <Link path="/internal gateway" name="http://127.0.0.1:8080" />
     </Wiki>
   </Wiki>
+  
+  <Link name="early" path="/late" />  
+  <Wiki name="late" />
     
 </CapRoot>
 

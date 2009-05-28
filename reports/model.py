@@ -396,12 +396,14 @@ def BaseComponent(rootFolder, componentPath=()):
       return self.get(self.resolve(name), name)
       
     def resolve(self, name):
-      data = self._selfGetData()      
-      return data.resolve(self, name) if data else None
+      data = self._selfGetData()
+      if not data:
+        raise KeyError(name)
+      return data.resolve(self, name)
 
     def get(self, descriptor, segment=None, path=None):
 #      self._check('read')   #XXX ideally would be 'traverse', but current resolving requires reading the actual object anyway
-      assert isinstance(descriptor, tuple), descriptor    
+      assert isinstance(descriptor, tuple), descriptor
       id = _assertId(descriptor[0])
       if id == ((1,),):
         id = (1,)
@@ -451,6 +453,8 @@ def createBase(baseDir, template='baseTemplate.xml'):
   import xml
   spec = xml.dom.minidom.parse(template)
   
+  tryLater = []
+  
   root = BaseComponent(baseDir)
   
   def walk(path):
@@ -461,15 +465,40 @@ def createBase(baseDir, template='baseTemplate.xml'):
     for segment in path:      
       node /= segment         
     return node
-  
+
+  def constructInternals(node, detail, content, newNode=None):
+    if detail.nodeType is not spec.ELEMENT_NODE:
+      if detail.nodeType is spec.TEXT_NODE:
+        content += [detail.data]
+      return
+    
+    if newNode is None:
+      newNode = node.create()
+    descriptor = construct(detail, newNode)
+    if not descriptor:
+      tryLater.append((node, detail, newNode))
+      return
+      
+    name = detail.getAttribute('name')
+    permissions = detail.getAttribute('permissions') if detail.hasAttribute('permissions') else None
+
+    content += ['[%s]\n' % name]
+    node.data.link(node, name, descriptor)      
+    node.data.save(node, ''.join(content))
+
   def construct(spec, node):
     nodeType = spec.tagName
     if nodeType == 'Link':
       print 
       print spec.getAttribute('path')
-      descriptor = walk(spec.getAttribute('path')).descriptor
-      print descriptor
-      return descriptor
+      try: #something
+        descriptor = walk(spec.getAttribute('path')).descriptor
+      except KeyError:
+        return None
+      else:
+        print descriptor
+        return descriptor
+        
     elif nodeType == 'Component':
       path = spec.getAttribute('file')
       node.data = Component(path)
@@ -482,25 +511,27 @@ def createBase(baseDir, template='baseTemplate.xml'):
     obj = builtins.metaTypes[nodeType]()
     assert obj
     node.data = obj
-    content = ''    
-    node.data.save(node, content)
+    content = []
+    node.data.save(node, ''.join(content))
     
     for detail in spec.childNodes:
-      if detail.nodeType is spec.TEXT_NODE:
-        content += detail.data
-      if detail.nodeType is not spec.ELEMENT_NODE:
-        continue
-      
-      descriptor = construct(detail, node.create())
-      name = detail.getAttribute('name')
-      permissions = detail.getAttribute('permissions') if detail.hasAttribute('permissions') else None
-
-      content += '[%s]\n' % name
-      node.data.link(node, name, descriptor)      
-      node.data.save(node, content)
-    
-    node.data.save(node, content)
+      constructInternals(node, detail, content)
+        
+    node.data.save(node, ''.join(content))
     return node.descriptor     
 
   construct(spec.childNodes[0], root)
+
+  tried = None
+  while tryLater and tried != tryLater:
+    tried = tryLater
+    tryLater = []
+    for node, detail, newNode in tried:
+      content = [node.data.show(node)]
+      constructInternals(node, detail, content, newNode)
+      node.data.save(node, ''.join(content))
+
+  assert not tryLater, "Some nodes failed to be created: " % tryLater
+  
+
   return root   

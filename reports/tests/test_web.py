@@ -45,20 +45,24 @@ def teardown():
   os.system('rm -rf "%s"' % TEST_PICKLES)
 
 def test_simpleRequests():    
-  assert "OK" == urlopen(address).msg 
-  assert "OK" == urlopen(address + '/').msg 
+  assert_equal("OK", urlopen(address).msg)
+  assert_equal("OK", urlopen(address + '/').msg)
 
 def test_signedRequests():
   name = '~test(abcdef)'
   signature = cherrypy.root._signPath(('protected', name))
   signed = '~test(abcdef-%s)' % signature 
   print signed
-  assert "OK" == urlopen(address + '/%s/' % signed).msg
-  assert "OK" == urlopen(address + '/%s/root' % signed).msg
-  assert "OK" == urlopen(address + '/%s/root/' % signed).msg
+  assert_equal("OK", urlopen(address + '/%s/' % signed).msg)
+  assert_equal("OK", urlopen(address + '/%s/root' % signed).msg)
+  assert_equal("OK", urlopen(address + '/%s/root/' % signed).msg)
 
 def test_invalid():    
   assert_equal(404, catch(HTTPError, urlopen, address + '/test/nonexisting/').code)  
     
   assert_equal("OK", urlopen(address + '/?op=save;data=[root]+[test]+qwerty12345678').msg)
   assert "qwerty12345678" in urlopen(address + '/').read()
+  
+def test_linkEarly():
+  assert_equal((web.baseMeta/'root'/'early').id, (web.baseMeta/'root'/'late').id)
+  

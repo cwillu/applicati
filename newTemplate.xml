@@ -1,12 +1,26 @@
 <CapRoot>  
+  <Wiki name="Objects">
+  </Wiki>
+  
+  <Wiki name="Applications">
+    <WebServer name="Web Server">
+    </WebServer>
+  </Wiki>
+  
+  <Wiki name="Users">
+  </Wiki>
+  
+  <Wiki name="Config">
+    <Wiki name="Launch">
+      <Link name="web" path="/Applications/Web Server" />
+    </Wiki>
+  </Wiki>
+
   <Wiki name="prototypes" >  
     <Constructor name="Wiki">Wiki</Constructor>
     <Constructor name="User">User</Constructor>       
     <Constructor name="Editor">Editor</Constructor>
   </Wiki>
-  
-  <Link name="early" path="/late" />  
-  <Wiki name="late" />
   
   <Link name="prototype" path="/prototypes" />    
   
