@@ -4,6 +4,7 @@
   
   <Wiki name="Applications">
     <WebServer name="Web Server">
+      <Link name="users" path="/Users" />
     </WebServer>
   </Wiki>
   

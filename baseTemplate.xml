@@ -4,10 +4,7 @@
     <Constructor name="User">User</Constructor>       
     <Constructor name="Editor">Editor</Constructor>
   </Wiki>
-  
-  <Link name="early" path="/late" />  
-  <Wiki name="late" />
-  
+   
   <Link name="prototype" path="/prototypes" />    
   
   <Editor name="Editor Test" />
