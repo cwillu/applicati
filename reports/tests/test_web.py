@@ -44,7 +44,14 @@ def teardown():
   web.baseMeta = originalBase
   os.system('rm -rf "%s"' % TEST_PICKLES)
 
-def test_simpleRequests():    
+def test_simple():
+  assert_true(web.baseMeta.data.show(web.baseMeta))
+
+def test_linkEarly():
+  assert_equal((web.baseMeta/'root'/'early').id, (web.baseMeta/'root'/'late').id)
+  assert_equal((web.baseMeta/'root'/'early').data.show(None), (web.baseMeta/'root'/'late').data.show(None))
+
+def test_simpleRequests():  
   assert_equal("OK", urlopen(address).msg)
   assert_equal("OK", urlopen(address + '/').msg)
 
@@ -63,6 +70,5 @@ def test_invalid():
   assert_equal("OK", urlopen(address + '/?op=save;data=[root]+[test]+qwerty12345678').msg)
   assert "qwerty12345678" in urlopen(address + '/').read()
   
-def test_linkEarly():
-  assert_equal((web.baseMeta/'root'/'early').id, (web.baseMeta/'root'/'late').id)
+  
   

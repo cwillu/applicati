@@ -25,23 +25,25 @@ config.update(dict(package="reports"))
 
 from reports.web import Root
 
-if __name__ != "__main__":
-  gitPid = True
-  gitPid = os.fork()
-  if not gitPid:
-    exit = os.system('git add .')
-    if exit: sys.exit(1)
-    exit = os.system('git commit -a -m "$(date)"')
-    if exit: sys.exit(2)
-    sys.exit(0)
+#if __name__ != "__main__":
+#  gitPid = True
+#  gitPid = os.fork()
+#  if not gitPid:
+#    exit = os.system('git add .')
+#    if exit: sys.exit(1)
+#    exit = os.system('git commit -a -m "$(date)"')
+#    if exit: sys.exit(2)
+#    sys.exit(0)
 
-  def checkGitStatus(pid):
-    import os #???
-    exit = os.waitpid(pid, 0)
-    if exit[1]:
-      print "\nCommit failed (%s)\n" % (exit,)
-      thread.interrupt_main()
-    
-  thread.start_new_thread(checkGitStatus, (gitPid,))
+#  def checkGitStatus(pid):
+#    import os #???
+#    exit = os.waitpid(pid, 0)
+#    if exit[1]:
+#      print "\nCommit failed (%s)\n" % (exit,)
+#      thread.interrupt_main()
+#    
+#  thread.start_new_thread(checkGitStatus, (gitPid,))
 
 start_server(Root())
+
+assert False, "got here"

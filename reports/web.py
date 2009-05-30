@@ -1,6 +1,8 @@
 from __future__ import absolute_import
 
-# 9977553311
+import logging
+logging.getLogger('root').setLevel(40)
+#logging.getLogger('root.controller').setLevel(10)
 
 import os, sys
 import bisect
@@ -14,6 +16,8 @@ from random import SystemRandom as sysrandom; random = sysrandom()
 import xml.dom.minidom as dom
 import re
 import time
+
+
 
 from Queue import Queue, Empty
 
@@ -35,8 +39,8 @@ try:
   def codeFilter(co):
     if 'enclosing_frame' in co.co_name:
       return False
-    print co
-    print co.co_name
+    logging.getLogger('root').debug(co)
+    logging.getLogger('root').debug(co.co_name)
     return True
   
   psyco.setfilter(codeFilter)
@@ -45,14 +49,11 @@ try:
   from psyco.classes import *
 
 except ImportError:
-  print 'Psyco not installed, the program will just run slower'  
+  logging.getLogger('root').warn('Psyco not installed, the program will just run slower')  
   compile = lambda func: func
 
 compile = lambda func: func
 
-import logging
-logging.getLogger('root').setLevel(20)
-#logging.getLogger('root.controller').setLevel(10)
 
 logging.getLogger('root').info('\n' + "-" * 40 + '\nSystem Start')
 
@@ -100,7 +101,11 @@ corePermissions = ['read', 'modify', 'replace', 'cross', 'override']
 rootDir = '/tmp/pickles'
 os.system('rm -r "%s"' % rootDir)
 db.createBase(rootDir)
-baseMeta = db.BaseComponent(rootDir)/'web'
+try:
+  baseMeta = db.BaseComponent(rootDir)/'web'
+except KeyError:
+  #FIXME
+  baseMeta = db.BaseComponent(rootDir)  
 
 @compile
 def visit(root, path, op):
@@ -256,11 +261,11 @@ class Root(controllers.RootController):
   @expose()
   def default(self, *path, **args):
     start = time.time()
-    print
-    print "\033[1;34m" + "*" * 80 + "\033[0m"
-    print gateway(), path, args
-    print request.browser_url
-    print request.headers
+
+    logging.getLogger('root').info("\033[1;34m" + "*" * 80 + "\033[0m")
+    logging.getLogger('root').info(gateway(), path, args)
+    logging.getLogger('root').info(request.browser_url)
+    logging.getLogger('root').debug(request.headers)
 
     loginRoot()
 
@@ -288,7 +293,7 @@ class Root(controllers.RootController):
       return self.dispatch(path, args)
     finally:
       stop = time.time()
-      print "\033[1;35m" + "Request finished: %10f" % (stop - start) + "\033[0m"
+      logging.getLogger('root').info("\033[1;35m" + "Request finished: %10f" % (stop - start) + "\033[0m")
       print >>open('requestTimings', 'a'), "%10f" % (stop - start), request.browser_url 
   
 
@@ -362,14 +367,14 @@ class Root(controllers.RootController):
       userPath = ['users', userName]
       userMeta = getPage(loginRoot(), userPath)
       if not userMeta or not userMeta.data:
-        print "login fail at 1", userMeta, userMeta.data
+        logging.getLogger('root').info("login fail at 1", userMeta, userMeta.data)
         break        
       userObject = userMeta.data
       if 'checkPassword' not in dir(userObject):
-        print "login fail at 2, checkPassword not in ", userObject 
+        logging.getLogger('root').info("login fail at 2, checkPassword not in ", userObject) 
         break
       if not userObject.checkPassword(userName, password):
-        print "login fail at 3, invalid password"
+        logging.getLogger('root').info("login fail at 3, invalid password")
         break
 
       #session['root'] = (request.headers['Host'], userName,)
@@ -377,7 +382,7 @@ class Root(controllers.RootController):
       
       name, signature = self.addProtected(userPath)
       if not signature:
-        print "login fail at 4, logins not being accepted"
+        logging.getLogger('root').info("login fail at 4, logins not being accepted")
         break
         
       #flash("Logged in as %s" % session['root'][-1])
@@ -503,7 +508,7 @@ def raiseRedirectToShow(path=None, signature=None, status=None):
   protocol = request.headers.get('X-Protocol', 'http')
   originalPath = request.browser_url.split('?', 1)[0]
           
-  print "Redirect %s" % (path,)
+  logging.getLogger('root').info("Redirect %s" % (path,))
   if not path:
     raise HTTPRedirect("%s://%s/" % (protocol, originalPath), status=status)
 

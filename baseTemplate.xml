@@ -1,54 +1,31 @@
 <CapRoot>  
+  <Wiki name="Objects">
+    <Constructor name="Wiki">Wiki</Constructor>
+    <Constructor name="User">User</Constructor>       
+    <Constructor name="Editor">Editor</Constructor>
+  </Wiki>
+  
+  <Wiki name="Applications">
+    <Wiki name="Web Server">
+      <Link name="users" path="/Users" />
+    </Wiki>
+  </Wiki>
+  
+  <Wiki name="Users">
+  </Wiki>
+  
+  <Wiki name="Config">
+    <Wiki name="Launch">
+      <Link name="web" path="/Applications/Web Server" />
+    </Wiki>
+  </Wiki>
+
   <Wiki name="prototypes" >  
     <Constructor name="Wiki">Wiki</Constructor>
     <Constructor name="User">User</Constructor>       
     <Constructor name="Editor">Editor</Constructor>
   </Wiki>
-   
-  <Link name="prototype" path="/prototypes" />    
   
-  <Editor name="Editor Test" />
-  
-  <Wiki name="public">
-    <Link path="/Editor Test" name="Editor Test" />
-  </Wiki>
-
-  <Wiki name="users">
-  </Wiki>
-
-  <Wiki name="protected" />
-  
-  <Wiki name="trusted"><!-- No authentication required to log in-->
-    <Link path="/users" name="users" />
-    <Link path="/" name="public" /> 
-    <Link path="/protected" name="protected" />
-    <Link path="/prototypes" name="prototype" />
-  </Wiki>
-
-  <Wiki name="trustable"><!-- Authentication required to log in -->
-    <Link path="/users" name="users" />
-    <Link path="/public" name="public" /> 
-    <Link path="/protected" name="protected" />
-  </Wiki>
-
-  <Wiki name="untrusted"><!-- Do not permit logins -->
-    <Link path="/public" name="public" /> 
-  </Wiki>
-  
-  <Wiki name="web">
-    <Wiki name="gateways">
-      <Link path="/trusted" name="http://127.0.0.1:8080" />
-      <Link path="/trusted" name="https://127.0.0.1:8080" />
-      <Link path="/trustable" name="http://127.0.0.1" />      
-      <Link path="/trustable" name="https://127.0.0.1" />      
-      <Link path="/untrusted" name="http://home.cwillu.com" />
-      <Link path="/trustable" name="https://home.cwillu.com" />      
-      <Link path="/trustable" name="http://dominubuntu.local" />      
-    </Wiki>
-  </Wiki>
-    
+  <Link name="prototype" path="/prototypes" />        
 </CapRoot>
 
-
-<!-- Wiki User  Raw XML Constructor AutoLogin -->
-<!--  <Reference component="/original" descriptor="('1', '078e9482-0563-4dd0-9ac5-feb5d484138f', '1841522ab4f69f04b8c046e85cf9e4809f38389ffcfd3585a583cd63891a4dbe')" />-->

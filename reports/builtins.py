@@ -25,7 +25,7 @@ try:
   publish_parts = psyco.proxy(publish_parts)
   from psyco.classes import *
 except ImportError:
-  print 'Psyco not installed, the program will just run slower'  
+  logging.getLogger('root.builtins').warn('Psyco not installed, the program will just run slower')  
   compile = lambda func: func
 
 def _assertId(id):  #XXX change to assert

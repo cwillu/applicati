@@ -26,7 +26,7 @@ try:
   from psyco.classes import *
 
 except ImportError:
-  print 'Psyco not installed, the program will just run slower'  
+  logging.getLogger('root.model').warn('Psyco not installed, the program will just run slower')  
   compile = lambda func: func
 
 def _assertId(id):  #XXX change to assert
@@ -79,9 +79,9 @@ def logger(func):
     return func
   
   def log(*args, **kargs):
-    print ">", name, args, kargs 
+    logging.getLogger('root.model').debug(">", name, args, kargs) 
     result = func(*args, **kargs)
-    print "<", name, result
+    logging.getLogger('root.model').debug("<", name, result)
     return result    
   return log
 
@@ -98,7 +98,7 @@ def timer(func):
     stop = time.time()
     
     _nest -= 1
-    print "%16s" % ("--"*_nest) + "->", "%10f" % (stop - start), name 
+    logging.getLogger('root.model').debug("%16s" % ("--"*_nest) + "->", "%10f" % (stop - start), name) 
     
     return result
     
@@ -116,7 +116,7 @@ def timera(func):
     stop = time.time()
     
     _nest -= 1
-    print "%16s" % ("--"*_nest) + "->", "%10f" % (stop - start), name, (args, kargs)
+    logging.getLogger('root.model').debug("%16s" % ("--"*_nest) + "->", "%10f" % (stop - start), name, (args, kargs))
     
     return result
   timed.nest = 0    
@@ -165,12 +165,12 @@ def BaseComponent(rootFolder, componentPath=()):
         if not capPermissions:          
           if _sourceId and self._getPerms(_sourceId):
             capPermissions = self._getPerms(_sourceId) 
-            print "\033[1;31m" + 'Updating obsolete permissions' + "\033[0m"
-            print "\033[1;31m" + str(capPermissions) + "\033[0m"
-            print "\033[1;31m" + str(source) + "\033[0m"
+            logging.getLogger('root.model').warn("\033[1;31m" + 'Updating obsolete permissions' + "\033[0m")
+            logging.getLogger('root.model').warn("\033[1;31m" + str(capPermissions) + "\033[0m")
+            logging.getLogger('root.model').warn("\033[1;31m" + str(source) + "\033[0m")
             self._setPerms(capPermissions, source) #!!
           else:
-            print "\033[1;31m" + 'new' + "\033[0m"
+            logging.getLogger('root.model').debug("\033[1;31m" + 'new' + "\033[0m")
             capPermissions = (path, 0)
             self._setPerms(capPermissions, source)
           
@@ -248,7 +248,7 @@ def BaseComponent(rootFolder, componentPath=()):
             os.makedirs(self._filename(''))
           except OSError, err:
             if err.errno is not 17:  #path already exists (which is an error for a recursive create why exactly?)
-              print self._filename(''), self._filename()
+              logging.getLogger('root.model').error(self._filename(''), self._filename())
               raise err            
           return None
         if err.errno == 2 and 'data' not in self._filename(): #file not found
@@ -295,7 +295,7 @@ def BaseComponent(rootFolder, componentPath=()):
       pickle.dump((VERSION_MAGIC, old, obj), file(os.path.join(folder, new), 'w'))      
       if old:
         os.unlink(path)
-      print path, old
+      logging.getLogger('root.model').debug(path, old)
       os.symlink(new, path)
      
     data = property(getData, _selfSetData)   
@@ -336,10 +336,10 @@ def BaseComponent(rootFolder, componentPath=()):
         
       try:                
         perms = pickle.load(file(self._filename('permissions')))
-        print "Rewriting old permissions format"
+        logging.getLogger('root.model').warn("Rewriting old permissions format")
         db = self._connect()
         db.executemany('replace into perm(source, permissions) values (?, ?)', ((k, pickle.dumps(perms[k])) for k in perms))
-        print self._filename('permissions')
+        logging.getLogger('root.model').warn(self._filename('permissions'))
         os.rename(self._filename('permissions'), '%s~' % self._filename('permissions'))
         db.commit()
       except IOError, err:
@@ -414,11 +414,11 @@ def BaseComponent(rootFolder, componentPath=()):
       if not _checkSignature(descriptor, componentSecret):
         for cut in reversed(range(len(id)-1)):
           trial = id[cut:]
-          print "Trial:", trial
+          logging.getLogger('root.model').debug("Trial:", trial)
           segment = trial[0]
           
           metaComponent = self.get(segment)
-          print metaComponent        
+          logging.getLogger('root.model').debug(metaComponent)        
           ## get(None, segment) because I'm still on the fence about auto wrapping data objects with their meta object        
           component = metaComponent.data.get(None, componentPath + (segment,))          
           trialDescriptor = (trial[1:], ) + descriptor[1:]
@@ -489,14 +489,13 @@ def createBase(baseDir, template='baseTemplate.xml'):
   def construct(spec, node):
     nodeType = spec.tagName
     if nodeType == 'Link':
-      print 
-      print spec.getAttribute('path')
+      logging.getLogger('root.model').debug(spec.getAttribute('path'))
       try: #something
         descriptor = walk(spec.getAttribute('path')).descriptor
       except KeyError:
         return None
       else:
-        print descriptor
+        logging.getLogger('root.model').debug(descriptor)
         return descriptor
         
     elif nodeType == 'Component':
