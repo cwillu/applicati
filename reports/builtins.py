@@ -1,12 +1,12 @@
 from __future__ import absolute_import
 
 import os
-from sha import sha
+from hashlib import sha1 as sha
 import xml.dom.minidom as dom
 import re
 
-from turbogears import flash
-from cherrypy import session
+#from turbogears import flash
+flash = lambda *a, **k: None
 from docutils.core import publish_parts
 
 #import urllib
@@ -143,8 +143,9 @@ class Wiki(object):
     
 class CapRoot(Wiki):
   def resolve(self, meta, name):
-    if name == '~hand':  # I don't like this
-      return session.get('hand', None)
+#    if name == '~hand':  # I don't like this
+#      from cherrypy import session
+#      return session.get('hand', None)
     return super(CapRoot, self).resolve(meta, name)
 
 class User(Wiki):
