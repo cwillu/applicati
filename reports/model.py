@@ -18,6 +18,8 @@ from . import builtins
 
 VERSION_MAGIC = 1956027083
 
+logging.getLogger('root.model').setLevel(10)
+
 try:  
   import psycos
   psyco.log()
@@ -128,8 +130,60 @@ def with_methods(obj, decorator):
       setattr(obj, name, decorator(method))
   except PermissionError:
     pass
+
+
   
 def BaseComponent(rootFolder, componentPath=()):
+  def Wrapper(data, meta):
+    if data is None and meta is not None:
+      data = meta.data
+
+    class Wrapper(object):
+      def __init__(self, meta):
+        assert meta
+    #    if data is None:
+    #      raise AttributeError
+        self.meta = meta
+        if not meta:
+          self.permissions = ([], [])
+          self.links = []
+          return
+        try:
+          self.links = meta.links      
+        except db.PermissionError:
+          self.permissions = ([], [])
+          self.links = []
+          return
+        self.write = meta.write
+        self.changePermission = meta.changePermission
+        self.permissions = meta.permissions
+            
+      @property
+      def descriptor(self):
+        return self.meta.descriptor
+      
+      def __value__(self):
+        return data
+      
+      @property
+      def __class__(self):
+        if not data:
+          return Wrapper
+        ''' hack '''
+        logging.getLogger('root.controller.wrapper').debug("Faking class: %s", data.__class__)
+        return data.__class__
+      
+      def __getattr__(self, name):
+        attr = getattr(data, name)
+
+        return lambda *args, **kargs: attr(self.meta, *args, **kargs)
+
+      def __str__(self):
+        return str(data)
+      def __repr__(self):
+        return '<proxy of %s>' % repr(data)
+    return Wrapper(meta)
+
   assert rootFolder, "No root folder supplied (%s)" % rootFolder
   
   try:
@@ -220,7 +274,7 @@ def BaseComponent(rootFolder, componentPath=()):
           
     def getData(self):
       self._check('read')
-      return self._getData()
+      return Wrapper(self._getData(), self)
 
     def _getData(self):    
       if self._data is not None:
@@ -231,8 +285,9 @@ def BaseComponent(rootFolder, componentPath=()):
         
       try:
         obj = pickle.load(file( self._filename()))
+        
         if isinstance(obj, tuple) and len(obj) == 3 and obj[0] == VERSION_MAGIC:
-          return obj[2]
+          obj = obj[2]
         return obj
       except IOError, err:
         if self.id in [1, (1,)] and err.errno == 2:
@@ -292,12 +347,14 @@ def BaseComponent(rootFolder, componentPath=()):
       else:
         old = None            
 
+      obj = getattr(obj, '__value__', lambda: obj)()
+      
       pickle.dump((VERSION_MAGIC, old, obj), file(os.path.join(folder, new), 'w'))      
       if old:
         os.unlink(path)
       logging.getLogger('root.model').debug(path, old)
       os.symlink(new, path)
-     
+    
     data = property(getData, _selfSetData)   
     
     def _filename(self, selector="data", id=None):              
@@ -420,7 +477,7 @@ def BaseComponent(rootFolder, componentPath=()):
           metaComponent = self.get(segment)
           logging.getLogger('root.model').debug(metaComponent)        
           ## get(None, segment) because I'm still on the fence about auto wrapping data objects with their meta object        
-          component = metaComponent.data.get(None, componentPath + (segment,))          
+          component = metaComponent.data.get(componentPath + (segment,))          
           trialDescriptor = (trial[1:], ) + descriptor[1:]
           result = component.get(trialDescriptor, path=path)
           if result:
@@ -483,8 +540,8 @@ def createBase(baseDir, template='baseTemplate.xml'):
     permissions = detail.getAttribute('permissions') if detail.hasAttribute('permissions') else None
 
     content += ['[%s]\n' % name]
-    node.data.link(node, name, descriptor)      
-    node.data.save(node, ''.join(content))
+    node.data.link(name, descriptor)      
+    node.data.save(''.join(content))
 
   def construct(spec, node):
     nodeType = spec.tagName
@@ -508,15 +565,14 @@ def createBase(baseDir, template='baseTemplate.xml'):
       return ((component.descriptor,) + descriptor[0],) + descriptor[1:]
       
     obj = builtins.metaTypes[nodeType]()
-    assert obj
     node.data = obj
     content = []
-    node.data.save(node, ''.join(content))
+    node.data.save(''.join(content))
     
     for detail in spec.childNodes:
       constructInternals(node, detail, content)
         
-    node.data.save(node, ''.join(content))
+    node.data.save(''.join(content))
     return node.descriptor     
 
   construct(spec.childNodes[0], root)
@@ -526,9 +582,9 @@ def createBase(baseDir, template='baseTemplate.xml'):
     tried = tryLater
     tryLater = []
     for node, detail, newNode in tried:
-      content = [node.data.show(node)]
+      content = [node.data.show()]
       constructInternals(node, detail, content, newNode)
-      node.data.save(node, ''.join(content))
+      node.data.save(''.join(content))
 
   assert not tryLater, "Some nodes failed to be created: " % tryLater
   

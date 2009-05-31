@@ -9,3 +9,5 @@
 test.pickles
 *.pyc
 
+log-psyco
+devdata.sqlite

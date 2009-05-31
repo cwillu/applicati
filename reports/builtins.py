@@ -18,15 +18,15 @@ class _(object):
     for k in kargs:
       setattr(self, k, kargs[k])
 
-try:  
-  import psyco
-  psyco.log()
-  compile = psyco.proxy
-  publish_parts = psyco.proxy(publish_parts)
-  from psyco.classes import *
-except ImportError:
-  logging.getLogger('root.builtins').warn('Psyco not installed, the program will just run slower')  
-  compile = lambda func: func
+#try:  
+#  import psyco
+#  psyco.log()
+#  compile = psyco.proxy
+#  publish_parts = psyco.proxy(publish_parts)
+#  from psyco.classes import *
+#except ImportError:
+#  logging.getLogger('root.builtins').warn('Psyco not installed, the program will just run slower')  
+#  compile = lambda func: func
 
 def _assertId(id):  #XXX change to assert
   '''from model'''
@@ -66,7 +66,6 @@ class Wiki(object):
   linkWords = re.compile(r'(?P<type>[\[\(\{]+)(?P<name>[^\ \[\]\(\)\{\}][^\[\]]*?)[\]\)\}]+')
   indentWords = re.compile(r'\s*\*')   
   
-  @compile  
   def _wikiFormat(self, meta, content, prefix=None):
     if not prefix:
       prefix = tuple()

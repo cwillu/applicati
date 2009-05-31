@@ -44,6 +44,10 @@ from reports.web import Root
 #    
 #  thread.start_new_thread(checkGitStatus, (gitPid,))
 
-start_server(Root())
 
-assert False, "got here"
+rootDir = '/tmp/pickles'
+os.system('rm -r "%s"' % rootDir)
+(db.createBase(rootDir)/'Boot')
+
+base = db.BaseComponent(rootDir)/'web'
+

@@ -1,6 +1,6 @@
 <CapRoot>
-  <Component name="self" file="pickles" />
-     
+  <Wiki name="content">
+  </Wiki>
   <Wiki name="prototype">    
   </Wiki>
 
@@ -31,8 +31,11 @@
   </Wiki>
   
   <Link name="early" path="/late" />  
-  <Wiki name="late" />
+  <Wiki name="late">
+    Hey there!
+  </Wiki>
     
+  <Component name="self" file="pickles" />
 </CapRoot>
 
 

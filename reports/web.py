@@ -187,30 +187,30 @@ def walk(root, action, maxDepth=5):
       seen.add(childNode.id)        
 
 class Wrapper(object):
-  def __init__(self, data, page):
-    if data is None and page is not None:
-      data = page.data
+  def __init__(self, data, meta):
+    if data is None and meta is not None:
+      data = meta.data
 #    if data is None:
 #      raise AttributeError
     self._data = data
-    self.page = page
-    if not page:
+    self.meta = meta
+    if not meta:
       self.permissions = ([], [])
       self.links = []
       return
     try:
-      self.links = page.links      
+      self.links = meta.links      
     except db.PermissionError:
       self.permissions = ([], [])
       self.links = []
       return
-    self.write = page.write
-    self.changePermission = page.changePermission
-    self.permissions = page.permissions
+    self.write = meta.write
+    self.changePermission = meta.changePermission
+    self.permissions = meta.permissions
         
   @property
   def descriptor(self):
-    return self.page.descriptor
+    return self.meta.descriptor
   
   @property
   def __class__(self):
@@ -823,5 +823,5 @@ class XmlPresentation(WikiPresentation):
 #metaTypes = dict((name, eval('builtins.' + name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin'))
 metaTypes = builtins.metaTypes
 
-import nose
-thread.start_new_thread(nose.run, ())
+#import nose
+#thread.start_new_thread(nose.run, ())
