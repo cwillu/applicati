@@ -132,57 +132,96 @@ def with_methods(obj, decorator):
     pass
 
 
+#trace=True
   
 def BaseComponent(rootFolder, componentPath=()):
   def Wrapper(data, meta):
-    if data is None and meta is not None:
-      data = meta.data
+    data = [data]
+    
+#    global trace
+#    assert trace
+#    trace = False 
 
-    class Wrapper(object):
-      def __init__(self, meta):
-        assert meta
-    #    if data is None:
-    #      raise AttributeError
-        self.meta = meta
-        if not meta:
-          self.permissions = ([], [])
-          self.links = []
+#    if data is None and meta is not None:
+#      data = meta.data
+    class MetaWrapper(object):
+      def __getattr__(self, name):
+        if name == 'data':
+          return data[0]
+        return (meta / name).data
+        
+      def __setattr__(self, name, value):
+        if name == 'data':
+          meta.data = value
+          data[0] = value
           return
         try:
-          self.links = meta.links      
-        except db.PermissionError:
-          self.permissions = ([], [])
-          self.links = []
+          data[0].resolve(wrappedMeta, name)
+        except KeyError:
+          newNode = meta.create()
+          newNode.data = value          
+          data[0].link(wrappedMeta, name, newNode.descriptor)
+        else:
+          (meta / name).data = value
+
+    wrappedMeta = MetaWrapper()
+    wrapperDict = {}
+    class DataWrapper(object):
+      def __init__(self):
+        if not meta:
+          wrapperDict['permissions'] = ([], [])
+          wrapperDict['links'] = []
           return
-        self.write = meta.write
-        self.changePermission = meta.changePermission
-        self.permissions = meta.permissions
+
+        try:
+          wrapperDict['links'] = meta.links      
+        except db.PermissionError:
+          wrapperDict['permissions'] = ([], [])
+          wrapperDict['links'] = []
+          return
+
+        wrapperDict['write'] = meta.write
+        wrapperDict['changePermission'] = meta.changePermission
+        wrapperDict['permissions'] = meta.permissions
             
       @property
       def descriptor(self):
-        return self.meta.descriptor
+        return meta.descriptor
       
       def __value__(self):
-        return data
+        return data[0]
       
       @property
       def __class__(self):
-        if not data:
-          return Wrapper
+        if not data[0]:
+          return DataWrapper
         ''' hack '''
-        logging.getLogger('root.controller.wrapper').debug("Faking class: %s", data.__class__)
-        return data.__class__
+        logging.getLogger('root.controller.wrapper').debug("Faking class: %s", data[0].__class__)
+        return data[0].__class__
       
       def __getattr__(self, name):
-        attr = getattr(data, name)
+        if name in wrapperDict:
+          return wrapperDict[name]
+        try:
+          attr = getattr(data[0], name)
+        except AttributeError:
+          return getattr(wrappedMeta, name)
+        else:
+          return lambda *args, **kargs: attr(wrappedMeta, *args, **kargs)
 
-        return lambda *args, **kargs: attr(self.meta, *args, **kargs)
+      def __setattr__(self, name, value):
+        if name in wrapperDict:
+          wrapperDict[name] = value
+          return
+        setattr(wrappedMeta, name, value)
 
       def __str__(self):
-        return str(data)
+        return str(data[0])
       def __repr__(self):
-        return '<proxy of %s>' % repr(data)
-    return Wrapper(meta)
+        return '<proxy of %s>' % repr(data[0])
+    
+#    trace = True
+    return DataWrapper()
 
   assert rootFolder, "No root folder supplied (%s)" % rootFolder
   
@@ -540,7 +579,7 @@ def createBase(baseDir, template='baseTemplate.xml'):
     permissions = detail.getAttribute('permissions') if detail.hasAttribute('permissions') else None
 
     content += ['[%s]\n' % name]
-    node.data.link(name, descriptor)      
+    node.data.link(name, descriptor)
     node.data.save(''.join(content))
 
   def construct(spec, node):

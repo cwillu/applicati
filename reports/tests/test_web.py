@@ -51,6 +51,21 @@ def test_linkEarly():
   assert_equal((base/'early').id, (base/'late').id)
   assert_equal((base/'early').data.show(), (base/'late').data.show())
 
+def test_magic():
+  assert_equal(base.data.early.show(), base.data.late.show())
+  base.data.newobject = 123
+  
+  assert_equal(123, base.data.newobject)
+  
+  assert_equal(123, (base/'newobject').data)
+  
+#def test_XXX_deficiencies():
+#  base.data.Capitalization = 123
+#  
+#  assert_equal(123, base.data.capitalization)
+#  assert_raises(KeyError, lambda: (base/'Capitalization').data)
+
+
 #def test_simpleRequests():  
 #  assert_equal("OK", urlopen(address).msg)
 #  assert_equal("OK", urlopen(address + '/').msg)
