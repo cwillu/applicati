@@ -55,9 +55,9 @@ def test_magic():
   assert_equal(base.data.early.show(), base.data.late.show())
   base.data.newobject = 123
   
-  assert_equal(123, base.data.newobject)
+  assert_equal(123, base.data.newobject.__value__())
   
-  assert_equal(123, (base/'newobject').data)
+  assert_equal(123, (base/'newobject').data.__value__())
   
 #def test_XXX_deficiencies():
 #  base.data.Capitalization = 123
