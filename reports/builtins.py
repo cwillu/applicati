@@ -255,6 +255,48 @@ class XML(object):
     self.links[name] = id    
     meta.data = self    
         
-        
-metaTypes = dict((name, eval(name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin', ))
+class Base(object):
+  def __init__(self):
+    self.links = {}
+    
+  def save(self, meta, data):
+    pass
+  
+  def resolve(self, meta, name):
+    return self.links[name]
+      
+  def link(self, meta, name, id):
+    self.links[name] = id
+    meta.data = self
+  
+
+class Blog(Base):
+  def __init__(self, data=''):
+    self.data = data
+    super(Blog, self).__init__()
+    
+  def init(self, meta):
+    meta.posts = Wiki()
+    meta.categories = Wiki()
+
+    meta.publisher = Wiki()
+    meta.publisher.blog = meta    
+  
+class BlogPublisher(Base):
+  def __init__(self, data=''):
+    self.data = data
+    super(BlogPublisher, self).__init__()
+
+  def show(self, meta, posts):
+    return template.render(posts=posts)
+    
+class BlogCategory(Base):
+  def __init__(self, data=''):
+    self.data = data
+    super(BlogCategory, self).__init__()
+
+  def posts(self, meta):
+    pass
+
+metaTypes = dict((name, eval(name)) for name in ('Wiki', 'User', 'CapRoot', 'Raw', 'XML', 'Constructor', 'AutoLogin', 'Blog',))
 

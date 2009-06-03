@@ -59,6 +59,16 @@ def test_magic():
   
   assert_equal(123, (base/'newobject').data.__value__())
   
+def test_blog():
+  blog = base.data.blog
+  
+  blog.init()
+  blog.posts.show()
+  blog.publisher.show()
+  
+  blog.publisher.blog = blog
+  
+  
 #def test_XXX_deficiencies():
 #  base.data.Capitalization = 123
 #  

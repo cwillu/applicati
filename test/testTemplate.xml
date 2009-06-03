@@ -4,6 +4,8 @@
   <Wiki name="prototype">    
   </Wiki>
 
+  <Blog name="blog" />
+
   <Wiki name="users">
     <Wiki name="guest" />
   </Wiki>

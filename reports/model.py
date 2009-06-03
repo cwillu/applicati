@@ -155,11 +155,18 @@ def BaseComponent(rootFolder, componentPath=()):
           meta.data = value
           data[0] = value
           return
+        
+#        if isinstance(value, MetaWrapper):
+#          assert value is self, ("Haven't worked out how to get other descriptors", value, self)
+#          #
+#        elif isinstance(value, DataWrapper):
+#          data[0].link(wrappedMeta, name, newNode.descriptor)
+          
         try:
           data[0].resolve(wrappedMeta, name)
         except KeyError:
           newNode = meta.create()
-          newNode.data = value          
+          newNode.data = value
           data[0].link(wrappedMeta, name, newNode.descriptor)
         else:
           (meta / name).data = value
