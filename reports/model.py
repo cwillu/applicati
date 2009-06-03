@@ -148,6 +148,8 @@ def BaseComponent(rootFolder, componentPath=()):
       def __getattr__(self, name):
         if name == 'data':
           return data[0]
+        elif name == 'self':
+          return meta.data
         return (meta / name).data
         
       def __setattr__(self, name, value):
@@ -156,11 +158,9 @@ def BaseComponent(rootFolder, componentPath=()):
           data[0] = value
           return
         
-#        if isinstance(value, MetaWrapper):
-#          assert value is self, ("Haven't worked out how to get other descriptors", value, self)
-#          #
-#        elif isinstance(value, DataWrapper):
-#          data[0].link(wrappedMeta, name, newNode.descriptor)
+        if isinstance(value, DataWrapper):
+          data[0].link(wrappedMeta, name, value.descriptor)
+          return
           
         try:
           data[0].resolve(wrappedMeta, name)
@@ -194,6 +194,10 @@ def BaseComponent(rootFolder, componentPath=()):
       @property
       def descriptor(self):
         return meta.descriptor
+            
+      @property
+      def id(self):
+        return meta.id
       
       def __value__(self):
         return data[0]
@@ -226,6 +230,21 @@ def BaseComponent(rootFolder, componentPath=()):
         return str(data[0])
       def __repr__(self):
         return '<proxy of %s>' % repr(data[0])
+        
+      def __eq__(self, other):
+        print self, other
+        print type(self), type(other)
+        if type(other).__name__ != type(self).__name__:
+          # isinstance() uses __class__, which we've overridden to prevent
+          # exactly this sort of tomfoolery :p
+          # Also, because each invocation of Wrapper redefines the class,
+          # any two instances are not actualy of the same class.
+          print "hmmm"
+          return False
+        else:
+          print other.id, self.id
+          return other.id == self.id
+        
     
 #    trace = True
     return DataWrapper()

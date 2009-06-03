@@ -49,6 +49,7 @@ def test_simple():
 
 def test_linkEarly():
   assert_equal((base/'early').id, (base/'late').id)
+  assert_equal(base.data.early, base.data.late)
   assert_equal((base/'early').data.show(), (base/'late').data.show())
 
 def test_magic():
@@ -66,7 +67,9 @@ def test_blog():
   blog.posts.show()
   blog.publisher.show()
   
-  blog.publisher.blog = blog
+  assert blog.publisher.blog.__eq__(blog)
+  assert blog.__eq__(blog.publisher.blog)
+  assert_equal(blog, blog.publisher.blog)
   
   
 #def test_XXX_deficiencies():

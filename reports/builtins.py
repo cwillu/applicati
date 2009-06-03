@@ -280,7 +280,7 @@ class Blog(Base):
     meta.categories = Wiki()
 
     meta.publisher = Wiki()
-    meta.publisher.blog = meta    
+    meta.publisher.blog = meta.self
   
 class BlogPublisher(Base):
   def __init__(self, data=''):
