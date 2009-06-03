@@ -56,9 +56,16 @@ def test_magic():
   assert_equal(base.data.early.show(), base.data.late.show())
   base.data.newobject = 123
   
-  assert_equal(123, base.data.newobject.__value__())
-  
+  assert_equal(123, base.data.newobject.__value__())  
   assert_equal(123, (base/'newobject').data.__value__())
+  assert_equal(base.data.newobject, (base/'newobject').data)
+  assert_equal(base.data.newobject.__value__(), (base/'newobject').data.__value__())
+
+def test_assignmentOfMeta():
+  base.data.late = base.data
+  print type(base.data)
+  print type(base.data.late)
+  assert_equal(base.data, base.data.late)
   
 def test_blog():
   blog = base.data.blog

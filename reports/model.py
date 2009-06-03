@@ -158,7 +158,9 @@ def BaseComponent(rootFolder, componentPath=()):
           data[0] = value
           return
         
-        if isinstance(value, DataWrapper):
+        if type(value).__name__ == DataWrapper.__name__ and type(value).__module__ == DataWrapper.__module__:
+          # isinstance() uses __class__, which is overridden
+          print "Wrapping", value
           data[0].link(wrappedMeta, name, value.descriptor)
           return
           
@@ -231,19 +233,20 @@ def BaseComponent(rootFolder, componentPath=()):
       def __repr__(self):
         return '<proxy of %s>' % repr(data[0])
         
-      def __eq__(self, other):
-        print self, other
-        print type(self), type(other)
-        if type(other).__name__ != type(self).__name__:
+      def __eq__(self, value):
+        print self, value
+        print type(self), type(value)
+        if type(value).__name__ == DataWrapper.__name__ and type(value).__module__ == DataWrapper.__module__:
+          print value.descriptor, self.descriptor
+          print value.id, self.id
+          return value.id == self.id
+        else:
           # isinstance() uses __class__, which we've overridden to prevent
           # exactly this sort of tomfoolery :p
           # Also, because each invocation of Wrapper redefines the class,
           # any two instances are not actualy of the same class.
           print "hmmm"
           return False
-        else:
-          print other.id, self.id
-          return other.id == self.id
         
     
 #    trace = True
