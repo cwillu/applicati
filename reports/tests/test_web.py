@@ -72,11 +72,9 @@ def test_blog():
   
   blog.init()
   blog.posts.show()
-  blog.publisher.show()
   
-  assert blog.publisher.blog.__eq__(blog)
-  assert blog.__eq__(blog.publisher.blog)
   assert_equal(blog, blog.publisher.blog)
+  assert_equal(789, blog.publisher.show(789))
   
   
 #def test_XXX_deficiencies():

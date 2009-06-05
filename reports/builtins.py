@@ -5,6 +5,9 @@ from hashlib import sha1 as sha
 import xml.dom.minidom as dom
 import re
 
+from jinja2 import Environment, FileSystemLoader, Markup
+jinja = Environment(loader=FileSystemLoader('templates'), autoescape=True)
+
 #from turbogears import flash
 flash = lambda *a, **k: None
 from docutils.core import publish_parts
@@ -279,7 +282,7 @@ class Blog(Base):
     meta.posts = Wiki()
     meta.categories = Wiki()
 
-    meta.publisher = Wiki()
+    meta.publisher = BlogPublisher()
     meta.publisher.blog = meta.self
   
 class BlogPublisher(Base):
@@ -288,7 +291,14 @@ class BlogPublisher(Base):
     super(BlogPublisher, self).__init__()
 
   def show(self, meta, posts):
-    return template.render(posts=posts)
+    return posts
+    template = jinja.get_template('contacts/contact.html')
+    context = {
+      'posts': posts,
+    }
+    return template.render(**context)
+    
+    
     
 class BlogCategory(Base):
   def __init__(self, data=''):
